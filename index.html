@@ -47,7 +47,7 @@
   .graph-layer{position:absolute; inset:0; z-index:1;}
   .graph-layer svg{width:100%; height:100%; display:block;}
 
-  .hero-content{position:relative; z-index:2; padding:88px 0 0;}
+  .hero-content{position:relative; z-index:2; padding:88px 0 0; pointer-events:none;}
   .eyebrow{
     font-size:12px; letter-spacing:.11em; text-transform:uppercase; color:var(--amber);
     margin:0 0 18px; font-weight:650;
@@ -64,7 +64,7 @@
   .stat .n{font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
   .stat .l{font-size:11px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.07em; margin-top:2px;}
 
-  .legend{position:relative; z-index:2; display:flex; gap:20px; flex-wrap:wrap; padding:0 0 54px;}
+  .legend{position:relative; z-index:2; display:flex; gap:20px; flex-wrap:wrap; padding:0 0 54px; pointer-events:none;}
   .legend-item{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-mute);}
   .dot{width:8px; height:8px; border-radius:50%; flex:none;}
   .dot.op{background:var(--blue); box-shadow:0 0 8px var(--blue);}
@@ -81,8 +81,9 @@
 
   /* graph nodes */
   .node{cursor:pointer;}
-  .node .ring{fill:none; stroke-width:1.6; transition:filter .15s ease;}
-  .node .core{transition:r .15s ease;}
+  .node .hit{pointer-events:all;}
+  .node .ring{fill:none; stroke-width:1.6; transition:filter .15s ease; pointer-events:none;}
+  .node .core{transition:r .15s ease; pointer-events:none;}
   .node .label{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; fill:var(--ink-2); text-anchor:middle; pointer-events:none;}
   .node.not .ring{stroke:var(--grey);}
   .node.not .core{fill:var(--grey);}
@@ -149,6 +150,10 @@
   @media (max-width:860px){
     .hero{min-height:1100px;}
     h1{max-width:none;}
+    .hero-content{
+      background:linear-gradient(180deg, var(--bg) 78%, transparent 100%);
+      padding-bottom:26px;
+    }
   }
 </style>
 
@@ -339,6 +344,7 @@
 
   function makeNode(n, cls, r, labelBelow, fontSize){
     const g = el('g', {class:'node '+cls, tabindex:'0', role:'button', 'data-agent': n.id || ''});
+    g.appendChild(el('circle', {class:'hit', cx:n.x, cy:n.y, r: r+20, fill:'transparent'}));
     g.appendChild(el('circle', {class:'ring', cx:n.x, cy:n.y, r: r+6}));
     g.appendChild(el('circle', {class:'core', cx:n.x, cy:n.y, r: r*0.42}));
     if(labelBelow){
