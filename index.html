@@ -81,6 +81,7 @@
 
   /* graph nodes */
   .node{cursor:pointer;}
+  .node.you{cursor:default;}
   .node .hit{pointer-events:all;}
   .node .ring{fill:none; stroke-width:1.6; transition:filter .15s ease; pointer-events:none;}
   .node .core{transition:r .15s ease; pointer-events:none;}
@@ -148,7 +149,7 @@
   }
 
   @media (max-width:860px){
-    .hero{min-height:1100px;}
+    .hero{min-height:860px;}
     h1{max-width:none;}
     .hero-content{
       background:linear-gradient(180deg, var(--bg) 78%, transparent 100%);
@@ -170,7 +171,7 @@
 </nav>
 
 <div class="hero">
-  <div class="graph-layer"><svg id="graph" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice"></svg></div>
+  <div class="graph-layer"><svg id="graph" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg></div>
   <div class="hero-content wrap">
     <p class="eyebrow">agentic gtm agency</p>
     <h1>A marketing agency with <span class="hl-amber">one person</span> on staff.</h1>
@@ -311,6 +312,11 @@
   });
 
   const svg = document.getElementById('graph');
+  function updateGraphAspect(){
+    svg.setAttribute('preserveAspectRatio', window.matchMedia('(max-width:860px)').matches ? 'xMidYMax meet' : 'xMidYMid meet');
+  }
+  updateGraphAspect();
+  window.addEventListener('resize', updateGraphAspect);
   const edgesLayer = el('g', {class:'edges'});
   const ambLayer = el('g', {class:'ambient'});
   const nodesLayer = el('g', {class:'nodes'});
@@ -343,7 +349,9 @@
   });
 
   function makeNode(n, cls, r, labelBelow, fontSize){
-    const g = el('g', {class:'node '+cls, tabindex:'0', role:'button', 'data-agent': n.id || ''});
+    const attrs = {class:'node '+cls};
+    if(n.id){ attrs.tabindex = '0'; attrs.role = 'button'; attrs['data-agent'] = n.id; }
+    const g = el('g', attrs);
     g.appendChild(el('circle', {class:'hit', cx:n.x, cy:n.y, r: r+20, fill:'transparent'}));
     g.appendChild(el('circle', {class:'ring', cx:n.x, cy:n.y, r: r+6}));
     g.appendChild(el('circle', {class:'core', cx:n.x, cy:n.y, r: r*0.42}));
@@ -372,12 +380,32 @@
     needs:['Nothing blocking on its own — it runs as soon as a Mind has work to route']
   };
 
+  const MIND_INDEX = {};
+  MINDS.forEach(m => MIND_INDEX[m.id] = m);
+
   const overlay = document.getElementById('overlay');
   const panelContent = document.getElementById('panel-content');
 
+  function openMind(m){
+    const rows = m.agents.map(a =>
+      `<li><span class="chip ${a.status}" style="margin:0 8px 4px 0;">${STATUS_LABEL[a.status]}</span>${a.name}</li>`
+    ).join('');
+    panelContent.innerHTML = `
+      <div class="mind-tag">${m.phase}</div>
+      <h3 id="panel-title">${m.name}</h3>
+      <div class="agent-id mono">${m.agents.length} agent${m.agents.length===1?'':'s'}</div>
+      <span class="chip ${m.future ? 'not' : 'scaf'}">${m.future ? 'Not started' : 'Active build'}</span>
+      <div class="panel-block"><h4>What this Mind covers</h4><p>${m.note}</p></div>
+      <div class="panel-block"><h4>Agents in this Mind</h4><ul style="list-style:none; padding:0; margin:0;">${rows}</ul></div>
+    `;
+    overlay.classList.add('open');
+    location.hash = 'agent=' + m.id;
+    document.getElementById('panel-close').focus();
+  }
+
   function openAgent(id){
     const a = AGENT_INDEX[id];
-    if(!a) return;
+    if(!a){ if(MIND_INDEX[id]) openMind(MIND_INDEX[id]); return; }
     const needsHtml = a.needs && a.needs.length
       ? `<div class="panel-block"><h4>Needed to go operational</h4><ul>${a.needs.map(n=>`<li>${n}</li>`).join('')}</ul></div>`
       : '';
@@ -417,7 +445,7 @@
   window.addEventListener('hashchange', checkHash);
   function checkHash(){
     const m = location.hash.match(/agent=([\w-]+)/);
-    if(m && AGENT_INDEX[m[1]]) openAgent(m[1]);
+    if(m && (AGENT_INDEX[m[1]] || MIND_INDEX[m[1]])) openAgent(m[1]);
   }
   checkHash();
 </script>
