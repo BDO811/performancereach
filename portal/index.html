@@ -188,9 +188,7 @@
 
     onAuthStateChanged(auth, (user) => {
       if(user){
-        formView.classList.add("hide");
-        portalView.classList.add("show");
-        userEmail.textContent = user.email;
+        window.location.href = "/architecture/";
       } else {
         formView.classList.remove("hide");
         portalView.classList.remove("show");

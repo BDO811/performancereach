@@ -171,16 +171,16 @@
 </nav>
 
 <div class="hero">
-  <div class="graph-layer"><svg id="graph" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="graph-layer"><svg id="graph" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid meet"></svg></div>
   <div class="hero-content wrap">
-    <p class="eyebrow">agentic gtm agency</p>
-    <h1>A marketing agency with <span class="hl-amber">one person</span> on staff.</h1>
-    <p class="lede">Every campaign, every audit, every report runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">six operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
+    <p class="eyebrow">agentic services company</p>
+    <h1>A services company with <span class="hl-amber">one person</span> on staff.</h1>
+    <p class="lede">Every campaign, every design, every piece of writing, every research question runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">eight operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
     <div class="stats">
       <div class="stat"><div class="n mono">1</div><div class="l">Operator</div></div>
-      <div class="stat"><div class="n mono">6</div><div class="l">Minds</div></div>
-      <div class="stat"><div class="n mono">21</div><div class="l">Agents</div></div>
-      <div class="stat"><div class="n mono" style="color:var(--amber)">9</div><div class="l">Built</div></div>
+      <div class="stat"><div class="n mono">8</div><div class="l">Minds</div></div>
+      <div class="stat"><div class="n mono">30</div><div class="l">Agents</div></div>
+      <div class="stat"><div class="n mono" style="color:var(--amber)">21</div><div class="l">Built</div></div>
       <div class="stat"><div class="n mono">1</div><div class="l">Customer</div></div>
     </div>
   </div>
@@ -196,7 +196,7 @@
     <div class="section-head">
       <p class="eyebrow">where things stand</p>
       <h2>Right now</h2>
-      <p>Nine agents are built and waiting on live account access. GEO/citation tracking needs nothing and can already run. The other twelve are scoped but not started — they wait for Phase 1 to prove out first. Click any node above to see what it does.</p>
+      <p>21 agents are built across five Minds — Paid Social, SEO/GEO, Design, Writing/Docs, Research — most waiting on live account access. GEO/citation tracking and the whole Research Mind need no credentials and can already run. Analytics & Reporting, Email/Lifecycle, and Client Intake are scoped but not started. Click any node above to see what it does.</p>
     </div>
   </div>
 </section>
@@ -264,12 +264,67 @@
         {id:'anomaly-alert', name:'Alerts', status:'not', role:'Flags sudden metric swings between cycles.'},
       ]
     },
-    { id:'creative-prod', name:'Creative Prod.', phase:'Phase 2', future:true,
-      note:'Turns briefs and copy into finished assets at scale.',
+    { id:'design', name:'Design', phase:'Phase 1', future:false,
+      note:'Brand system, ad creative, web/UI, and deck design — all grounded in the client\'s real brand, never a template.',
       agents:[
-        {id:'asset-generator', name:'Assets', status:'not', role:'Canva-driven visual production.'},
-        {id:'brand-compliance', name:'Brand Check', status:'not', role:'Checks output against brand rules before publish.'},
-        {id:'content-calendar', name:'Calendar', status:'not', role:'Schedules and sequences publishing across channels.'},
+        {id:'design-brand-identity', name:'Brand/Identity', status:'scaf',
+         role:'Defines or audits a client\'s brand system — color, type, logo rules, voice.',
+         detail:'Builds the brand reference file every other Design agent reads from: real hex values and typefaces pulled from the client\'s actual site/assets, never guessed, plus a voice/tone description with real example lines.',
+         needs:['Read access to the client\'s live site or brand asset folder']},
+        {id:'design-ad-creative', name:'Ad Creative', status:'scaf',
+         role:'Produces the actual visual ad assets from the Paid Social Mind\'s brief.',
+         detail:'Builds the visual asset in every size each platform needs (feed, Stories/Reels vertical, TikTok native) from real brand colors/type/logo — never a generic stock-photo-and-gradient placeholder.',
+         needs:['Canva MCP connector authorized','Client brand assets on file']},
+        {id:'design-web-ui', name:'Web/UI', status:'scaf',
+         role:'Designs landing pages, web UI, and app screens in the client\'s real brand.',
+         detail:'Produces a full design spec with real copy in place (never lorem ipsum) and, where useful, an actual working HTML/CSS mockup rather than just a description.',
+         needs:['Brand file populated first','Real copy from the Writing/Docs Mind or the client']},
+        {id:'design-deck', name:'Deck', status:'scaf',
+         role:'Designs pitch decks, one-pagers, and investor/board updates.',
+         detail:'Gets the narrative arc right first — one slide, one idea — then applies the client\'s real brand. Numbers and claims come from the client or the Research Mind, never fabricated to fill a slide.',
+         needs:['Brand file populated first','Source data/claims from the client or Research Mind']},
+      ]
+    },
+    { id:'writing-docs', name:'Writing/Docs', phase:'Phase 1', future:false,
+      note:'Copy, long-form content, technical docs, and editing — the words behind everything else.',
+      agents:[
+        {id:'docs-copywriting', name:'Copywriting', status:'scaf',
+         role:'Writes general marketing copy — website, email, sales one-pagers.',
+         detail:'Distinct from the Paid Social Mind\'s ad-specific copy: website copy, email sequences, sales one-pagers, written from the reader\'s side in the client\'s real voice.',
+         needs:['Brand file for voice/tone','Real product facts from the client']},
+        {id:'docs-content', name:'Long-form Content', status:'scaf',
+         role:'Writes blog posts, articles, and case studies from a brief.',
+         detail:'Takes the SEO/GEO Mind\'s content brief and writes the actual piece — matching the target search intent the brief was built for, not just reading well in isolation.',
+         needs:['A content brief from the SEO/GEO Mind','Brand file for voice/tone']},
+        {id:'docs-technical', name:'Technical Docs', status:'scaf',
+         role:'Writes READMEs, API docs, and user guides grounded in the real product.',
+         detail:'Reads the client\'s actual code/API/product where accessible rather than describing a generic version of "a product like this" — accuracy over polish.',
+         needs:['Read access to the client\'s real codebase/API/product']},
+        {id:'docs-editing', name:'Editing', status:'scaf',
+         role:'Edits and proofreads any written deliverable before it ships.',
+         detail:'The last pass before anything written goes out: line edits for clarity and brand-voice consistency, internal-consistency checks, a clean final version — never a rewrite of the author\'s actual intent.',
+         needs:['Nothing blocking — runs against any draft already on file']},
+      ]
+    },
+    { id:'research', name:'Research', phase:'Phase 1', future:false,
+      note:'Market, competitive, customer, and data research — the evidence behind every other Mind\'s work.',
+      agents:[
+        {id:'research-market', name:'Market', status:'scaf',
+         role:'Sizes markets and maps industry landscapes — TAM/SAM/SOM, trends.',
+         detail:'Every figure sourced and cited; a market-size claim with no source is worse than saying no reliable public number exists and showing the best proxy instead.',
+         needs:['Nothing blocking — runs on public research today']},
+        {id:'research-competitive', name:'Competitive', status:'scaf',
+         role:'Tracks competitor positioning, pricing, and messaging.',
+         detail:'Maps who the client actually competes with (not just the biggest names), pulling positioning and pricing from competitors\' real public sites and ads.',
+         needs:['Nothing blocking — runs on public research today']},
+        {id:'research-customer', name:'Customer', status:'scaf',
+         role:'Synthesizes customer/user research into real patterns.',
+         detail:'Turns interviews, surveys, and review mining into patterns grounded in actual quotes and counts — "three of eight interviews mentioned X," not "customers feel X."',
+         needs:['Real customer data from the client for anything beyond public review mining']},
+        {id:'research-data', name:'Data/Quant', status:'scaf',
+         role:'Runs quantitative deep-dives on the client\'s own data.',
+         detail:'Cohort/funnel breakdowns and root-cause analysis on metric moves, with the actual numbers and method shown — never presents correlation as causation.',
+         needs:['Access to the client\'s real underlying data']},
       ]
     },
     { id:'lifecycle', name:'Lifecycle', phase:'Phase 3', future:true,
@@ -298,10 +353,10 @@
     return n;
   }
 
-  const VB_W = 1600, VB_H = 900;
-  const OPERATOR = {x: 1160, y: 46};
-  const COS = {x: 1160, y: 156};
-  const mindXs = [700, 870, 1040, 1210, 1380, 1550];
+  const VB_W = 2400, VB_H = 900;
+  const OPERATOR = {x: 1680, y: 46};
+  const COS = {x: 1680, y: 156};
+  const mindXs = [1032, 1217, 1402, 1587, 1772, 1957, 2142, 2328];
   MINDS.forEach((m,i)=>{
     m.x = mindXs[i]; m.y = 300;
     const n = m.agents.length;
@@ -344,7 +399,7 @@
     const cx = Math.random()*VB_W, cy = Math.random()*VB_H*0.85;
     ambLayer.appendChild(el('circle', {cx, cy, r: (Math.random()*1.6+0.5).toFixed(2), class:'amb'}));
   }
-  [[OPERATOR,{x:1580,y:250}], [COS,{x:1580,y:40}]].forEach(([a,b])=>{
+  [[OPERATOR,{x:2380,y:250}], [COS,{x:2380,y:40}]].forEach(([a,b])=>{
     edgesLayer.appendChild(el('line', {x1:a.x,y1:a.y,x2:b.x,y2:b.y, class:'edge not', 'stroke-dasharray':'2 5'}));
   });
 
@@ -365,7 +420,7 @@
   }
 
   makeNode({...OPERATOR, id:null}, 'you', 12, 'OPERATOR');
-  makeNode({...COS, id:'gtm-chief-of-staff'}, 'hub', 16, 'CHIEF OF STAFF');
+  makeNode({...COS, id:'chief-of-staff'}, 'hub', 16, 'CHIEF OF STAFF');
   MINDS.forEach(m=>{
     makeNode(m, m.future ? 'not' : 'scaf', 12, m.name.toUpperCase());
     m.agents.forEach(a=> makeNode(a, edgeClass(a.status), 7, a.name, m.future ? 9.5 : 11));
@@ -373,11 +428,11 @@
 
   const AGENT_INDEX = {};
   MINDS.forEach(m=>m.agents.forEach(a=>AGENT_INDEX[a.id] = {...a, mindName:m.name}));
-  AGENT_INDEX['gtm-chief-of-staff'] = {
-    id:'gtm-chief-of-staff', name:'Chief of Staff', status:'scaf', mindName:'Orchestrator',
-    role:'Routes work across every Mind and gates every external action for approval.',
-    detail:'The only agent that talks to every Mind. It reads the sealed client’s config, dispatches work to the right specialist, and collects every proposed spend or publish action into one place for a human to approve before anything goes live.',
-    needs:['Nothing blocking on its own — it runs as soon as a Mind has work to route']
+  AGENT_INDEX['chief-of-staff'] = {
+    id:'chief-of-staff', name:'Chief of Staff', status:'scaf', mindName:'Orchestrator',
+    role:'Plans every cycle and gates every external action for approval.',
+    detail:'Reads the sealed client’s config and decides what each Mind should do, returning a structured plan the harness executes. It has no ability to call other agents itself — that division of labor is the point — and every proposed spend or publish action gets surfaced for a human to approve before anything goes live.',
+    needs:['Nothing blocking on its own — it runs as soon as a Mind has work to plan for']
   };
 
   const MIND_INDEX = {};
