@@ -1,0 +1,451 @@
+<meta charset="utf-8">
+<title>PerformanceReach — The Agentic Agency</title>
+<style>
+  :root{
+    --bg:#08090C; --bg-2:#0D0F14; --grid-line: rgba(255,255,255,0.035);
+    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280; --border:#22252C;
+    --amber:#E0954F; --amber-dim:#5A3F22; --blue:#5B9BFF; --blue-dim:#1E3352;
+    --grey:#4A4F59; --grey-dim:#1C1E24;
+    --radius:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+  a{color:inherit;}
+  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+
+  nav{position:relative; z-index:5;}
+  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
+  .word{display:flex; align-items:center; gap:9px; font-weight:800; letter-spacing:-.02em; font-size:15px;}
+  .word b{color:var(--amber); font-weight:800;}
+  .mark{flex:none;}
+  .navlinks{display:flex; gap:22px; font-size:13px; color:var(--ink-mute);}
+  .navlinks a{text-decoration:none;}
+  .navlinks a:hover{color:var(--ink);}
+
+  .hero{
+    position:relative; overflow:hidden;
+    min-height:860px;
+    background:
+      radial-gradient(ellipse at 75% 20%, rgba(224,149,79,0.10), transparent 55%),
+      radial-gradient(ellipse at 85% 55%, rgba(91,155,255,0.07), transparent 55%),
+      var(--bg);
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image: radial-gradient(ellipse at 60% 40%, black 40%, transparent 85%);
+    pointer-events:none;
+  }
+  .graph-layer{position:absolute; inset:0; z-index:1;}
+  .graph-layer svg{width:100%; height:100%; display:block;}
+
+  .hero-content{position:relative; z-index:2; padding:88px 0 0; pointer-events:none;}
+  .eyebrow{
+    font-size:12px; letter-spacing:.11em; text-transform:uppercase; color:var(--amber);
+    margin:0 0 18px; font-weight:650;
+  }
+  h1{
+    font-size:clamp(32px,4.6vw,52px); font-weight:800; letter-spacing:-.03em; line-height:1.08;
+    margin:0 0 20px; text-wrap:balance; max-width:15ch;
+  }
+  h1 .hl-blue{color:var(--blue);}
+  h1 .hl-amber{color:var(--amber);}
+  .lede{font-size:16px; line-height:1.6; color:var(--ink-2); max-width:46ch; margin:0 0 30px;}
+
+  .stats{display:flex; flex-wrap:wrap; gap:30px; margin-bottom:10px;}
+  .stat .n{font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
+  .stat .l{font-size:11px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.07em; margin-top:2px;}
+
+  .legend{position:relative; z-index:2; display:flex; gap:20px; flex-wrap:wrap; padding:0 0 54px; pointer-events:none;}
+  .legend-item{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-mute);}
+  .dot{width:8px; height:8px; border-radius:50%; flex:none;}
+  .dot.op{background:var(--blue); box-shadow:0 0 8px var(--blue);}
+  .dot.scaf{background:var(--amber); box-shadow:0 0 8px var(--amber);}
+  .dot.not{background:var(--grey);}
+
+  section.status{padding:56px 0 70px; border-top:1px solid var(--border);}
+  .section-head{max-width:64ch; margin-bottom:8px;}
+  .section-head .eyebrow{margin-bottom:10px;}
+  .section-head h2{font-size:22px; font-weight:800; letter-spacing:-.01em; margin:0 0 10px;}
+  .section-head p{color:var(--ink-mute); font-size:14.5px; line-height:1.6; margin:0;}
+
+  footer{padding:30px 0 56px; border-top:1px solid var(--border); font-size:12px; color:var(--ink-mute);}
+
+  /* graph nodes */
+  .node{cursor:pointer;}
+  .node.you{cursor:default;}
+  .node .hit{pointer-events:all;}
+  .node .ring{fill:none; stroke-width:1.6; transition:filter .15s ease; pointer-events:none;}
+  .node .core{transition:r .15s ease; pointer-events:none;}
+  .node .label{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; fill:var(--ink-2); text-anchor:middle; pointer-events:none;}
+  .node.not .ring{stroke:var(--grey);}
+  .node.not .core{fill:var(--grey);}
+  .node.not .label{fill:var(--ink-mute);}
+  .node.scaf .ring{stroke:var(--amber); filter:drop-shadow(0 0 6px rgba(224,149,79,.55));}
+  .node.scaf .core{fill:var(--amber);}
+  .node.op .ring{stroke:var(--blue); filter:drop-shadow(0 0 6px rgba(91,155,255,.55));}
+  .node.op .core{fill:var(--blue);}
+  .node.hub .ring{stroke:var(--amber); stroke-width:2; filter:drop-shadow(0 0 12px rgba(224,149,79,.75));}
+  .node.hub .core{fill:var(--amber);}
+  .node.you .ring{stroke:var(--ink); stroke-width:1.6;}
+  .node.you .core{fill:var(--ink);}
+  .node:hover .core{r:6;}
+  .node:focus-visible{outline:none;}
+  .node:focus-visible .ring{filter:drop-shadow(0 0 10px rgba(255,255,255,.6));}
+  .edge{stroke-width:1; fill:none;}
+  .edge.not{stroke:var(--grey-dim);}
+  .edge.scaf{stroke:var(--amber-dim);}
+  .edge.op{stroke:var(--blue-dim);}
+  .amb{fill:var(--ink-mute); opacity:.35;}
+
+  /* detail overlay */
+  .overlay{
+    position:fixed; inset:0; z-index:50; display:none;
+    background:color-mix(in srgb, var(--bg) 65%, transparent);
+    backdrop-filter:blur(3px);
+  }
+  .overlay.open{display:block;}
+  .panel{
+    position:absolute; top:0; right:0; height:100%; width:min(480px,100%);
+    background:var(--bg-2); border-left:1px solid var(--border);
+    padding:28px 26px 32px; overflow-y:auto;
+    transform:translateX(100%); transition:transform .22s ease;
+  }
+  .overlay.open .panel{transform:translateX(0);}
+  @media (prefers-reduced-motion:reduce){ .panel{transition:none;} }
+  .panel-close{
+    background:var(--grid-line); border:1px solid var(--border); color:var(--ink-mute);
+    width:32px; height:32px; border-radius:999px; font-size:15px; cursor:pointer; margin-bottom:22px;
+  }
+  .panel-close:hover{color:var(--ink);}
+  .panel .mind-tag{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--amber); font-weight:700; margin-bottom:8px;}
+  .panel h3{font-size:22px; font-weight:800; margin:0 0 4px; letter-spacing:-.01em;}
+  .panel .agent-id{font-size:12px; color:var(--ink-mute); margin-bottom:16px;}
+  .panel .chip{
+    margin-bottom:20px; display:inline-block; font-size:9.5px; font-weight:750; text-transform:uppercase;
+    letter-spacing:.04em; padding:3px 8px; border-radius:999px;
+  }
+  .panel .chip.not{color:var(--grey); background:var(--grey-dim);}
+  .panel .chip.scaf{color:var(--amber); background:var(--amber-dim);}
+  .panel .chip.op{color:var(--blue); background:var(--blue-dim);}
+  .panel-block{margin-bottom:22px;}
+  .panel-block h4{
+    font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-mute);
+    margin:0 0 8px; font-weight:700;
+  }
+  .panel-block p{font-size:14px; line-height:1.6; color:var(--ink-2); margin:0;}
+  .panel-block ul{margin:0; padding-left:18px; font-size:13.5px; line-height:1.6; color:var(--ink-2);}
+  .empty-state{
+    border:1px dashed var(--border); border-radius:9px; padding:16px;
+    font-size:13px; color:var(--ink-mute); line-height:1.5;
+  }
+
+  @media (max-width:860px){
+    .hero{min-height:860px;}
+    h1{max-width:none;}
+    .hero-content{
+      background:linear-gradient(180deg, var(--bg) 78%, transparent 100%);
+      padding-bottom:26px;
+    }
+  }
+</style>
+
+<nav>
+  <div class="wrap">
+    <div class="word">
+      <svg class="mark" width="20" height="20" viewBox="0 0 20 20"><circle cx="4" cy="16" r="2.4" fill="var(--grey)"/><circle cx="16" cy="4" r="2.4" fill="var(--amber)"/><circle cx="10" cy="10" r="2.8" fill="var(--amber)"/><line x1="4" y1="16" x2="10" y2="10" stroke="var(--grey)" stroke-width="1.2"/><line x1="10" y1="10" x2="16" y2="4" stroke="var(--amber)" stroke-width="1.2"/></svg>
+      performance<b>reach</b>
+    </div>
+    <div class="navlinks">
+      <a href="#status">Status</a>
+    </div>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="graph-layer"><svg id="graph" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="hero-content wrap">
+    <p class="eyebrow">agentic gtm agency</p>
+    <h1>A marketing agency with <span class="hl-amber">one person</span> on staff.</h1>
+    <p class="lede">Every campaign, every audit, every report runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">six operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
+    <div class="stats">
+      <div class="stat"><div class="n mono">1</div><div class="l">Operator</div></div>
+      <div class="stat"><div class="n mono">6</div><div class="l">Minds</div></div>
+      <div class="stat"><div class="n mono">21</div><div class="l">Agents</div></div>
+      <div class="stat"><div class="n mono" style="color:var(--amber)">9</div><div class="l">Built</div></div>
+      <div class="stat"><div class="n mono">1</div><div class="l">Customer</div></div>
+    </div>
+  </div>
+  <div class="legend wrap">
+    <div class="legend-item"><span class="dot not"></span>Not started</div>
+    <div class="legend-item"><span class="dot scaf"></span>Scaffolded — needs credentials</div>
+    <div class="legend-item"><span class="dot op"></span>Operational</div>
+  </div>
+</div>
+
+<section class="status" id="status">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">where things stand</p>
+      <h2>Right now</h2>
+      <p>Nine agents are built and waiting on live account access. GEO/citation tracking needs nothing and can already run. The other twelve are scoped but not started — they wait for Phase 1 to prove out first. Click any node above to see what it does.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">First customer: Amplifier Health, onboarded as a sealed pilot. Operated from a single Claude Code workspace.</div>
+</footer>
+
+<div class="overlay" id="overlay">
+  <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
+    <button class="panel-close" id="panel-close" aria-label="Close">✕</button>
+    <div id="panel-content"></div>
+  </div>
+</div>
+
+<script>
+  const MINDS = [
+    { id:'paid-social', name:'Paid Social', phase:'Phase 1', future:false,
+      note:'Facebook, Instagram, TikTok, Reels — campaign strategy through spend reporting.',
+      agents:[
+        {id:'gtm-paid-social-strategist', name:'Strategist', status:'scaf',
+         role:'Designs campaign structure, audience stacks, and placement tests across Meta and TikTok.',
+         detail:'Given a goal and a budget range, proposes campaign objective, audience/placement mix, and a test plan with a numeric definition of what a "win" looks like before any spend happens.',
+         needs:['Meta ad account ID + System User token (ads_management, ads_read)','TikTok advertiser ID + access token']},
+        {id:'gtm-paid-social-creative', name:'Creative', status:'scaf',
+         role:'Writes ad copy variants and creative briefs per platform and format.',
+         detail:'Produces 3–5 copy variants per ad set plus a shot-list-level creative brief, sized for how each platform actually reads — a TikTok native caption is not a Meta feed headline.',
+         needs:['Canva MCP connector authorized','Client brand assets on file']},
+        {id:'gtm-paid-social-budget-bid', name:'Budget/Bid', status:'scaf',
+         role:'Watches spend pacing and proposes budget or bid changes — never executes one.',
+         detail:'Compares live spend and performance against the Strategist’s test-plan thresholds and recommends what to scale or pause. The recommendation always goes to a human; this agent has no execute path, by design.',
+         needs:['Meta + TikTok API access (read minimum)','Confirmed spend-approval owner']},
+        {id:'gtm-paid-social-performance', name:'Performance', status:'scaf',
+         role:'Reads CPA, ROAS, CTR, and frequency, and flags winners and underperformers.',
+         detail:'A weekly (soon daily) readout across every active ad set, with a plain call on what’s clearly working, what’s clearly not, and what’s still too early to judge.',
+         needs:['Meta + TikTok API access']},
+      ]
+    },
+    { id:'seo-geo', name:'SEO / GEO', phase:'Phase 1', future:false,
+      note:'Organic search plus showing up inside AI answers, not just blue links.',
+      agents:[
+        {id:'gtm-seo-keyword-research', name:'Keywords', status:'scaf',
+         role:'Finds query and topic opportunities from Search Console data and competitive gaps.',
+         detail:'Clusters real Search Console query data into topic opportunities, ranked by traffic value against how hard they’d be to win, and flags where competitors cover ground the client doesn’t.',
+         needs:['Google Search Console service account + verified property']},
+        {id:'gtm-seo-content-brief', name:'Content Brief', status:'scaf',
+         role:'Turns keyword research into publish-ready content briefs with schema and linking guidance.',
+         detail:'One brief per piece: target query, an outline that actually answers it, internal links from the existing site, and the schema markup that helps it get picked up correctly.',
+         needs:['Confirmed CMS platform','Site crawl or sitemap access']},
+        {id:'gtm-seo-technical-audit', name:'Tech Audit', status:'scaf',
+         role:'Audits indexation, speed, and schema, and explains organic traffic drops.',
+         detail:'Pulls Coverage and Core Web Vitals data to find what’s actually blocking rankings, and ties any traffic drop to a specific technical cause rather than a shrug.',
+         needs:['Search Console + GA4 API access']},
+        {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'scaf',
+         role:'Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews.',
+         detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds.',
+         needs:['Nothing blocking — running manual query tests today']},
+      ]
+    },
+    { id:'analytics', name:'Analytics', phase:'Phase 2', future:true,
+      note:'Cross-channel weekly rollup once Phase 1 Minds are producing real data.',
+      agents:[
+        {id:'cross-channel-aggregator', name:'Aggregator', status:'not', role:'Blends paid social and SEO data into one dataset.'},
+        {id:'weekly-report-builder', name:'Reports', status:'not', role:'Produces the standing performance summary.'},
+        {id:'anomaly-alert', name:'Alerts', status:'not', role:'Flags sudden metric swings between cycles.'},
+      ]
+    },
+    { id:'creative-prod', name:'Creative Prod.', phase:'Phase 2', future:true,
+      note:'Turns briefs and copy into finished assets at scale.',
+      agents:[
+        {id:'asset-generator', name:'Assets', status:'not', role:'Canva-driven visual production.'},
+        {id:'brand-compliance', name:'Brand Check', status:'not', role:'Checks output against brand rules before publish.'},
+        {id:'content-calendar', name:'Calendar', status:'not', role:'Schedules and sequences publishing across channels.'},
+      ]
+    },
+    { id:'lifecycle', name:'Lifecycle', phase:'Phase 3', future:true,
+      note:'Klaviyo/HubSpot-driven retention and nurture.',
+      agents:[
+        {id:'segmentation', name:'Segments', status:'not', role:'Defines lifecycle segments from behavior data.'},
+        {id:'campaign-flow-builder', name:'Flows', status:'not', role:'Builds nurture flows in Klaviyo/HubSpot.'},
+        {id:'deliverability-monitor', name:'Delivery', status:'not', role:'Watches sender reputation and bounce/spam rates.'},
+      ]
+    },
+    { id:'intake', name:'Intake', phase:'Phase 4', future:true,
+      note:'Unlocks onboarding new customers once Phase 1–3 are proven.',
+      agents:[
+        {id:'discovery-intake', name:'Discovery', status:'not', role:'Runs new-client discovery and requirements gathering.'},
+        {id:'contract-pricing', name:'Pricing', status:'not', role:'Drafts scope and pricing for a new customer.'},
+        {id:'onboarding-setup', name:'Onboard', status:'not', role:'Provisions a new sealed customer workspace end-to-end.'},
+      ]
+    },
+  ];
+
+  const STATUS_LABEL = {not:'Not started', scaf:'Scaffolded', op:'Operational'};
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs){
+    const n = document.createElementNS(NS, tag);
+    for(const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  const VB_W = 1600, VB_H = 900;
+  const OPERATOR = {x: 1160, y: 46};
+  const COS = {x: 1160, y: 156};
+  const mindXs = [700, 870, 1040, 1210, 1380, 1550];
+  MINDS.forEach((m,i)=>{
+    m.x = mindXs[i]; m.y = 300;
+    const n = m.agents.length;
+    const grid = n === 4
+      ? [[-52,0],[52,0],[-52,66],[52,66]]
+      : [[-44,0],[44,0],[0,58]];
+    m.agents.forEach((a,j)=>{ const [dx,dy] = grid[j]||[0,0]; a.x = m.x + dx; a.y = 458 + dy; });
+  });
+
+  const svg = document.getElementById('graph');
+  function updateGraphAspect(){
+    svg.setAttribute('preserveAspectRatio', window.matchMedia('(max-width:860px)').matches ? 'xMidYMax meet' : 'xMidYMid meet');
+  }
+  updateGraphAspect();
+  window.addEventListener('resize', updateGraphAspect);
+  const edgesLayer = el('g', {class:'edges'});
+  const ambLayer = el('g', {class:'ambient'});
+  const nodesLayer = el('g', {class:'nodes'});
+  svg.append(ambLayer, edgesLayer, nodesLayer);
+
+  function edgeClass(status){ return status==='op' ? 'op' : status==='scaf' ? 'scaf' : 'not'; }
+  function line(a,b,cls){
+    const l = el('line', {x1:a.x, y1:a.y, x2:b.x, y2:b.y, class:'edge '+cls});
+    edgesLayer.appendChild(l);
+  }
+  function curve(a,b,cls){
+    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2 - 26;
+    const p = el('path', {d:`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`, class:'edge '+cls});
+    edgesLayer.appendChild(p);
+  }
+
+  line(OPERATOR, COS, 'scaf');
+  MINDS.forEach(m=>{
+    curve(COS, m, m.future ? 'not' : 'scaf');
+    m.agents.forEach(a=> line(m, a, edgeClass(a.status)));
+  });
+
+  // ambient background points + long signal lines
+  for(let i=0;i<70;i++){
+    const cx = Math.random()*VB_W, cy = Math.random()*VB_H*0.85;
+    ambLayer.appendChild(el('circle', {cx, cy, r: (Math.random()*1.6+0.5).toFixed(2), class:'amb'}));
+  }
+  [[OPERATOR,{x:1580,y:250}], [COS,{x:1580,y:40}]].forEach(([a,b])=>{
+    edgesLayer.appendChild(el('line', {x1:a.x,y1:a.y,x2:b.x,y2:b.y, class:'edge not', 'stroke-dasharray':'2 5'}));
+  });
+
+  function makeNode(n, cls, r, labelBelow, fontSize){
+    const attrs = {class:'node '+cls};
+    if(n.id){ attrs.tabindex = '0'; attrs.role = 'button'; attrs['data-agent'] = n.id; }
+    const g = el('g', attrs);
+    g.appendChild(el('circle', {class:'hit', cx:n.x, cy:n.y, r: r+20, fill:'transparent'}));
+    g.appendChild(el('circle', {class:'ring', cx:n.x, cy:n.y, r: r+6}));
+    g.appendChild(el('circle', {class:'core', cx:n.x, cy:n.y, r: r*0.42}));
+    if(labelBelow){
+      const t = el('text', {class:'label', x:n.x, y:n.y + r + 20, 'font-size': fontSize||11});
+      t.textContent = labelBelow;
+      g.appendChild(t);
+    }
+    nodesLayer.appendChild(g);
+    return g;
+  }
+
+  makeNode({...OPERATOR, id:null}, 'you', 12, 'OPERATOR');
+  makeNode({...COS, id:'gtm-chief-of-staff'}, 'hub', 16, 'CHIEF OF STAFF');
+  MINDS.forEach(m=>{
+    makeNode(m, m.future ? 'not' : 'scaf', 12, m.name.toUpperCase());
+    m.agents.forEach(a=> makeNode(a, edgeClass(a.status), 7, a.name, m.future ? 9.5 : 11));
+  });
+
+  const AGENT_INDEX = {};
+  MINDS.forEach(m=>m.agents.forEach(a=>AGENT_INDEX[a.id] = {...a, mindName:m.name}));
+  AGENT_INDEX['gtm-chief-of-staff'] = {
+    id:'gtm-chief-of-staff', name:'Chief of Staff', status:'scaf', mindName:'Orchestrator',
+    role:'Routes work across every Mind and gates every external action for approval.',
+    detail:'The only agent that talks to every Mind. It reads the sealed client’s config, dispatches work to the right specialist, and collects every proposed spend or publish action into one place for a human to approve before anything goes live.',
+    needs:['Nothing blocking on its own — it runs as soon as a Mind has work to route']
+  };
+
+  const MIND_INDEX = {};
+  MINDS.forEach(m => MIND_INDEX[m.id] = m);
+
+  const overlay = document.getElementById('overlay');
+  const panelContent = document.getElementById('panel-content');
+
+  function openMind(m){
+    const rows = m.agents.map(a =>
+      `<li><span class="chip ${a.status}" style="margin:0 8px 4px 0;">${STATUS_LABEL[a.status]}</span>${a.name}</li>`
+    ).join('');
+    panelContent.innerHTML = `
+      <div class="mind-tag">${m.phase}</div>
+      <h3 id="panel-title">${m.name}</h3>
+      <div class="agent-id mono">${m.agents.length} agent${m.agents.length===1?'':'s'}</div>
+      <span class="chip ${m.future ? 'not' : 'scaf'}">${m.future ? 'Not started' : 'Active build'}</span>
+      <div class="panel-block"><h4>What this Mind covers</h4><p>${m.note}</p></div>
+      <div class="panel-block"><h4>Agents in this Mind</h4><ul style="list-style:none; padding:0; margin:0;">${rows}</ul></div>
+    `;
+    overlay.classList.add('open');
+    location.hash = 'agent=' + m.id;
+    document.getElementById('panel-close').focus();
+  }
+
+  function openAgent(id){
+    const a = AGENT_INDEX[id];
+    if(!a){ if(MIND_INDEX[id]) openMind(MIND_INDEX[id]); return; }
+    const needsHtml = a.needs && a.needs.length
+      ? `<div class="panel-block"><h4>Needed to go operational</h4><ul>${a.needs.map(n=>`<li>${n}</li>`).join('')}</ul></div>`
+      : '';
+    const runsHtml = `<div class="panel-block"><h4>Recent output</h4><div class="empty-state">No runs yet — this pilot hasn’t gone live. Once it has, its reports show up here.</div></div>`;
+    panelContent.innerHTML = `
+      <div class="mind-tag">${a.mindName}</div>
+      <h3 id="panel-title">${a.name}</h3>
+      <div class="agent-id mono">${a.id}</div>
+      <span class="chip ${a.status}">${STATUS_LABEL[a.status]}</span>
+      <div class="panel-block"><h4>What it does</h4><p>${a.detail || a.role}</p></div>
+      ${needsHtml}
+      ${runsHtml}
+    `;
+    overlay.classList.add('open');
+    location.hash = 'agent=' + id;
+    document.getElementById('panel-close').focus();
+  }
+  function closePanel(){
+    overlay.classList.remove('open');
+    if(location.hash.startsWith('#agent=')) history.replaceState(null,'',location.pathname+location.search);
+  }
+
+  document.addEventListener('click', e=>{
+    const node = e.target.closest('[data-agent]');
+    if(node && node.getAttribute('data-agent')){ openAgent(node.getAttribute('data-agent')); return; }
+    if(e.target === overlay){ closePanel(); }
+  });
+  document.addEventListener('keydown', e=>{
+    if(e.key==='Escape') closePanel();
+    if(e.key==='Enter' && document.activeElement && document.activeElement.matches('[data-agent]')){
+      const id = document.activeElement.getAttribute('data-agent');
+      if(id) openAgent(id);
+    }
+  });
+  document.getElementById('panel-close').addEventListener('click', closePanel);
+
+  window.addEventListener('hashchange', checkHash);
+  function checkHash(){
+    const m = location.hash.match(/agent=([\w-]+)/);
+    if(m && (AGENT_INDEX[m[1]] || MIND_INDEX[m[1]])) openAgent(m[1]);
+  }
+  checkHash();
+</script>
