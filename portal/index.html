@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PerformanceReach — Client Portal</title>
+<style>
+  :root{
+    --bg:#08090C; --surface:#12141A; --surface-2:#1A1D24;
+    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280; --border:#22252C;
+    --amber:#E0954F; --amber-dim:#5A3F22;
+    --danger:#E0664F; --danger-dim:#4A241E;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
+    padding:24px;
+  }
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
+  .card{
+    width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; padding:32px 28px;
+  }
+  .word{display:flex; align-items:center; gap:9px; font-weight:800; letter-spacing:-.02em; font-size:16px; margin-bottom:6px;}
+  .word b{color:var(--amber);}
+  .eyebrow{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 26px;}
+  h1{font-size:19px; font-weight:750; margin:0 0 6px; letter-spacing:-.01em;}
+  .sub{font-size:13px; color:var(--ink-mute); margin:0 0 24px; line-height:1.5;}
+  label{display:block; font-size:12px; color:var(--ink-2); margin:0 0 6px;}
+  .field{margin-bottom:16px;}
+  input{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:9px;
+    padding:11px 12px; color:var(--ink); font-size:14px; font-family:inherit;
+  }
+  input:focus{outline:none; border-color:var(--amber);}
+  button.primary{
+    width:100%; background:var(--amber); color:#1A1206; border:none; border-radius:9px;
+    padding:12px; font-size:14px; font-weight:700; cursor:pointer; margin-top:6px;
+  }
+  button.primary:disabled{opacity:.55; cursor:default;}
+  button.primary:hover:not(:disabled){filter:brightness(1.08);}
+  .toggle{
+    text-align:center; margin-top:18px; font-size:13px; color:var(--ink-mute);
+  }
+  .toggle button{
+    background:none; border:none; color:var(--amber); font-size:13px; cursor:pointer; padding:0; font-family:inherit;
+  }
+  .error{
+    display:none; background:var(--danger-dim); color:var(--danger); border-radius:9px;
+    padding:10px 12px; font-size:12.5px; margin-bottom:16px; line-height:1.4;
+  }
+  .error.show{display:block;}
+  .portal-view{display:none; text-align:center;}
+  .portal-view.show{display:block;}
+  .form-view.hide{display:none;}
+  .portal-view .status{color:var(--ink-mute); font-size:13px; margin-bottom:22px;}
+  .portal-view .email{color:var(--ink); font-weight:650;}
+  button.ghost{
+    background:none; border:1px solid var(--border); color:var(--ink-2); border-radius:9px;
+    padding:9px 16px; font-size:13px; cursor:pointer; font-family:inherit;
+  }
+  button.ghost:hover{border-color:var(--amber); color:var(--amber);}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="word"><span>performance<b>reach</b></span></div>
+    <p class="eyebrow">client portal</p>
+
+    <div id="formView" class="form-view">
+      <h1 id="formTitle">Sign in</h1>
+      <p class="sub" id="formSub">Sign in to see your campaign status and reports.</p>
+      <div class="error" id="errorBox"></div>
+      <form id="authForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" autocomplete="current-password" required minlength="6">
+        </div>
+        <button type="submit" class="primary" id="submitBtn">Sign in</button>
+      </form>
+      <div class="toggle">
+        <span id="toggleText">New here?</span>
+        <button type="button" id="toggleBtn">Create an account</button>
+      </div>
+    </div>
+
+    <div id="portalView" class="portal-view">
+      <p class="status">Signed in as</p>
+      <p class="email" id="userEmail"></p>
+      <p class="status">There's nothing here yet — this is a placeholder confirming sign-in works. Reports and campaign status land here once a client is live.</p>
+      <button class="ghost" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signInWithEmailAndPassword,
+      createUserWithEmailAndPassword, signOut
+    } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCr30bj-pa3sv9H8h7rrijkvVmJWg5IH6A",
+      authDomain: "performancereach.firebaseapp.com",
+      projectId: "performancereach",
+      storageBucket: "performancereach.firebasestorage.app",
+      messagingSenderId: "118723320454",
+      appId: "1:118723320454:web:54b8b4a2a9a449d98d8f07"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let mode = "signin";
+    const formView = document.getElementById("formView");
+    const portalView = document.getElementById("portalView");
+    const formTitle = document.getElementById("formTitle");
+    const formSub = document.getElementById("formSub");
+    const submitBtn = document.getElementById("submitBtn");
+    const toggleText = document.getElementById("toggleText");
+    const toggleBtn = document.getElementById("toggleBtn");
+    const errorBox = document.getElementById("errorBox");
+    const userEmail = document.getElementById("userEmail");
+
+    function setMode(next){
+      mode = next;
+      errorBox.classList.remove("show");
+      if(mode === "signin"){
+        formTitle.textContent = "Sign in";
+        formSub.textContent = "Sign in to see your campaign status and reports.";
+        submitBtn.textContent = "Sign in";
+        toggleText.textContent = "New here?";
+        toggleBtn.textContent = "Create an account";
+      } else {
+        formTitle.textContent = "Create an account";
+        formSub.textContent = "Set a password to access your reports.";
+        submitBtn.textContent = "Create account";
+        toggleText.textContent = "Already have an account?";
+        toggleBtn.textContent = "Sign in";
+      }
+    }
+    toggleBtn.addEventListener("click", () => setMode(mode === "signin" ? "signup" : "signin"));
+
+    function showError(message){
+      errorBox.textContent = message;
+      errorBox.classList.add("show");
+    }
+
+    const FRIENDLY_ERRORS = {
+      "auth/invalid-email": "That email address doesn't look right.",
+      "auth/user-not-found": "No account with that email — try creating one.",
+      "auth/wrong-password": "That password doesn't match.",
+      "auth/invalid-credential": "Email or password doesn't match.",
+      "auth/email-already-in-use": "An account with that email already exists — sign in instead.",
+      "auth/weak-password": "Password needs to be at least 6 characters."
+    };
+
+    document.getElementById("authForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove("show");
+      submitBtn.disabled = true;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      try {
+        if(mode === "signin"){
+          await signInWithEmailAndPassword(auth, email, password);
+        } else {
+          await createUserWithEmailAndPassword(auth, email, password);
+        }
+      } catch(err){
+        showError(FRIENDLY_ERRORS[err.code] || "Something went wrong — try again.");
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    document.getElementById("signOutBtn").addEventListener("click", () => signOut(auth));
+
+    onAuthStateChanged(auth, (user) => {
+      if(user){
+        formView.classList.add("hide");
+        portalView.classList.add("show");
+        userEmail.textContent = user.email;
+      } else {
+        formView.classList.remove("hide");
+        portalView.classList.remove("show");
+      }
+    });
+  </script>
+</body>
+</html>
