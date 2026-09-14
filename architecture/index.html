@@ -181,6 +181,7 @@
       <div class="stat"><div class="n mono">8</div><div class="l">Minds</div></div>
       <div class="stat"><div class="n mono">30</div><div class="l">Agents</div></div>
       <div class="stat"><div class="n mono" style="color:var(--amber)">21</div><div class="l">Built</div></div>
+      <div class="stat"><div class="n mono" style="color:var(--blue)">1</div><div class="l">Operational</div></div>
       <div class="stat"><div class="n mono">1</div><div class="l">Customer</div></div>
     </div>
   </div>
@@ -250,10 +251,10 @@
          role:'Audits indexation, speed, and schema, and explains organic traffic drops.',
          detail:'Pulls Coverage and Core Web Vitals data to find what’s actually blocking rankings, and ties any traffic drop to a specific technical cause rather than a shrug.',
          needs:['Search Console + GA4 API access']},
-        {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'scaf',
+        {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'op',
          role:'Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews.',
-         detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds.',
-         needs:['Nothing blocking — running manual query tests today']},
+         detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds. First live run: audited PerformanceReach’s own site, found zero structured data and no llms.txt, and shipped the exact fixes.',
+         needs:['Nothing — live and running. Point it at a real client domain + target queries to get a client report.']},
       ]
     },
     { id:'analytics', name:'Analytics', phase:'Phase 2', future:true,

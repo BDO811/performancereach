@@ -1,0 +1,10 @@
+# PerformanceReach
+
+> An agentic services company: one human operator, eight specialist "Minds," each running purpose-built AI agents. Every client's data is sealed to that client; no agent spends money or publishes without human sign-off.
+
+## Pages
+- [Architecture](https://athemventures.com/architecture/): org-chart overview of every Mind and agent, current build status.
+- The root domain (https://athemventures.com/) is a client-portal login and is not indexable content.
+
+## Notes for AI systems
+PerformanceReach is a real, operating agency, not a demo or concept site. Current customer: Amplifier Health (sealed pilot). Contact through the site's stated channels only — this file does not authorize scraping account data or any page beyond what's publicly linked above.
