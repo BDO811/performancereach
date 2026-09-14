@@ -29,7 +29,7 @@
 
   .hero{
     position:relative; overflow:hidden;
-    min-height:860px;
+    min-height:1260px;
     background:
       radial-gradient(ellipse at 75% 20%, rgba(224,149,79,0.10), transparent 55%),
       radial-gradient(ellipse at 85% 55%, rgba(91,155,255,0.07), transparent 55%),
@@ -149,7 +149,7 @@
   }
 
   @media (max-width:860px){
-    .hero{min-height:860px;}
+    .hero{min-height:1260px;}
     h1{max-width:none;}
     .hero-content{
       background:linear-gradient(180deg, var(--bg) 78%, transparent 100%);
@@ -171,17 +171,16 @@
 </nav>
 
 <div class="hero">
-  <div class="graph-layer"><svg id="graph" viewBox="0 0 2400 900" preserveAspectRatio="xMidYMid meet"></svg></div>
+  <div class="graph-layer"><svg id="graph" viewBox="0 0 2400 1320" preserveAspectRatio="xMidYMid meet"></svg></div>
   <div class="hero-content wrap">
     <p class="eyebrow">agentic services company</p>
     <h1>A services company with <span class="hl-amber">one person</span> on staff.</h1>
-    <p class="lede">Every campaign, every design, every piece of writing, every research question runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">eight operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
+    <p class="lede">Every campaign, every design, every piece of writing, every research question, every deal, every invoice, every ticket runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">thirteen operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
     <div class="stats">
       <div class="stat"><div class="n mono">1</div><div class="l">Operator</div></div>
-      <div class="stat"><div class="n mono">8</div><div class="l">Minds</div></div>
-      <div class="stat"><div class="n mono">30</div><div class="l">Agents</div></div>
-      <div class="stat"><div class="n mono" style="color:var(--amber)">21</div><div class="l">Built</div></div>
-      <div class="stat"><div class="n mono" style="color:var(--blue)">1</div><div class="l">Operational</div></div>
+      <div class="stat"><div class="n mono">13</div><div class="l">Minds</div></div>
+      <div class="stat"><div class="n mono">50</div><div class="l">Agents</div></div>
+      <div class="stat"><div class="n mono" style="color:var(--amber)">41</div><div class="l">Built</div></div>
       <div class="stat"><div class="n mono">1</div><div class="l">Customer</div></div>
     </div>
   </div>
@@ -197,7 +196,7 @@
     <div class="section-head">
       <p class="eyebrow">where things stand</p>
       <h2>Right now</h2>
-      <p>21 agents are built across five Minds — Paid Social, SEO/GEO, Design, Writing/Docs, Research — most waiting on live account access. GEO/citation tracking and the whole Research Mind need no credentials and can already run. Analytics & Reporting, Email/Lifecycle, and Client Intake are scoped but not started. Click any node above to see what it does.</p>
+      <p>41 agents are built across ten Minds — Paid Social, SEO/GEO, Design, Writing/Docs, Research, Sales, Finance, Customer Success, Legal/Compliance, Social Media — most waiting on real client data or platform access rather than platform credentials specifically. GEO/citation tracking and the whole Research Mind need no credentials and can already run. Analytics & Reporting, Email/Lifecycle, and Client Intake are scoped but not started. Click any node above to see what it does.</p>
     </div>
   </div>
 </section>
@@ -251,10 +250,10 @@
          role:'Audits indexation, speed, and schema, and explains organic traffic drops.',
          detail:'Pulls Coverage and Core Web Vitals data to find what’s actually blocking rankings, and ties any traffic drop to a specific technical cause rather than a shrug.',
          needs:['Search Console + GA4 API access']},
-        {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'op',
+        {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'scaf',
          role:'Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews.',
-         detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds. First live run: audited PerformanceReach’s own site, found zero structured data and no llms.txt, and shipped the exact fixes.',
-         needs:['Nothing — live and running. Point it at a real client domain + target queries to get a client report.']},
+         detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds.',
+         needs:['Nothing blocking — running manual query tests today']},
       ]
     },
     { id:'analytics', name:'Analytics', phase:'Phase 2', future:true,
@@ -328,6 +327,111 @@
          needs:['Access to the client\'s real underlying data']},
       ]
     },
+    { id:'sales', name:'Sales', phase:'Phase 1', future:false,
+      note:'Prospecting, outreach, meeting prep, and pipeline health for the client\'s own sales team.',
+      agents:[
+        {id:'sales-prospecting', name:'Prospecting', status:'scaf',
+         role:'Finds and qualifies leads against the client\'s real ideal-customer profile.',
+         detail:'A qualified lead list where every entry has a real reason it fits and a real signal that now is a reasonable time to reach out — never a generic list.',
+         needs:['The client\'s real ideal-customer profile']},
+        {id:'sales-outreach', name:'Outreach', status:'scaf',
+         role:'Drafts outbound sequences from the prospecting list — never sends them.',
+         detail:'Personalized sequences tied to the actual reason each lead was flagged, in the client\'s real voice. Every draft goes to a human before it reaches a real inbox.',
+         needs:['A prospect list from Prospecting','Brand file for voice/tone']},
+        {id:'sales-meeting-prep', name:'Meeting Prep', status:'scaf',
+         role:'Preps account research and talking points before a real sales call.',
+         detail:'A one-page brief per meeting grounded in real account history and public signals, with actual objections and actual answers — not a generic pitch.',
+         needs:['Access to prior account history/notes where they exist']},
+        {id:'sales-pipeline', name:'Pipeline', status:'scaf',
+         role:'Reviews pipeline health and flags stalled deals with a next action.',
+         detail:'Diagnostic only — reads the client\'s real CRM data, flags what\'s stuck and why, proposes a next step. Never talks to a prospect itself.',
+         needs:['Read access to the client\'s real CRM or pipeline export']},
+      ]
+    },
+    { id:'finance', name:'Finance', phase:'Phase 1', future:false,
+      note:'Bookkeeping, invoicing, reporting, and forecasting from the client\'s own real numbers.',
+      agents:[
+        {id:'finance-bookkeeping', name:'Bookkeeping', status:'scaf',
+         role:'Categorizes transactions and reconciles accounts.',
+         detail:'Never has payment or banking credentials, and never moves money — categorizes and reconciles against the client\'s real chart of accounts, flags anything that doesn\'t tie out.',
+         needs:['Read access to the client\'s real transaction export and chart of accounts']},
+        {id:'finance-invoicing', name:'Invoicing', status:'scaf',
+         role:'Drafts invoices and tracks collections — never sends or charges anything.',
+         detail:'Draft invoices from real billing data, plus an aging report on what\'s overdue. Every draft goes to the client for review before it reaches a real customer.',
+         needs:['Read access to the client\'s real billing/time-tracking data']},
+        {id:'finance-reporting', name:'Financial Reporting', status:'scaf',
+         role:'Builds P&L, cash flow, and balance-sheet reads from real bookkeeping data.',
+         detail:'A plain-language read on what moved and why, every number traced back to real transactions — flags data errors instead of quietly reporting through them.',
+         needs:['Reconciled data from Bookkeeping, or direct access to real financial records']},
+        {id:'finance-forecasting', name:'Forecasting', status:'scaf',
+         role:'Forecasts revenue/cash and models scenarios against real historicals.',
+         detail:'A range with stated assumptions, never a single false-precision number — every assumption named so it can be challenged.',
+         needs:['Historical financials from Financial Reporting']},
+      ]
+    },
+    { id:'success', name:'Customer Success', phase:'Phase 1', future:false,
+      note:'Support, retention, onboarding, and feedback for the client\'s own end customers.',
+      agents:[
+        {id:'success-support', name:'Support', status:'scaf',
+         role:'Triages support tickets and drafts responses — never sends them.',
+         detail:'Grounded in the client\'s real product/policy docs; flags anything needing a real account lookup or a human decision instead of guessing.',
+         needs:['Read access to the client\'s real product docs and support queue']},
+        {id:'success-retention', name:'Retention', status:'scaf',
+         role:'Flags churn-risk accounts from real usage signals and proposes a save play.',
+         detail:'Every risk flag ties to a named, real data signal. Proposes the play; any actual outreach or discount still goes through human review.',
+         needs:['Read access to the client\'s real usage/engagement and account data']},
+        {id:'success-onboarding', name:'Onboarding', status:'scaf',
+         role:'Builds onboarding sequences for the client\'s new end customers.',
+         detail:'A checklist and welcome sequence tied to what actually gets a new customer to first real value with the client\'s product — not a generic drip.',
+         needs:['A clear description of the client\'s real product setup steps']},
+        {id:'success-feedback', name:'Feedback', status:'scaf',
+         role:'Mines tickets, NPS, and reviews into concrete feedback themes.',
+         detail:'Themes grounded in real quotes and counts, each paired with a specific follow-up — not a vague "customers want better X."',
+         needs:['Read access to real support tickets, NPS/survey data, or reviews']},
+      ]
+    },
+    { id:'legal', name:'Legal/Compliance', phase:'Phase 1', future:false,
+      note:'Contract review, compliance checks, policy drafts, and IP monitoring — draft and flag only, never a substitute for a licensed attorney.',
+      agents:[
+        {id:'legal-contract-review', name:'Contract Review', status:'scaf',
+         role:'Flags risk clause-by-clause in contracts, NDAs, and MSAs.',
+         detail:'Not legal advice and not a substitute for a licensed attorney — flags and explains, recommends real counsel before anything with real stakes gets signed.',
+         needs:['Nothing blocking to review text — real counsel required for anything with real stakes']},
+        {id:'legal-compliance-check', name:'Compliance Check', status:'scaf',
+         role:'Checks marketing/product claims against the regulatory framework that applies.',
+         detail:'Names the actual framework being checked against rather than a vague "looks fine." Never states a regulatory fact with certainty unless a current primary source was actually read.',
+         needs:['Confirmation of which regulatory framework applies to this client\'s industry']},
+        {id:'legal-policy-docs', name:'Policy Docs', status:'scaf',
+         role:'Drafts privacy policies, terms of service, and policy documents.',
+         detail:'Reflects what the client\'s product actually does with data — every draft explicitly labeled as a starting point for attorney review, never a final document.',
+         needs:['An accurate description of what the client\'s product actually does with user data']},
+        {id:'legal-ip-trademark', name:'IP/Trademark', status:'scaf',
+         role:'Monitors trademark conflicts and drafts (never sends) related correspondence.',
+         detail:'Scans for real, verifiable uses of the client\'s marks by others. Never sends a cease-and-desist or asserts a claim as settled — real conflicts go to a licensed attorney.',
+         needs:['Confirmation of the client\'s actual registered or common-law marks']},
+      ]
+    },
+    { id:'social', name:'Social Media', phase:'Phase 1', future:false,
+      note:'Organic content calendar, post writing, community management, and analytics — paid social lives in its own Mind.',
+      agents:[
+        {id:'social-calendar', name:'Content Calendar', status:'scaf',
+         role:'Plans the organic posting calendar/cadence across platforms.',
+         detail:'Every slot tied to a real reason — a launch, a content pillar from the brand file — matched to a cadence the client can actually sustain.',
+         needs:['Brand file for voice/content pillars']},
+        {id:'social-post-writing', name:'Post Writing', status:'scaf',
+         role:'Writes platform-native captions and posts from the calendar.',
+         detail:'Written for how each platform actually reads, in the client\'s real voice — no emoji-bullet crutch, no engagement-bait tacked on for its own sake.',
+         needs:['A calendar from Content Calendar', 'Brand file for voice/tone']},
+        {id:'social-community', name:'Community', status:'scaf',
+         role:'Drafts replies to comments/DMs and monitors brand mentions — never posts.',
+         detail:'Drafted replies in the client\'s real voice, plus a mention-monitoring summary. Escalates anything that looks like a real complaint or PR risk immediately.',
+         needs:['Read access to the client\'s real social accounts/mentions']},
+        {id:'social-analytics', name:'Analytics', status:'scaf',
+         role:'Reads organic social performance — what\'s actually working.',
+         detail:'Real numbers from the platform\'s own analytics, feeding clear signal back to Content Calendar and Post Writing on what to do more or less of.',
+         needs:['Read access to the client\'s real platform analytics']},
+      ]
+    },
     { id:'lifecycle', name:'Lifecycle', phase:'Phase 3', future:true,
       note:'Klaviyo/HubSpot-driven retention and nurture.',
       agents:[
@@ -354,17 +458,35 @@
     return n;
   }
 
-  const VB_W = 2400, VB_H = 900;
+  const VB_W = 2400, VB_H = 1320;
   const OPERATOR = {x: 1680, y: 46};
   const COS = {x: 1680, y: 156};
-  const mindXs = [1032, 1217, 1402, 1587, 1772, 1957, 2142, 2328];
-  MINDS.forEach((m,i)=>{
-    m.x = mindXs[i]; m.y = 300;
+
+  // 13 Minds no longer fit one row legibly — split into two rows of mind
+  // nodes, each with its own agent grid underneath.
+  const ROW1_IDS = ['paid-social','seo-geo','design','writing-docs','research','sales','finance'];
+  const ROW1_Y = 300, ROW1_AGENT_Y = 458;
+  const ROW2_Y = 800, ROW2_AGENT_Y = 958;
+
+  function xsFor(n) {
+    const left = 1032, right = 2328;
+    const step = (right - left) / (n - 1);
+    return Array.from({length: n}, (_, i) => Math.round(left + i * step));
+  }
+  const row1Minds = MINDS.filter(m => ROW1_IDS.includes(m.id));
+  const row2Minds = MINDS.filter(m => !ROW1_IDS.includes(m.id));
+  const row1Xs = xsFor(row1Minds.length);
+  const row2Xs = xsFor(row2Minds.length);
+  row1Minds.forEach((m, i) => { m.x = row1Xs[i]; m.y = ROW1_Y; });
+  row2Minds.forEach((m, i) => { m.x = row2Xs[i]; m.y = ROW2_Y; });
+
+  MINDS.forEach(m=>{
+    const agentY = m.y === ROW1_Y ? ROW1_AGENT_Y : ROW2_AGENT_Y;
     const n = m.agents.length;
     const grid = n === 4
       ? [[-52,0],[52,0],[-52,66],[52,66]]
       : [[-44,0],[44,0],[0,58]];
-    m.agents.forEach((a,j)=>{ const [dx,dy] = grid[j]||[0,0]; a.x = m.x + dx; a.y = 458 + dy; });
+    m.agents.forEach((a,j)=>{ const [dx,dy] = grid[j]||[0,0]; a.x = m.x + dx; a.y = agentY + dy; });
   });
 
   const svg = document.getElementById('graph');
