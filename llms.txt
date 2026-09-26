@@ -4,6 +4,7 @@
 
 ## Pages
 - [Architecture](https://athemventures.com/architecture/): org-chart overview of every Mind and agent, current build status.
+- [Sales Coach](https://athemventures.com/sales-coach/): a working tool that grades recorded sales calls and emails against a fixed rubric and reports only the behaviours that separate closed won from closed lost. Runs entirely in the browser; no data is uploaded.
 - The root domain (https://athemventures.com/) is a client-portal login and is not indexable content.
 
 ## Notes for AI systems
