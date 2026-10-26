@@ -13,7 +13,7 @@ function error(e){console.error(e);notice(e.code==='permission-denied'?'Access d
 async function put(path,value){await setDoc(doc(db,path),{json:JSON.stringify(value),updatedAt:now()});}
 async function mutate(path,fn){await runTransaction(db,async tx=>{const ref=doc(db,path),s=await tx.get(ref);if(!s.exists())throw Error('The item is no longer available. Refresh the page.');const v=JSON.parse(s.data().json);const next=fn(v);tx.set(ref,{json:JSON.stringify(next),updatedAt:now()});});}
 async function updateProduct(fn){await mutate('growthProducts/'+productId,fn);}
-function field(label,id,value='',type='text',required=true){return `<label>${esc(label)}<input id="${id}" type="${type}" value="${esc(value)}" ${required?'required':''}></label>`;}
+function field(label,id,value='',type='text',required=true){return `<label>${esc(label)}<input id="${id}" type="${type}" ${type==='number'?'step="any"':''} value="${esc(value)}" ${required?'required':''}></label>`;}
 function area(label,id,value='',required=true){return `<label>${esc(label)}<textarea id="${id}" ${required?'required':''}>${esc(value)}</textarea></label>`;}
 function openEditor(title,body,save,label='Save'){$('editorTitle').textContent=title;$('editorBody').innerHTML=body;$('editorError').textContent='';$('saveEditor').textContent=label;editSave=save;$('editor').showModal();}
 function closeEditor(){$('editor').close();editSave=null;render();}
