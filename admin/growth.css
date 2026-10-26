@@ -3,3 +3,5 @@
 .campaign-assets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:24px 0}.campaign-assets img{width:100%;height:auto;display:block;border:1px solid var(--line)}.campaign-assets article{min-width:0}.campaign-assets .actions button{font-size:12px}@media(min-width:1500px){.campaign-assets{max-width:1000px}}@media(max-width:760px){.campaign-assets{grid-template-columns:1fr}.campaign-assets img{max-width:450px}}
 
 .operator-message{padding:14px 0;border-top:1px solid var(--line)}.operator-message summary{cursor:pointer;font-size:15px}.operator-message .report{font-size:15px}#campaignChat{max-width:850px;margin:24px 0}#campaignChat textarea{min-height:96px}#campaignChat select{max-width:100%}
+
+.team-roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}.team-roles article{border-top:1px solid #000;padding:16px 0}.team-roles button{text-align:left;width:100%}.team-roles .meta{overflow-wrap:anywhere}
