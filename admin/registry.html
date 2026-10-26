@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Harness Admin</title>
+<style>
+  :root{
+    --bg:#08090C; --surface:#0D0F14; --surface-2:#12141A; --border:#22252C;
+    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280;
+    --lead:#E0954F;  --lead-dim:#5A3F22;      /* Sonnet main session */
+    --inst:#5B9BFF;  --inst-dim:#1E3352;      /* what you install */
+    --jev:#E3C565;   --jev-dim:#4A3F1C;       /* JEV fork layer */
+    --reg:#A58BFF;   --reg-dim:#2E2650;       /* registry scan */
+    --split:#E0664F; --split-dim:#4A241E;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.45;padding:20px 16px 40px}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto}
+  .hidden{display:none!important}
+
+  /* sign-in */
+  .login{max-width:360px;margin:12vh auto 0;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:28px 24px}
+  .login h1{font-size:15px;margin:0 0 4px;letter-spacing:.02em}
+  .login p{color:var(--ink-mute);margin:0 0 20px;font-size:12px}
+  .login label{display:block;font-size:11px;color:var(--ink-2);margin:0 0 5px}
+  .login input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--ink);font:inherit;margin-bottom:14px}
+  .login input:focus{outline:none;border-color:var(--lead)}
+  .btn{background:var(--lead);color:#1A1206;border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;width:100%}
+  .btn.ghost{background:none;border:1px solid var(--border);color:var(--ink-2);width:auto;padding:6px 12px;font-weight:400}
+  .err{color:var(--split);background:var(--split-dim);border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:14px}
+
+  /* header */
+  .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+  .title{font-weight:700;letter-spacing:.06em;font-size:14px}
+  .title .n{color:var(--lead)} .title .one{color:var(--jev)}
+  .who{color:var(--ink-mute);font-size:11px;display:flex;gap:10px;align-items:center}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--ink-2);font-size:11.5px;margin:10px 0 18px}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+
+  .grid{display:grid;grid-template-columns:240px 1fr;gap:18px}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}}
+
+  .box{border:1.5px solid var(--border);border-radius:6px;background:var(--surface);padding:12px 14px}
+  .box h2{margin:0 0 8px;font-size:12.5px;text-align:center;letter-spacing:.04em}
+  .reg{border-color:var(--reg)} .reg h2{color:var(--reg)}
+  .lead{border-color:var(--lead)} .lead h2{color:var(--lead)}
+  .jev{border-color:var(--jev)} .jev h2{color:var(--jev)}
+  .kind{border-color:var(--inst)} .kind h2{color:var(--ink)}
+  .center{text-align:center}
+  .mute{color:var(--ink-mute)} .ink2{color:var(--ink-2)}
+
+  /* registry list */
+  .slots{list-style:none;margin:0;padding:0}
+  .slot{padding:7px 0;border-bottom:1px dashed var(--border)}
+  .slot:last-child{border-bottom:0}
+  .slot .row{display:flex;justify-content:space-between;gap:8px}
+  .slot .name{color:var(--ink)}
+  .slot .ok{color:var(--reg)}
+  .slot .sub{color:var(--reg);font-size:11.5px;padding-left:12px}
+  .slot .src{color:var(--ink-mute);font-size:10.5px;padding-left:12px;word-break:break-all}
+
+  /* flow */
+  .flow{display:flex;flex-direction:column;gap:14px}
+  .tabs{display:flex;justify-content:center;gap:14px;margin:6px 0}
+  .tabs span{color:var(--ink-mute)} .tabs b{color:var(--lead);font-weight:700}
+  .bar{height:12px;background:var(--surface-2);border-radius:2px;overflow:hidden;position:relative}
+  .bar > span{position:absolute;inset:0 auto 0 0;background:var(--inst)}
+  .bar.lead > span{background:var(--lead)}
+  .bar.sharp > span{background:var(--jev)} .bar.split > span{background:var(--split)}
+  .q{display:grid;grid-template-columns:110px 1fr 120px;gap:10px;align-items:center;margin:6px 0}
+  .q .lab{color:var(--ink-2)}
+  .q .val.sharp{color:var(--jev)} .q .val.split{color:var(--split)}
+  .q .pick{grid-column:1/-1;color:var(--ink-mute);font-size:11px;margin:-4px 0 2px 120px}
+  @media (max-width:520px){.q{grid-template-columns:90px 1fr 92px}.q .pick{margin-left:0}}
+  .rule{text-align:center;color:var(--ink-mute);font-size:11.5px;margin-top:6px}
+  .rule b{color:var(--jev);font-weight:400}
+  .lands{text-align:center;color:var(--ink-2)} .lands b{color:var(--inst);font-weight:700}
+  .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:620px){.kinds{grid-template-columns:1fr}}
+  .kind .tag{color:var(--inst);text-align:center;margin-bottom:8px}
+  .kind .stat{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-2);margin-top:6px}
+  .kind .top3{font-size:11px;color:var(--ink-mute);margin-top:6px;min-height:30px}
+  .verdicts{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:6px}
+  .verdicts b{color:var(--ink)}
+
+  /* log */
+  .log{margin-top:20px;border:1px solid var(--border);border-radius:6px;padding:10px 14px;background:var(--surface)}
+  .log h3{margin:-20px 0 8px;display:inline-block;background:var(--bg);padding:0 8px;font-size:12px;color:var(--ink-2);font-weight:400}
+  .line{display:grid;grid-template-columns:70px 84px 1fr;gap:10px;font-size:12px;padding:2px 0}
+  .line .s-jev{color:var(--jev)} .line .s-hooks{color:var(--inst)} .line .s-registry{color:var(--reg)}
+  .line .msg{color:var(--ink-2);overflow-wrap:anywhere}
+  .statusline{margin-top:14px;color:var(--ink-2);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 22px}
+  .statusline b{color:var(--lead);font-weight:400} .statusline .j{color:var(--jev)}
+  .empty{color:var(--ink-mute);font-style:italic}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section id="loginView" class="login hidden">
+    <h1>HARNESS ADMIN</h1>
+    <p>Owner access only.</p>
+    <div id="err" class="err hidden"></div>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+  </section>
+
+  <section id="dash" class="hidden">
+    <div class="top">
+      <div class="title">CLAUDE CODE HARNESS · <span class="n" id="hRepos">10 REPOS</span> · <span class="one">ONE .CLAUDE FOLDER</span></div>
+      <div class="who"><span id="updated">waiting for first snapshot</span><button class="btn ghost" id="signOut" type="button">Sign out</button></div>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--lead)"></i>sonnet · session</span>
+      <span><i style="background:var(--inst)"></i>what you install</span>
+      <span><i style="background:var(--jev)"></i>jev · forks</span>
+      <span><i style="background:var(--reg)"></i>registry scan</span>
+    </div>
+
+    <div class="grid">
+      <aside class="box reg">
+        <h2>REGISTRY</h2>
+        <div class="center mute" id="scanned">scanned 0/10</div>
+        <ul class="slots" id="slots"></ul>
+      </aside>
+
+      <div class="flow">
+        <div class="box lead">
+          <h2 id="leadName">Sonnet · main session</h2>
+          <div class="center ink2">installed from the registry</div>
+          <div class="tabs" id="leadTabs"></div>
+          <div class="bar lead"><span id="leadBar" style="width:0"></span></div>
+          <div class="center mute" style="margin-top:6px" id="leadAdded">.claude/ · added 0 of 10</div>
+        </div>
+
+        <div class="box jev">
+          <div style="display:flex;justify-content:space-between;align-items:baseline">
+            <h2 style="margin:0">JEV · fork layer</h2>
+            <span class="mute">forks <b style="color:var(--jev)" id="forks">0</b></span>
+          </div>
+          <div id="jevQs"></div>
+          <div class="rule"><b>sharp → runs in code</b> · <span style="color:var(--split)">split → Sonnet</span> · <span id="jevCost"></span></div>
+        </div>
+
+        <div class="lands">what lands in .claude · <b>three kinds</b></div>
+
+        <div class="kinds" id="kinds"></div>
+
+        <div class="box lead">
+          <h2>back to Sonnet · lead</h2>
+          <div class="center ink2">one team, one repo · skeptic grades, librarian files</div>
+          <div class="verdicts" id="verdicts"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="log">
+      <h3>session log · last 7 days</h3>
+      <div id="log"></div>
+    </div>
+
+    <div class="statusline" id="statusline"></div>
+  </section>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+  import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+  import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyCr30bj-pa3sv9H8h7rrijkvVmJWg5IH6A",
+    authDomain: "performancereach.firebaseapp.com",
+    projectId: "performancereach",
+    storageBucket: "performancereach.firebasestorage.app",
+    messagingSenderId: "118723320454",
+    appId: "1:118723320454:web:54b8b4a2a9a449d98d8f07"
+  });
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const showErr = (m) => { $("err").textContent = m; $("err").classList.remove("hidden"); };
+  let unsub = null;
+
+  $("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    $("err").classList.add("hidden");
+    try { await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value); }
+    catch (err) { showErr("Sign-in failed. Check the email and password."); }
+  });
+  $("signOut").addEventListener("click", () => signOut(auth));
+
+  const preview = location.hostname === "localhost" && new URLSearchParams(location.search).has("snapshot");
+  onAuthStateChanged(auth, (user) => {
+    if (preview) return;
+    if (unsub) { unsub(); unsub = null; }
+    if (!user) { $("dash").classList.add("hidden"); $("loginView").classList.remove("hidden"); return; }
+    unsub = onSnapshot(doc(db, "harness", "status"), (snap) => {
+      $("loginView").classList.add("hidden"); $("dash").classList.remove("hidden");
+      if (!snap.exists()) { $("updated").textContent = "no snapshot yet · run tools/push_status.py"; return; }
+      render(JSON.parse(snap.data().json));
+    }, () => {
+      signOut(auth);
+      showErr("This account is not allowed to view the harness.");
+    });
+  });
+
+  // Local layout check only: lets a localhost preview render a snapshot file without signing in.
+  if (location.hostname === "localhost" && new URLSearchParams(location.search).has("snapshot")) {
+    fetch(new URLSearchParams(location.search).get("snapshot")).then((r) => r.json()).then((s) => {
+      $("loginView").classList.add("hidden"); $("dash").classList.remove("hidden"); render(s);
+    });
+  }
+
+  const kindLabel = { agent: "agents", skill: "skills", command: "commands", hook: "hooks", tool: "tool" };
+  const ago = (iso) => {
+    const m = Math.round((Date.now() - new Date(iso)) / 60000);
+    return m < 1 ? "just now" : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.round(m / 60)} h ago` : `${Math.round(m / 1440)} d ago`;
+  };
+
+  function render(s) {
+    $("updated").textContent = "snapshot " + ago(s.updatedAt);
+    $("leadName").textContent = s.lead || "Sonnet · main session";
+    const reg = s.registry || [];
+    $("hRepos").textContent = `${reg.length} REPOS`;
+    $("scanned").textContent = `scanned ${reg.length}/10`;
+
+    $("slots").innerHTML = reg.map((r) => {
+      const subs = Object.entries(r.counts).map(([k, n]) => `<div class="sub">» ${n} ${esc(kindLabel[k] || k)}</div>`).join("");
+      return `<li class="slot"><div class="row"><span class="name">✓ ${esc(r.slot)}</span><span class="ok">✓</span></div>${subs}
+        <div class="src"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.repo)}</a>${r.commit ? " @" + esc(r.commit) : ""}</div></li>`;
+    }).join("");
+
+    const inst = s.installed || {};
+    const nA = (inst.agents || []).length, nS = (inst.skills || []).length, nH = (inst.hooks || []).length;
+    $("leadTabs").innerHTML = `<span>agents <b>${nA}</b></span><span>skills <b>${nS}</b></span><span>hooks <b>${nH}</b></span>`;
+    $("leadBar").style.width = `${Math.round(100 * reg.length / 10)}%`;
+    $("leadAdded").textContent = `.claude/ · added ${reg.length} of 10`;
+
+    const j = s.jev || {};
+    $("forks").textContent = (j.forks_total || 0).toLocaleString();
+    $("jevCost").textContent = `week cost $${(j.cost_week || 0).toFixed(4)}`;
+    const qs = [["which_agent", "which agent"], ["which_skill", "which skill"], ["retry_or_stop", "retry or stop"]];
+    $("jevQs").innerHTML = qs.map(([k, lab]) => {
+      const q = j[k] || {};
+      const mode = q.last_mode || "";
+      const p = Number(q.last_p || 0);
+      const rate = q.n ? Math.round(100 * q.sharp / q.n) : 0;
+      return `<div class="q"><span class="lab">${lab}</span>
+        <div class="bar ${mode}"><span style="width:${Math.round(p * 100)}%"></span></div>
+        <span class="val ${mode}">${q.n ? p.toFixed(2) + " " + mode : "no calls yet"}</span>
+        <span class="pick">${q.n ? `last → ${esc(q.last_pick || "none")} · ${q.sharp}/${q.n} sharp (${rate}%)` : ""}</span></div>`;
+    }).join("");
+
+    const u = s.usage_week || {};
+    const top = (obj) => Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n, c]) => `${esc(n)} ×${c}`).join(" · ");
+    const evTotal = Object.values(u.hook_events || {}).reduce((a, b) => a + b, 0);
+    const usedA = Object.keys(u.agents || {}).length, usedS = Object.keys(u.skills || {}).length;
+    const kinds = [
+      ["subagents", "delegated work", nA, usedA, `${usedA} of ${nA} used this week`, top(u.agents) || "none called yet"],
+      ["skills", "progressive load", nS, usedS, `${usedS} of ${nS} loaded this week`, top(u.skills) || "none loaded yet"],
+      ["hooks", "deterministic", nH, nH, `${evTotal.toLocaleString()} events · ${(inst.hook_events || []).length} hook points`, top(u.hook_events) || "no events yet"],
+    ];
+    $("kinds").innerHTML = kinds.map(([h, tag, n, used, stat, t]) => `
+      <div class="box kind"><h2>${h}</h2><div class="tag">${tag}</div>
+        <div class="bar"><span style="width:${n ? Math.round(100 * used / n) : 0}%"></span></div>
+        <div class="stat"><span>${stat}</span><span>✓ wired</span></div>
+        <div class="top3">${t}</div></div>`).join("");
+
+    const v = s.verdicts || {};
+    $("verdicts").innerHTML = ["VERIFIED", "TRADE-OFF", "NO EFFECT"].map((k) => `<span class="mute">${k} <b>${v[k] || 0}</b></span>`).join("");
+
+    const log = s.log || [];
+    $("log").innerHTML = log.length ? log.slice(-14).map((l) => `<div class="line"><span class="mute">${esc((l.ts || "").slice(11, 19))}</span>
+      <span class="s-${esc(l.src)}">${esc(l.src)}</span><span class="msg">${esc(l.msg)}</span></div>`).join("")
+      : `<div class="empty">No harness activity in the last 7 days.</div>`;
+
+    $("statusline").innerHTML = `<span>registry <b>[${reg.length}]</b></span><span>added <b>[${reg.length}]</b></span>
+      <span>sessions <b>[${u.sessions || 0}]</b></span><span class="j">jev [ ${(j.forks_total || 0).toLocaleString()} forks ]</span>`;
+  }
+</script>
+</body>
+</html>
