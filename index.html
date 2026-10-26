@@ -3,7 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PerformanceReach — Client Portal</title>
+<title>PerformanceReach, client portal</title>
+<meta name="description" content="Sign in to see your PerformanceReach campaign status and reports.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="/assets/system.css">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -15,102 +20,93 @@
 }
 </script>
 <style>
-  :root{
-    --bg:#08090C; --surface:#12141A; --surface-2:#1A1D24;
-    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280; --border:#22252C;
-    --amber:#E0954F; --amber-dim:#5A3F22;
-    --danger:#E0664F; --danger-dim:#4A241E;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-    padding:24px;
-  }
-  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
-  .card{
-    width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border);
-    border-radius:16px; padding:32px 28px;
-  }
-  .word{display:flex; align-items:center; gap:9px; font-weight:800; letter-spacing:-.02em; font-size:16px; margin-bottom:6px;}
-  .word b{color:var(--amber);}
-  .eyebrow{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-mute); margin:0 0 26px;}
-  h1{font-size:19px; font-weight:750; margin:0 0 6px; letter-spacing:-.01em;}
-  .sub{font-size:13px; color:var(--ink-mute); margin:0 0 24px; line-height:1.5;}
-  label{display:block; font-size:12px; color:var(--ink-2); margin:0 0 6px;}
-  .field{margin-bottom:16px;}
-  input{
-    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:9px;
-    padding:11px 12px; color:var(--ink); font-size:14px; font-family:inherit;
-  }
-  input:focus{outline:none; border-color:var(--amber);}
-  button.primary{
-    width:100%; background:var(--amber); color:#1A1206; border:none; border-radius:9px;
-    padding:12px; font-size:14px; font-weight:700; cursor:pointer; margin-top:6px;
-  }
-  button.primary:disabled{opacity:.55; cursor:default;}
-  button.primary:hover:not(:disabled){filter:brightness(1.08);}
-  .toggle{
-    text-align:center; margin-top:18px; font-size:13px; color:var(--ink-mute);
-  }
-  .toggle button{
-    background:none; border:none; color:var(--amber); font-size:13px; cursor:pointer; padding:0; font-family:inherit;
-  }
-  .error{
-    display:none; background:var(--danger-dim); color:var(--danger); border-radius:9px;
-    padding:10px 12px; font-size:12.5px; margin-bottom:16px; line-height:1.4;
-  }
-  .error.show{display:block;}
-  .portal-view{display:none; text-align:center;}
-  .portal-view.show{display:block;}
-  .form-view.hide{display:none;}
-  .portal-view .status{color:var(--ink-mute); font-size:13px; margin-bottom:22px;}
-  .portal-view .email{color:var(--ink); font-weight:650;}
-  button.ghost{
-    background:none; border:1px solid var(--border); color:var(--ink-2); border-radius:9px;
-    padding:9px 16px; font-size:13px; cursor:pointer; font-family:inherit;
-  }
-  button.ghost:hover{border-color:var(--amber); color:var(--amber);}
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom · redesign: full · job: try · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
+ * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: Split field, a blue field carries the head and the form stands on white · nav: wordmark only, left · footer: none on the sign-in · imagery: none · signature: the three-colour bar across the top of every page
+ * axes: light/geometric-sans/chromatic-blue · posture: Committed, blue is the field and the action · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, the sign-in has little to say; the blue field is the whole statement, so the head is set at poster scale */
+/* Hallmark · dismissed 77 · the page is a sign-in, a two-panel screen by design, not a landing strip */
+html, body { overflow-x: clip; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.portal { container-type: inline-size; display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); min-height: calc(100dvh - var(--space-xs)); }
+.field-panel { background: var(--color-field); color: var(--color-field-ink); padding: var(--space-xl) var(--gutter) var(--space-xl) max(var(--gutter), calc((100cqw - var(--container)) / 2 + var(--gutter))); display: flex; flex-direction: column; justify-content: space-between; gap: var(--space-2xl); }
+.field-panel .wordmark { color: var(--color-blue-ink); font-size: var(--text-xl); }
+.field-panel .wordmark b { color: inherit; }
+.lockup { display: flex; align-items: baseline; gap: var(--space-md); flex-wrap: wrap; }
+.lockup span { font-size: var(--text-sm); font-weight: 700; }
+.field-panel h1 { font-size: clamp(3.5rem, 8vw, 7.5rem); line-height: 0.95; max-width: 9ch; text-wrap: balance; }
+.field-panel .sub { margin-top: var(--space-lg); font-size: var(--text-lead); line-height: 1.4; max-width: 28ch; }
+.field-panel .back { font-weight: 700; }
+.field-panel .back:hover { text-decoration-color: var(--color-blue-ink); }
+.field-panel :focus-visible { outline-color: var(--color-blue-ink); }
+.form-side { display: flex; flex-direction: column; justify-content: center; padding: var(--space-xl) max(var(--gutter), calc((100cqw - var(--container)) / 2 + var(--gutter))) var(--space-xl) var(--gutter); }
+.form-view { width: 100%; max-width: 24rem; }
+.form-view.hide { display: none; }
+.form-view .row { margin-bottom: var(--space-md); }
+#authForm .btn { width: 100%; margin-top: var(--space-xs); }
+.toggle { margin-top: var(--space-lg); font-size: var(--text-sm); color: var(--color-ink-2); display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--space-xs); }
+.toggle button { min-height: 44px; }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { cursor: not-allowed; }
+#errorBox { display: none; margin-bottom: var(--space-md); }
+#errorBox.show { display: block; }
+.portal-view { display: none; max-width: 24rem; }
+.portal-view.show { display: block; }
+.portal-view .status-line { color: var(--color-ink-2); margin-bottom: var(--space-md); }
+.portal-view .email { font-weight: 700; margin-bottom: var(--space-md); overflow-wrap: anywhere; }
+@media (max-width: 60rem) {
+  html, body { overflow-x: clip; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+.portal { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .field-panel { padding: var(--space-lg) var(--gutter) var(--space-xl); gap: var(--space-xl); }
+  .form-side { padding-inline: var(--gutter); }
+  .field-panel h1 { font-size: clamp(3rem, 16vw, 5rem); }
+  .form-side { padding: var(--space-xl) var(--gutter); }
+}
 </style>
 </head>
 <body>
-  <div class="card">
-    <div class="word"><span>performance<b>reach</b></span></div>
-    <p class="eyebrow">client portal</p>
-
-    <div id="formView" class="form-view">
-      <h1 id="formTitle">Sign in</h1>
-      <p class="sub" id="formSub">Sign in to see your campaign status and reports.</p>
-      <div class="error" id="errorBox"></div>
-      <form id="authForm">
-        <div class="field">
-          <label for="email">Email</label>
-          <input type="email" id="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="password">Password</label>
-          <input type="password" id="password" autocomplete="current-password" required minlength="6">
-        </div>
-        <button type="submit" class="primary" id="submitBtn">Sign in</button>
-      </form>
-      <div class="toggle">
-        <span id="toggleText">New here?</span>
-        <button type="button" id="toggleBtn">Create an account</button>
+  <div class="rgb-bar" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i></div>
+  <main class="portal">
+    <section class="field-panel" aria-labelledby="formTitle">
+      <div class="lockup">
+        <a class="wordmark" href="/" aria-label="performancereach home">performance<b>reach</b></a>
+        <span>client portal</span>
       </div>
-    </div>
+      <div>
+        <h1 id="formTitle">Sign in</h1>
+        <p class="sub" id="formSub">Sign in to see your campaign status and reports.</p>
+      </div>
+      <a class="link back" href="/architecture/">See how the agency is built</a>
+    </section>
 
-    <div id="portalView" class="portal-view">
-      <p class="status">Signed in as</p>
-      <p class="email" id="userEmail"></p>
-      <p class="status">There's nothing here yet — this is a placeholder confirming sign-in works. Reports and campaign status land here once a client is live.</p>
-      <button class="ghost" id="signOutBtn">Sign out</button>
-    </div>
-  </div>
+    <section class="form-side">
+      <div id="formView" class="form-view">
+        <div class="notice notice--error" id="errorBox" role="alert"></div>
+        <form id="authForm">
+          <div class="row">
+            <label class="label" for="email">Email</label>
+            <input class="input input--lg" type="email" id="email" name="email" autocomplete="email" required>
+          </div>
+          <div class="row">
+            <label class="label" for="password">Password</label>
+            <input class="input input--lg" type="password" id="password" name="password" autocomplete="current-password" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn--primary btn--lg" id="submitBtn">Sign in</button>
+        </form>
+        <div class="toggle">
+          <span id="toggleText">New here?</span>
+          <button type="button" class="btn btn--quiet" id="toggleBtn">Create an account</button>
+        </div>
+      </div>
 
-  <p style="text-align:center; margin-top:18px; font-size:12px;">
-    <a href="/architecture/" style="color:var(--ink-mute); text-decoration:none;">See how the agency is built &rarr;</a>
-  </p>
+      <div id="portalView" class="portal-view">
+        <p class="status-line">Signed in as</p>
+        <p class="email" id="userEmail"></p>
+        <p class="status-line">There’s nothing here yet. This is a placeholder confirming sign-in works. Reports and campaign status land here once a client is live.</p>
+        <button class="btn" id="signOutBtn" type="button">Sign out</button>
+      </div>
+    </section>
+  </main>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
@@ -167,11 +163,11 @@
     }
 
     const FRIENDLY_ERRORS = {
-      "auth/invalid-email": "That email address doesn't look right.",
-      "auth/user-not-found": "No account with that email — try creating one.",
-      "auth/wrong-password": "That password doesn't match.",
-      "auth/invalid-credential": "Email or password doesn't match.",
-      "auth/email-already-in-use": "An account with that email already exists — sign in instead.",
+      "auth/invalid-email": "That email address doesn’t look right.",
+      "auth/user-not-found": "No account with that email. Try creating one.",
+      "auth/wrong-password": "That password doesn’t match.",
+      "auth/invalid-credential": "Email or password doesn’t match.",
+      "auth/email-already-in-use": "An account with that email already exists. Sign in instead.",
       "auth/weak-password": "Password needs to be at least 6 characters."
     };
 
@@ -188,7 +184,7 @@
           await createUserWithEmailAndPassword(auth, email, password);
         }
       } catch(err){
-        showError(FRIENDLY_ERRORS[err.code] || "Something went wrong — try again.");
+        showError(FRIENDLY_ERRORS[err.code] || "Something went wrong. Try again.");
       } finally {
         submitBtn.disabled = false;
       }

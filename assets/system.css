@@ -1,0 +1,54 @@
+/* Hallmark · shape: Control Room · genre: modern-minimal · theme: custom · redesign: full · job: sign up · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
+ * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: Split field, a blue field carries the head and the form stands on white · nav: wordmark only, left · footer: none on the sign-in, a single line elsewhere · imagery: none · signature: the three-colour bar that counts the real agents by state
+ * axes: light/geometric-sans/chromatic-blue · posture: Full palette, blue is the field and the action, green is live, red is stopped · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, a primary-colour palette can read as a school poster; the colours carry state only, never decoration, and every one rides with a word */
+@import url("./tokens.css");
+@import url("./base.css");
+
+body { font-weight: 400; }
+h1, h2, h3 { font-weight: 800; letter-spacing: var(--tracking-display); line-height: 1.04; }
+strong, b { font-weight: 700; }
+
+.wordmark { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.03em; font-size: var(--text-lg); text-decoration: none; color: inherit; white-space: nowrap; }
+.wordmark b { font-weight: 800; color: var(--color-blue-text); }
+.ident { font-family: var(--font-outlier); font-size: var(--text-xs); font-weight: 400; overflow-wrap: anywhere; }
+
+/* The three-colour bar. Equal thirds is identity; --w makes it a count. */
+.rgb-bar { display: flex; height: var(--space-xs); width: 100%; }
+.rgb-bar > i { display: block; flex: var(--w, 1) 1 0; min-width: 0; }
+.rgb-bar > .r { background: var(--color-red); }
+.rgb-bar > .g { background: var(--color-green); }
+.rgb-bar > .b { background: var(--color-blue); }
+.rgb-bar--tall { height: var(--space-lg); }
+
+/* Status: a filled block, a shape and a word. Colour never works alone. */
+.status { display: inline-flex; align-items: center; gap: var(--space-xs); min-height: 28px; padding: 0 var(--space-sm); font-size: var(--text-xs); font-weight: 700; line-height: 1; white-space: nowrap; border-radius: var(--radius-control); }
+.status--stop { background: var(--color-red); color: var(--color-red-ink); }
+.status--build { background: var(--color-blue); color: var(--color-blue-ink); }
+.status--live { background: var(--color-green); color: var(--color-green-ink); }
+.glyph { display: inline-block; width: 10px; height: 10px; flex: none; background: currentColor; }
+.glyph--build { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+.glyph--live { border-radius: 50%; }
+
+/* Controls */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: var(--control-h); padding: 0 var(--space-md); border: var(--rule-hair) solid var(--color-ink); border-radius: var(--radius-control); background: transparent; color: var(--color-ink); font-weight: 700; line-height: 1; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
+.btn:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--color-paper-3); }
+.btn:active:not(:disabled) { transform: translateY(1px); }
+.btn:disabled, .btn[aria-disabled="true"] { background: var(--color-paper-3); border-color: var(--color-rule); color: var(--color-muted); cursor: not-allowed; opacity: 0.7; }
+.btn--primary { background: var(--color-blue); border-color: var(--color-blue); color: var(--color-blue-ink); }
+.btn--primary:hover:not(:disabled):not([aria-disabled="true"]) { background: var(--color-blue-text); border-color: var(--color-blue-text); }
+.btn--lg { min-height: var(--control-h-lg); }
+.btn--quiet { border-color: transparent; padding-inline: 0; }
+.btn--quiet:hover:not(:disabled) { background: transparent; text-decoration: underline; }
+
+.input { display: block; width: 100%; min-height: var(--control-h); padding: 0 var(--space-sm); border: var(--rule-hair) solid var(--color-muted); border-radius: var(--radius-control); background: var(--color-paper); color: var(--color-ink); }
+.input--lg { min-height: var(--control-h-lg); }
+.input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: -2px; }
+.input:disabled { background: var(--color-paper-3); color: var(--color-muted); cursor: not-allowed; }
+.label { display: block; margin: 0 0 var(--space-xs); font-size: var(--text-sm); font-weight: 700; color: var(--color-ink-2); }
+
+.notice { padding: var(--space-sm) var(--space-md); border-radius: var(--radius-control); font-size: var(--text-sm); line-height: 1.45; }
+.notice--error { background: var(--color-red); color: var(--color-red-ink); }
+
+.link { color: inherit; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+.link:hover { text-decoration-color: var(--color-blue); }

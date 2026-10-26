@@ -1,213 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
-<title>PerformanceReach — The Agentic Agency</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PerformanceReach, the agentic agency</title>
+<meta name="description" content="One operator, thirteen groups of purpose-built agents, one Chief of Staff and a human sign-off before anything spends money or goes live.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="/assets/system.css">
 <style>
-  :root{
-    --bg:#08090C; --bg-2:#0D0F14; --grid-line: rgba(255,255,255,0.035);
-    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280; --border:#22252C;
-    --amber:#E0954F; --amber-dim:#5A3F22; --blue:#5B9BFF; --blue-dim:#1E3352;
-    --grey:#4A4F59; --grey-dim:#1C1E24;
-    --radius:16px;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;}
-  a{color:inherit;}
-  .wrap{max-width:1180px; margin:0 auto; padding:0 28px;}
+/* Hallmark · shape: Control Room · genre: modern-minimal · theme: custom · redesign: full · job: hire · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
+ * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: Poster, the head set at poster scale and anchored low, over a tall three-colour bar that counts the real agents · nav: wordmark left, one link right, no rule under · footer: one line, the wordmark and the first customer · imagery: none, the org chart is the product · signature: the tall bar and the thirteen branches that share its three colours
+ * axes: light/geometric-sans/chromatic-blue · posture: Full palette, blue is the action and the build state, green is live, red is stopped · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, an org chart is an org chart; every branch carries its own count in the same three colours so the chart reads as the scoreboard */
+/* Hallmark · dismissed 58 · the head is the page's own eight-word sentence and the lede is cut to twelve words */
+/* Hallmark · dropped #graph · the drawn node-link SVG set its labels at 6px on a 1440 screen, so it becomes an HTML chart of real buttons that keeps every data-agent hook and the #agent= deep links */
+/* Hallmark · dismissed 23 · the tall bar is the page's data, the count of real agents by state, and it carries the declared Full palette posture */
+html, body { overflow-x: clip; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { cursor: not-allowed; }
+.nav { position: relative; z-index: var(--z-sticky-nav); }
+.nav-row { display: flex; align-items: center; justify-content: space-between; min-height: 72px; gap: var(--space-md); }
+.nav .wordmark { display: inline-flex; align-items: center; gap: var(--space-sm); }
+.nav-link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 
-  nav{position:relative; z-index:5;}
-  nav .wrap{display:flex; align-items:center; justify-content:space-between; height:64px;}
-  .word{display:flex; align-items:center; gap:9px; font-weight:800; letter-spacing:-.02em; font-size:15px;}
-  .word b{color:var(--amber); font-weight:800;}
-  .mark{flex:none;}
-  .navlinks{display:flex; gap:22px; font-size:13px; color:var(--ink-mute);}
-  .navlinks a{text-decoration:none;}
-  .navlinks a:hover{color:var(--ink);}
+.hero { min-height: calc(100dvh - 80px); display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-2xl); padding-block: var(--space-xl) var(--space-2xl); }
+.hero h1 { font-size: clamp(3rem, 7vw, 6.5rem); max-width: 17ch; }
+.lede { margin-top: var(--space-lg); font-size: var(--text-lead); line-height: 1.4; max-width: 34ch; }
+.head-row { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gap-columns); align-items: end; }
+.stats { display: flex; flex-wrap: wrap; gap: var(--space-lg) var(--space-xl); margin: 0; justify-content: flex-end; }
+.stat { display: flex; flex-direction: column-reverse; gap: var(--space-2xs); }
+.stat dd { margin: 0; font-family: var(--font-display); font-weight: 800; font-size: var(--text-3xl); line-height: 1; letter-spacing: var(--tracking-display); font-variant-numeric: tabular-nums; }
+.stat dt { font-size: var(--text-sm); color: var(--color-ink-2); }
+.score { display: flex; flex-direction: column; gap: var(--space-md); }
+.key { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
 
-  .hero{
-    position:relative; overflow:hidden;
-    min-height:1260px;
-    background:
-      radial-gradient(ellipse at 75% 20%, rgba(224,149,79,0.10), transparent 55%),
-      radial-gradient(ellipse at 85% 55%, rgba(91,155,255,0.07), transparent 55%),
-      var(--bg);
-  }
-  .hero::before{
-    content:""; position:absolute; inset:0;
-    background-image:
-      linear-gradient(var(--grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size:56px 56px;
-    mask-image: radial-gradient(ellipse at 60% 40%, black 40%, transparent 85%);
-    pointer-events:none;
-  }
-  .graph-layer{position:absolute; inset:0; z-index:1;}
-  .graph-layer svg{width:100%; height:100%; display:block;}
+.band { padding-block: var(--section-gap-s); }
+.band + .band { border-top: var(--rule-hair) solid var(--color-rule); }
+.band h2 { font-size: var(--text-section); max-width: 22ch; }
+.band .intro { margin-top: var(--space-md); font-size: var(--text-lead); color: var(--color-ink-2); max-width: 40ch; }
 
-  .hero-content{position:relative; z-index:2; padding:88px 0 0; pointer-events:none;}
-  .eyebrow{
-    font-size:12px; letter-spacing:.11em; text-transform:uppercase; color:var(--amber);
-    margin:0 0 18px; font-weight:650;
-  }
-  h1{
-    font-size:clamp(32px,4.6vw,52px); font-weight:800; letter-spacing:-.03em; line-height:1.08;
-    margin:0 0 20px; text-wrap:balance; max-width:15ch;
-  }
-  h1 .hl-blue{color:var(--blue);}
-  h1 .hl-amber{color:var(--amber);}
-  .lede{font-size:16px; line-height:1.6; color:var(--ink-2); max-width:46ch; margin:0 0 30px;}
+.chain { display: flex; align-items: stretch; flex-wrap: wrap; gap: var(--space-md); margin-top: var(--space-xl); }
+.chain-node { display: flex; flex-direction: column; justify-content: center; gap: var(--space-3xs); min-height: 52px; padding: var(--space-sm) var(--space-lg); border: var(--rule-hair) solid var(--color-ink); border-radius: var(--radius-control); background: transparent; color: var(--color-ink); text-align: left; }
+.chain-node strong { font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg); line-height: 1.1; letter-spacing: var(--tracking-display); }
+.chain-node small { font-size: var(--text-xs); }
+.chain-node--you { background: var(--color-ink); color: var(--color-paper); }
+.chain-node--chief { background: var(--color-blue); border-color: var(--color-blue); color: var(--color-blue-ink); cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
+.chain-node--chief:hover { background: var(--color-blue-text); border-color: var(--color-blue-text); }
+.chain-node--chief:active { transform: translateY(1px); }
+.chain-link { align-self: center; width: var(--space-xl); height: var(--rule-heavy); background: var(--color-ink); }
+.trunk { height: var(--rule-heavy); background: var(--color-ink); margin-top: var(--space-xl); }
 
-  .stats{display:flex; flex-wrap:wrap; gap:30px; margin-bottom:10px;}
-  .stat .n{font-size:26px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.01em;}
-  .stat .l{font-size:11px; color:var(--ink-mute); text-transform:uppercase; letter-spacing:.07em; margin-top:2px;}
+.mind-rows { display: flex; flex-direction: column; gap: var(--space-3xl); margin-top: var(--space-xl); }
+.mind-row { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--space-lg); }
+.mind { display: flex; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+.mind .rgb-bar { height: var(--space-xs); }
+.mind h3 { font-size: var(--text-md); line-height: 1.1; margin-top: var(--space-xs); }
+.mind-title { display: block; width: 100%; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: inherit; letter-spacing: inherit; text-align: left; cursor: pointer; white-space: nowrap; }
+.mind-title:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.2em; }
+.agents { list-style: none; margin: var(--space-xs) 0 0; padding: 0; }
+.agent { display: flex; align-items: center; gap: var(--space-xs); width: 100%; min-height: 44px; padding: 0 var(--space-2xs); border: 0; border-top: var(--rule-hair) solid var(--color-rule); background: none; color: inherit; font-size: var(--text-sm); line-height: 1.2; text-align: left; cursor: pointer; transition: background-color var(--dur-micro) var(--ease-out); }
+.agent:hover { background: var(--color-paper-2); }
+.agent:active { background: var(--color-paper-3); }
+.agent .glyph--stop { color: var(--color-red); }
+.agent .glyph--build { color: var(--color-blue); }
+.agent .glyph--live { color: var(--color-green); }
 
-  .legend{position:relative; z-index:2; display:flex; gap:20px; flex-wrap:wrap; padding:0 0 54px; pointer-events:none;}
-  .legend-item{display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--ink-mute);}
-  .dot{width:8px; height:8px; border-radius:50%; flex:none;}
-  .dot.op{background:var(--blue); box-shadow:0 0 8px var(--blue);}
-  .dot.scaf{background:var(--amber); box-shadow:0 0 8px var(--amber);}
-  .dot.not{background:var(--grey);}
+.ledger { margin: var(--space-xl) 0 0; border-top: var(--rule-heavy) solid var(--color-ink); }
+.ledger-row { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: var(--gap-columns); padding: var(--space-lg) 0; border-bottom: var(--rule-hair) solid var(--color-rule); align-items: start; }
+.ledger-row dt { display: flex; }
+.ledger-row dd { margin: 0; font-size: var(--text-lead); line-height: 1.4; max-width: 46ch; }
+.status--plain { background: transparent; border: var(--rule-hair) solid var(--color-ink); color: var(--color-ink); }
 
-  section.status{padding:56px 0 70px; border-top:1px solid var(--border);}
-  .section-head{max-width:64ch; margin-bottom:8px;}
-  .section-head .eyebrow{margin-bottom:10px;}
-  .section-head h2{font-size:22px; font-weight:800; letter-spacing:-.01em; margin:0 0 10px;}
-  .section-head p{color:var(--ink-mute); font-size:14.5px; line-height:1.6; margin:0;}
+.rules { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap-columns); margin-top: var(--space-xl); }
+.rule { border-top: var(--rule-heavy) solid var(--color-ink); padding-top: var(--space-md); font-family: var(--font-display); font-weight: 800; font-size: var(--text-2xl); line-height: 1.1; letter-spacing: var(--tracking-display); text-wrap: balance; }
+.rule--red { border-color: var(--color-red); }
+.rule--blue { border-color: var(--color-blue); }
+.rule--green { border-color: var(--color-green); }
 
-  footer{padding:30px 0 56px; border-top:1px solid var(--border); font-size:12px; color:var(--ink-mute);}
+.foot { border-top: var(--rule-hair) solid var(--color-rule); padding-block: var(--space-xl) var(--space-2xl); font-size: var(--text-sm); color: var(--color-ink-2); }
+.foot-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-md); }
 
-  /* graph nodes */
-  .node{cursor:pointer;}
-  .node.you{cursor:default;}
-  .node .hit{pointer-events:all;}
-  .node .ring{fill:none; stroke-width:1.6; transition:filter .15s ease; pointer-events:none;}
-  .node .core{transition:r .15s ease; pointer-events:none;}
-  .node .label{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace; fill:var(--ink-2); text-anchor:middle; pointer-events:none;}
-  .node.not .ring{stroke:var(--grey);}
-  .node.not .core{fill:var(--grey);}
-  .node.not .label{fill:var(--ink-mute);}
-  .node.scaf .ring{stroke:var(--amber); filter:drop-shadow(0 0 6px rgba(224,149,79,.55));}
-  .node.scaf .core{fill:var(--amber);}
-  .node.op .ring{stroke:var(--blue); filter:drop-shadow(0 0 6px rgba(91,155,255,.55));}
-  .node.op .core{fill:var(--blue);}
-  .node.hub .ring{stroke:var(--amber); stroke-width:2; filter:drop-shadow(0 0 12px rgba(224,149,79,.75));}
-  .node.hub .core{fill:var(--amber);}
-  .node.you .ring{stroke:var(--ink); stroke-width:1.6;}
-  .node.you .core{fill:var(--ink);}
-  .node:hover .core{r:6;}
-  .node:focus-visible{outline:none;}
-  .node:focus-visible .ring{filter:drop-shadow(0 0 10px rgba(255,255,255,.6));}
-  .edge{stroke-width:1; fill:none;}
-  .edge.not{stroke:var(--grey-dim);}
-  .edge.scaf{stroke:var(--amber-dim);}
-  .edge.op{stroke:var(--blue-dim);}
-  .amb{fill:var(--ink-mute); opacity:.35;}
+/* detail panel */
+.overlay { position: fixed; inset: 0; z-index: var(--z-modal); display: none; background: color-mix(in oklab, var(--color-ink) 45%, transparent); }
+.overlay.open { display: block; }
+.panel { position: absolute; top: 0; right: 0; height: 100%; width: min(30rem, 100%); background: var(--color-paper); border-left: var(--rule-heavy) solid var(--color-ink); padding: var(--space-lg) var(--space-lg) var(--space-xl); overflow-y: auto; transform: translateX(100%); transition: transform var(--dur-short) var(--ease-out); }
+.overlay.open .panel { transform: translateX(0); }
+@media (prefers-reduced-motion: reduce) { .panel { transition: none; } }
+.panel-close { margin-bottom: var(--space-lg); }
+.panel-kind { font-size: var(--text-sm); font-weight: 700; color: var(--color-ink-2); margin-bottom: var(--space-xs); }
+.panel h2 { font-size: var(--text-2xl); margin-bottom: var(--space-xs); }
+.panel .ident { color: var(--color-muted); margin-bottom: var(--space-md); }
+.panel .status { margin-bottom: var(--space-lg); }
+.panel-block { margin-bottom: var(--space-lg); }
+.panel-block h3 { font-size: var(--text-md); font-family: var(--font-body); font-weight: 700; letter-spacing: 0; margin-bottom: var(--space-xs); color: var(--color-ink-2); }
+.panel-block p, .panel-block li { font-size: var(--text-md); line-height: 1.55; color: var(--color-ink); }
+.panel-block ul { margin: 0; padding-left: var(--space-lg); }
+.panel-list { list-style: none; padding: 0; margin: 0; }
+.panel-list li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-sm); padding: var(--space-xs) 0; border-top: var(--rule-hair) solid var(--color-rule); }
+.empty-state { border: var(--rule-hair) dashed var(--color-muted); padding: var(--space-md); font-size: var(--text-sm); color: var(--color-ink-2); line-height: 1.5; }
 
-  /* detail overlay */
-  .overlay{
-    position:fixed; inset:0; z-index:50; display:none;
-    background:color-mix(in srgb, var(--bg) 65%, transparent);
-    backdrop-filter:blur(3px);
-  }
-  .overlay.open{display:block;}
-  .panel{
-    position:absolute; top:0; right:0; height:100%; width:min(480px,100%);
-    background:var(--bg-2); border-left:1px solid var(--border);
-    padding:28px 26px 32px; overflow-y:auto;
-    transform:translateX(100%); transition:transform .22s ease;
-  }
-  .overlay.open .panel{transform:translateX(0);}
-  @media (prefers-reduced-motion:reduce){ .panel{transition:none;} }
-  .panel-close{
-    background:var(--grid-line); border:1px solid var(--border); color:var(--ink-mute);
-    width:32px; height:32px; border-radius:999px; font-size:15px; cursor:pointer; margin-bottom:22px;
-  }
-  .panel-close:hover{color:var(--ink);}
-  .panel .mind-tag{font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--amber); font-weight:700; margin-bottom:8px;}
-  .panel h3{font-size:22px; font-weight:800; margin:0 0 4px; letter-spacing:-.01em;}
-  .panel .agent-id{font-size:12px; color:var(--ink-mute); margin-bottom:16px;}
-  .panel .chip{
-    margin-bottom:20px; display:inline-block; font-size:9.5px; font-weight:750; text-transform:uppercase;
-    letter-spacing:.04em; padding:3px 8px; border-radius:999px;
-  }
-  .panel .chip.not{color:var(--grey); background:var(--grey-dim);}
-  .panel .chip.scaf{color:var(--amber); background:var(--amber-dim);}
-  .panel .chip.op{color:var(--blue); background:var(--blue-dim);}
-  .panel-block{margin-bottom:22px;}
-  .panel-block h4{
-    font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--ink-mute);
-    margin:0 0 8px; font-weight:700;
-  }
-  .panel-block p{font-size:14px; line-height:1.6; color:var(--ink-2); margin:0;}
-  .panel-block ul{margin:0; padding-left:18px; font-size:13.5px; line-height:1.6; color:var(--ink-2);}
-  .empty-state{
-    border:1px dashed var(--border); border-radius:9px; padding:16px;
-    font-size:13px; color:var(--ink-mute); line-height:1.5;
-  }
-
-  @media (max-width:860px){
-    .hero{min-height:1260px;}
-    h1{max-width:none;}
-    .hero-content{
-      background:linear-gradient(180deg, var(--bg) 78%, transparent 100%);
-      padding-bottom:26px;
-    }
-  }
+@media (max-width: 80rem) {
+  .mind-row { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: var(--space-xl); }
+}
+@media (max-width: 60rem) {
+  .head-row { grid-template-columns: minmax(0, 1fr); }
+  .stats { justify-content: flex-start; }
+  .mind-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ledger-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-sm); }
+  .rules { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 40rem) {
+  .mind-row { grid-template-columns: minmax(0, 1fr); }
+}
 </style>
+</head>
+<body>
+<div class="rgb-bar" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i></div>
 
-<nav>
-  <div class="wrap">
-    <div class="word">
-      <svg class="mark" width="20" height="20" viewBox="0 0 20 20"><circle cx="4" cy="16" r="2.4" fill="var(--grey)"/><circle cx="16" cy="4" r="2.4" fill="var(--amber)"/><circle cx="10" cy="10" r="2.8" fill="var(--amber)"/><line x1="4" y1="16" x2="10" y2="10" stroke="var(--grey)" stroke-width="1.2"/><line x1="10" y1="10" x2="16" y2="4" stroke="var(--amber)" stroke-width="1.2"/></svg>
-      performance<b>reach</b>
-    </div>
-    <div class="navlinks">
-      <a href="#status">Status</a>
-    </div>
+<header class="nav">
+  <div class="container nav-row">
+    <a class="wordmark" href="/" aria-label="performancereach, client sign in">
+      <svg width="30" height="12" viewBox="0 0 30 12" aria-hidden="true" focusable="false"><rect x="0" y="1" width="10" height="10" fill="var(--color-red)"/><polygon points="15,1 20,11 10,11" transform="translate(0 0)" fill="var(--color-blue)"/><circle cx="25" cy="6" r="5" fill="var(--color-green)"/></svg>
+      <span>performance<b>reach</b></span>
+    </a>
+    <a class="nav-link link" href="#status">Status</a>
   </div>
-</nav>
+</header>
 
-<div class="hero">
-  <div class="graph-layer"><svg id="graph" viewBox="0 0 2400 1320" preserveAspectRatio="xMidYMid meet"></svg></div>
-  <div class="hero-content wrap">
-    <p class="eyebrow">agentic services company</p>
-    <h1>A services company with <span class="hl-amber">one person</span> on staff.</h1>
-    <p class="lede">Every campaign, every design, every piece of writing, every research question, every deal, every invoice, every ticket runs through a purpose-built agent — organized into <span class="hl-blue" style="color:var(--ink-2)">thirteen operating groups</span> under one Chief of Staff. Every client's data stays sealed to that client. Nothing spends money or goes live without a human sign-off.</p>
-    <div class="stats">
-      <div class="stat"><div class="n mono">1</div><div class="l">Operator</div></div>
-      <div class="stat"><div class="n mono">13</div><div class="l">Minds</div></div>
-      <div class="stat"><div class="n mono">50</div><div class="l">Agents</div></div>
-      <div class="stat"><div class="n mono" style="color:var(--amber)">41</div><div class="l">Built</div></div>
-      <div class="stat"><div class="n mono">1</div><div class="l">Customer</div></div>
+<main>
+<section class="container hero" aria-labelledby="top">
+  <div class="head-row">
+    <div>
+      <h1 id="top">A services company with one person on staff.</h1>
+      <p class="lede">Thirteen groups of purpose-built agents, one Chief of Staff, one human sign-off.</p>
     </div>
+    <dl class="stats">
+      <div class="stat"><dt>Operator</dt><dd id="n-operator">1</dd></div>
+      <div class="stat"><dt>Minds</dt><dd id="n-minds">13</dd></div>
+      <div class="stat"><dt>Agents</dt><dd id="n-agents">50</dd></div>
+      <div class="stat"><dt>Built</dt><dd id="n-built">41</dd></div>
+      <div class="stat"><dt>Customer</dt><dd>1</dd></div>
+    </dl>
   </div>
-  <div class="legend wrap">
-    <div class="legend-item"><span class="dot not"></span>Not started</div>
-    <div class="legend-item"><span class="dot scaf"></span>Scaffolded — needs credentials</div>
-    <div class="legend-item"><span class="dot op"></span>Operational</div>
-  </div>
-</div>
-
-<section class="status" id="status">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">where things stand</p>
-      <h2>Right now</h2>
-      <p>41 agents are built across ten Minds — Paid Social, SEO/GEO, Design, Writing/Docs, Research, Sales, Finance, Customer Success, Legal/Compliance, Social Media — most waiting on real client data or platform access rather than platform credentials specifically. GEO/citation tracking and the whole Research Mind need no credentials and can already run. Analytics & Reporting, Email/Lifecycle, and Client Intake are scoped but not started. Click any node above to see what it does.</p>
+  <div class="score">
+    <div class="rgb-bar rgb-bar--tall" role="img" aria-label="Agents by state: 9 not started, 41 scaffolded, 0 operational" id="score-bar"><i class="r" style="--w:9"></i><i class="b" style="--w:41"></i><i class="g" style="--w:0"></i></div>
+    <div class="key">
+      <span class="status status--stop"><span class="glyph" aria-hidden="true"></span><span id="k-not">9</span> Not started</span>
+      <span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span><span id="k-scaf">41</span> Scaffolded, needs credentials</span>
+      <span class="status status--live"><span class="glyph glyph--live" aria-hidden="true"></span><span id="k-op">0</span> Operational</span>
     </div>
   </div>
 </section>
 
-<footer>
-  <div class="wrap">First customer: Amplifier Health, onboarded as a sealed pilot. Operated from a single Claude Code workspace.</div>
+<section class="band" id="chart" aria-labelledby="chart-h">
+  <div class="container">
+    <h2 id="chart-h">Thirteen Minds and fifty agents.</h2>
+    <p class="intro">Select any agent to see what it does and what it needs.</p>
+    <div class="chain">
+      <div class="chain-node chain-node--you"><strong>Operator</strong></div>
+      <span class="chain-link" aria-hidden="true"></span>
+      <button type="button" class="chain-node chain-node--chief" data-agent="chief-of-staff"><strong>Chief of Staff</strong></button>
+    </div>
+    <div class="trunk" aria-hidden="true"></div>
+    <div class="mind-rows" id="mind-rows"></div>
+  </div>
+</section>
+
+<section class="band" id="status" aria-labelledby="status-h">
+  <div class="container">
+    <h2 id="status-h">Right now</h2>
+    <dl class="ledger">
+      <div class="ledger-row">
+        <dt><span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span>41 built across ten Minds</span></dt>
+        <dd>Paid Social, SEO/GEO, Design, Writing/Docs, Research, Sales, Finance, Customer Success, Legal/Compliance and Social Media. Most are waiting on real client data or platform access.</dd>
+      </div>
+      <div class="ledger-row">
+        <dt><span class="status status--plain">Can run today</span></dt>
+        <dd>GEO/citation tracking and the whole Research Mind need no credentials.</dd>
+      </div>
+      <div class="ledger-row">
+        <dt><span class="status status--stop"><span class="glyph" aria-hidden="true"></span>Scoped, not started</span></dt>
+        <dd>Analytics &amp; Reporting, Email/Lifecycle, and Client Intake.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="rules-h">
+  <div class="container">
+    <h2 id="rules-h">Three standing rules.</h2>
+    <div class="rules">
+      <p class="rule rule--blue">Every campaign, design, piece of writing, research question, deal, invoice and ticket runs through a purpose-built agent.</p>
+      <p class="rule rule--red">Every client’s data stays sealed to that client.</p>
+      <p class="rule rule--green">Nothing spends money or goes live without a human sign-off.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="container foot-row">
+    <span>First customer: Amplifier Health, onboarded as a sealed pilot. Operated from a single Claude Code workspace.</span>
+    <a class="link" href="/">Client sign in</a>
+  </div>
 </footer>
 
 <div class="overlay" id="overlay">
   <div class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="panel-title">
-    <button class="panel-close" id="panel-close" aria-label="Close">✕</button>
+    <button class="btn panel-close" id="panel-close" type="button" aria-label="Close">Close</button>
     <div id="panel-content"></div>
   </div>
 </div>
@@ -215,7 +219,7 @@
 <script>
   const MINDS = [
     { id:'paid-social', name:'Paid Social', phase:'Phase 1', future:false,
-      note:'Facebook, Instagram, TikTok, Reels — campaign strategy through spend reporting.',
+      note:'Facebook, Instagram, TikTok, Reels: campaign strategy through spend reporting.',
       agents:[
         {id:'gtm-paid-social-strategist', name:'Strategist', status:'scaf',
          role:'Designs campaign structure, audience stacks, and placement tests across Meta and TikTok.',
@@ -223,10 +227,10 @@
          needs:['Meta ad account ID + System User token (ads_management, ads_read)','TikTok advertiser ID + access token']},
         {id:'gtm-paid-social-creative', name:'Creative', status:'scaf',
          role:'Writes ad copy variants and creative briefs per platform and format.',
-         detail:'Produces 3–5 copy variants per ad set plus a shot-list-level creative brief, sized for how each platform actually reads — a TikTok native caption is not a Meta feed headline.',
+         detail:'Produces 3 to 5 copy variants per ad set plus a shot-list-level creative brief, sized for how each platform actually reads, a TikTok native caption is not a Meta feed headline.',
          needs:['Canva MCP connector authorized','Client brand assets on file']},
         {id:'gtm-paid-social-budget-bid', name:'Budget/Bid', status:'scaf',
-         role:'Watches spend pacing and proposes budget or bid changes — never executes one.',
+         role:'Watches spend pacing and proposes budget or bid changes, never executes one.',
          detail:'Compares live spend and performance against the Strategist’s test-plan thresholds and recommends what to scale or pause. The recommendation always goes to a human; this agent has no execute path, by design.',
          needs:['Meta + TikTok API access (read minimum)','Confirmed spend-approval owner']},
         {id:'gtm-paid-social-performance', name:'Performance', status:'scaf',
@@ -253,7 +257,7 @@
         {id:'gtm-seo-geo-citation', name:'GEO/Citation', status:'scaf',
          role:'Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews.',
          detail:'Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds.',
-         needs:['Nothing blocking — running manual query tests today']},
+         needs:['Nothing blocking: running manual query tests today']},
       ]
     },
     { id:'analytics', name:'Analytics', phase:'Phase 2', future:true,
@@ -265,15 +269,15 @@
       ]
     },
     { id:'design', name:'Design', phase:'Phase 1', future:false,
-      note:'Brand system, ad creative, web/UI, and deck design — all grounded in the client\'s real brand, never a template.',
+      note:'Brand system, ad creative, web/UI, and deck design, all grounded in the client\'s real brand, never a template.',
       agents:[
         {id:'design-brand-identity', name:'Brand/Identity', status:'scaf',
-         role:'Defines or audits a client\'s brand system — color, type, logo rules, voice.',
+         role:'Defines or audits a client\'s brand system: color, type, logo rules, voice.',
          detail:'Builds the brand reference file every other Design agent reads from: real hex values and typefaces pulled from the client\'s actual site/assets, never guessed, plus a voice/tone description with real example lines.',
          needs:['Read access to the client\'s live site or brand asset folder']},
         {id:'design-ad-creative', name:'Ad Creative', status:'scaf',
          role:'Produces the actual visual ad assets from the Paid Social Mind\'s brief.',
-         detail:'Builds the visual asset in every size each platform needs (feed, Stories/Reels vertical, TikTok native) from real brand colors/type/logo — never a generic stock-photo-and-gradient placeholder.',
+         detail:'Builds the visual asset in every size each platform needs (feed, Stories/Reels vertical, TikTok native) from real brand colors/type/logo, never a generic stock-photo-and-gradient placeholder.',
          needs:['Canva MCP connector authorized','Client brand assets on file']},
         {id:'design-web-ui', name:'Web/UI', status:'scaf',
          role:'Designs landing pages, web UI, and app screens in the client\'s real brand.',
@@ -281,49 +285,49 @@
          needs:['Brand file populated first','Real copy from the Writing/Docs Mind or the client']},
         {id:'design-deck', name:'Deck', status:'scaf',
          role:'Designs pitch decks, one-pagers, and investor/board updates.',
-         detail:'Gets the narrative arc right first — one slide, one idea — then applies the client\'s real brand. Numbers and claims come from the client or the Research Mind, never fabricated to fill a slide.',
+         detail:'Gets the narrative arc right first, one slide, one idea, then applies the client\'s real brand. Numbers and claims come from the client or the Research Mind, never fabricated to fill a slide.',
          needs:['Brand file populated first','Source data/claims from the client or Research Mind']},
       ]
     },
     { id:'writing-docs', name:'Writing/Docs', phase:'Phase 1', future:false,
-      note:'Copy, long-form content, technical docs, and editing — the words behind everything else.',
+      note:'Copy, long-form content, technical docs, and editing, the words behind everything else.',
       agents:[
         {id:'docs-copywriting', name:'Copywriting', status:'scaf',
-         role:'Writes general marketing copy — website, email, sales one-pagers.',
+         role:'Writes general marketing copy: website, email, sales one-pagers.',
          detail:'Distinct from the Paid Social Mind\'s ad-specific copy: website copy, email sequences, sales one-pagers, written from the reader\'s side in the client\'s real voice.',
          needs:['Brand file for voice/tone','Real product facts from the client']},
         {id:'docs-content', name:'Long-form Content', status:'scaf',
          role:'Writes blog posts, articles, and case studies from a brief.',
-         detail:'Takes the SEO/GEO Mind\'s content brief and writes the actual piece — matching the target search intent the brief was built for, not just reading well in isolation.',
+         detail:'Takes the SEO/GEO Mind\'s content brief and writes the actual piece, matching the target search intent the brief was built for, not just reading well in isolation.',
          needs:['A content brief from the SEO/GEO Mind','Brand file for voice/tone']},
         {id:'docs-technical', name:'Technical Docs', status:'scaf',
          role:'Writes READMEs, API docs, and user guides grounded in the real product.',
-         detail:'Reads the client\'s actual code/API/product where accessible rather than describing a generic version of "a product like this" — accuracy over polish.',
+         detail:'Reads the client\'s actual code/API/product where accessible rather than describing a generic version of "a product like this", accuracy over polish.',
          needs:['Read access to the client\'s real codebase/API/product']},
         {id:'docs-editing', name:'Editing', status:'scaf',
          role:'Edits and proofreads any written deliverable before it ships.',
-         detail:'The last pass before anything written goes out: line edits for clarity and brand-voice consistency, internal-consistency checks, a clean final version — never a rewrite of the author\'s actual intent.',
-         needs:['Nothing blocking — runs against any draft already on file']},
+         detail:'The last pass before anything written goes out: line edits for clarity and brand-voice consistency, internal-consistency checks, a clean final version, never a rewrite of the author\'s actual intent.',
+         needs:['Nothing blocking: runs against any draft already on file']},
       ]
     },
     { id:'research', name:'Research', phase:'Phase 1', future:false,
-      note:'Market, competitive, customer, and data research — the evidence behind every other Mind\'s work.',
+      note:'Market, competitive, customer, and data research, the evidence behind every other Mind\'s work.',
       agents:[
         {id:'research-market', name:'Market', status:'scaf',
-         role:'Sizes markets and maps industry landscapes — TAM/SAM/SOM, trends.',
+         role:'Sizes markets and maps industry landscapes: TAM/SAM/SOM, trends.',
          detail:'Every figure sourced and cited; a market-size claim with no source is worse than saying no reliable public number exists and showing the best proxy instead.',
-         needs:['Nothing blocking — runs on public research today']},
+         needs:['Nothing blocking: runs on public research today']},
         {id:'research-competitive', name:'Competitive', status:'scaf',
          role:'Tracks competitor positioning, pricing, and messaging.',
          detail:'Maps who the client actually competes with (not just the biggest names), pulling positioning and pricing from competitors\' real public sites and ads.',
-         needs:['Nothing blocking — runs on public research today']},
+         needs:['Nothing blocking: runs on public research today']},
         {id:'research-customer', name:'Customer', status:'scaf',
          role:'Synthesizes customer/user research into real patterns.',
-         detail:'Turns interviews, surveys, and review mining into patterns grounded in actual quotes and counts — "three of eight interviews mentioned X," not "customers feel X."',
+         detail:'Turns interviews, surveys, and review mining into patterns grounded in actual quotes and counts, "three of eight interviews mentioned X," not "customers feel X."',
          needs:['Real customer data from the client for anything beyond public review mining']},
         {id:'research-data', name:'Data/Quant', status:'scaf',
          role:'Runs quantitative deep-dives on the client\'s own data.',
-         detail:'Cohort/funnel breakdowns and root-cause analysis on metric moves, with the actual numbers and method shown — never presents correlation as causation.',
+         detail:'Cohort/funnel breakdowns and root-cause analysis on metric moves, with the actual numbers and method shown, never presents correlation as causation.',
          needs:['Access to the client\'s real underlying data']},
       ]
     },
@@ -332,19 +336,19 @@
       agents:[
         {id:'sales-prospecting', name:'Prospecting', status:'scaf',
          role:'Finds and qualifies leads against the client\'s real ideal-customer profile.',
-         detail:'A qualified lead list where every entry has a real reason it fits and a real signal that now is a reasonable time to reach out — never a generic list.',
+         detail:'A qualified lead list where every entry has a real reason it fits and a real signal that now is a reasonable time to reach out, never a generic list.',
          needs:['The client\'s real ideal-customer profile']},
         {id:'sales-outreach', name:'Outreach', status:'scaf',
-         role:'Drafts outbound sequences from the prospecting list — never sends them.',
+         role:'Drafts outbound sequences from the prospecting list, never sends them.',
          detail:'Personalized sequences tied to the actual reason each lead was flagged, in the client\'s real voice. Every draft goes to a human before it reaches a real inbox.',
          needs:['A prospect list from Prospecting','Brand file for voice/tone']},
         {id:'sales-meeting-prep', name:'Meeting Prep', status:'scaf',
          role:'Preps account research and talking points before a real sales call.',
-         detail:'A one-page brief per meeting grounded in real account history and public signals, with actual objections and actual answers — not a generic pitch.',
+         detail:'A one-page brief per meeting grounded in real account history and public signals, with actual objections and actual answers, not a generic pitch.',
          needs:['Access to prior account history/notes where they exist']},
         {id:'sales-pipeline', name:'Pipeline', status:'scaf',
          role:'Reviews pipeline health and flags stalled deals with a next action.',
-         detail:'Diagnostic only — reads the client\'s real CRM data, flags what\'s stuck and why, proposes a next step. Never talks to a prospect itself.',
+         detail:'Diagnostic only, reads the client\'s real CRM data, flags what\'s stuck and why, proposes a next step. Never talks to a prospect itself.',
          needs:['Read access to the client\'s real CRM or pipeline export']},
       ]
     },
@@ -353,19 +357,19 @@
       agents:[
         {id:'finance-bookkeeping', name:'Bookkeeping', status:'scaf',
          role:'Categorizes transactions and reconciles accounts.',
-         detail:'Never has payment or banking credentials, and never moves money — categorizes and reconciles against the client\'s real chart of accounts, flags anything that doesn\'t tie out.',
+         detail:'Never has payment or banking credentials, and never moves money, categorizes and reconciles against the client\'s real chart of accounts, flags anything that doesn\'t tie out.',
          needs:['Read access to the client\'s real transaction export and chart of accounts']},
         {id:'finance-invoicing', name:'Invoicing', status:'scaf',
-         role:'Drafts invoices and tracks collections — never sends or charges anything.',
+         role:'Drafts invoices and tracks collections, never sends or charges anything.',
          detail:'Draft invoices from real billing data, plus an aging report on what\'s overdue. Every draft goes to the client for review before it reaches a real customer.',
          needs:['Read access to the client\'s real billing/time-tracking data']},
         {id:'finance-reporting', name:'Financial Reporting', status:'scaf',
          role:'Builds P&L, cash flow, and balance-sheet reads from real bookkeeping data.',
-         detail:'A plain-language read on what moved and why, every number traced back to real transactions — flags data errors instead of quietly reporting through them.',
+         detail:'A plain-language read on what moved and why, every number traced back to real transactions, flags data errors instead of quietly reporting through them.',
          needs:['Reconciled data from Bookkeeping, or direct access to real financial records']},
         {id:'finance-forecasting', name:'Forecasting', status:'scaf',
          role:'Forecasts revenue/cash and models scenarios against real historicals.',
-         detail:'A range with stated assumptions, never a single false-precision number — every assumption named so it can be challenged.',
+         detail:'A range with stated assumptions, never a single false-precision number, every assumption named so it can be challenged.',
          needs:['Historical financials from Financial Reporting']},
       ]
     },
@@ -373,7 +377,7 @@
       note:'Support, retention, onboarding, and feedback for the client\'s own end customers.',
       agents:[
         {id:'success-support', name:'Support', status:'scaf',
-         role:'Triages support tickets and drafts responses — never sends them.',
+         role:'Triages support tickets and drafts responses, never sends them.',
          detail:'Grounded in the client\'s real product/policy docs; flags anything needing a real account lookup or a human decision instead of guessing.',
          needs:['Read access to the client\'s real product docs and support queue']},
         {id:'success-retention', name:'Retention', status:'scaf',
@@ -382,52 +386,52 @@
          needs:['Read access to the client\'s real usage/engagement and account data']},
         {id:'success-onboarding', name:'Onboarding', status:'scaf',
          role:'Builds onboarding sequences for the client\'s new end customers.',
-         detail:'A checklist and welcome sequence tied to what actually gets a new customer to first real value with the client\'s product — not a generic drip.',
+         detail:'A checklist and welcome sequence tied to what actually gets a new customer to first real value with the client\'s product, not a generic drip.',
          needs:['A clear description of the client\'s real product setup steps']},
         {id:'success-feedback', name:'Feedback', status:'scaf',
          role:'Mines tickets, NPS, and reviews into concrete feedback themes.',
-         detail:'Themes grounded in real quotes and counts, each paired with a specific follow-up — not a vague "customers want better X."',
+         detail:'Themes grounded in real quotes and counts, each paired with a specific follow-up, not a vague "customers want better X."',
          needs:['Read access to real support tickets, NPS/survey data, or reviews']},
       ]
     },
     { id:'legal', name:'Legal/Compliance', phase:'Phase 1', future:false,
-      note:'Contract review, compliance checks, policy drafts, and IP monitoring — draft and flag only, never a substitute for a licensed attorney.',
+      note:'Contract review, compliance checks, policy drafts, and IP monitoring, draft and flag only, never a substitute for a licensed attorney.',
       agents:[
         {id:'legal-contract-review', name:'Contract Review', status:'scaf',
          role:'Flags risk clause-by-clause in contracts, NDAs, and MSAs.',
-         detail:'Not legal advice and not a substitute for a licensed attorney — flags and explains, recommends real counsel before anything with real stakes gets signed.',
-         needs:['Nothing blocking to review text — real counsel required for anything with real stakes']},
+         detail:'Not legal advice and not a substitute for a licensed attorney, flags and explains, recommends real counsel before anything with real stakes gets signed.',
+         needs:['Nothing blocking to review text: real counsel required for anything with real stakes']},
         {id:'legal-compliance-check', name:'Compliance Check', status:'scaf',
          role:'Checks marketing/product claims against the regulatory framework that applies.',
          detail:'Names the actual framework being checked against rather than a vague "looks fine." Never states a regulatory fact with certainty unless a current primary source was actually read.',
          needs:['Confirmation of which regulatory framework applies to this client\'s industry']},
         {id:'legal-policy-docs', name:'Policy Docs', status:'scaf',
          role:'Drafts privacy policies, terms of service, and policy documents.',
-         detail:'Reflects what the client\'s product actually does with data — every draft explicitly labeled as a starting point for attorney review, never a final document.',
+         detail:'Reflects what the client\'s product actually does with data, every draft explicitly labeled as a starting point for attorney review, never a final document.',
          needs:['An accurate description of what the client\'s product actually does with user data']},
         {id:'legal-ip-trademark', name:'IP/Trademark', status:'scaf',
          role:'Monitors trademark conflicts and drafts (never sends) related correspondence.',
-         detail:'Scans for real, verifiable uses of the client\'s marks by others. Never sends a cease-and-desist or asserts a claim as settled — real conflicts go to a licensed attorney.',
+         detail:'Scans for real, verifiable uses of the client\'s marks by others. Never sends a cease-and-desist or asserts a claim as settled, real conflicts go to a licensed attorney.',
          needs:['Confirmation of the client\'s actual registered or common-law marks']},
       ]
     },
     { id:'social', name:'Social Media', phase:'Phase 1', future:false,
-      note:'Organic content calendar, post writing, community management, and analytics — paid social lives in its own Mind.',
+      note:'Organic content calendar, post writing, community management, and analytics, paid social lives in its own Mind.',
       agents:[
         {id:'social-calendar', name:'Content Calendar', status:'scaf',
          role:'Plans the organic posting calendar/cadence across platforms.',
-         detail:'Every slot tied to a real reason — a launch, a content pillar from the brand file — matched to a cadence the client can actually sustain.',
+         detail:'Every slot tied to a real reason, a launch, a content pillar from the brand file, matched to a cadence the client can actually sustain.',
          needs:['Brand file for voice/content pillars']},
         {id:'social-post-writing', name:'Post Writing', status:'scaf',
          role:'Writes platform-native captions and posts from the calendar.',
-         detail:'Written for how each platform actually reads, in the client\'s real voice — no emoji-bullet crutch, no engagement-bait tacked on for its own sake.',
+         detail:'Written for how each platform actually reads, in the client\'s real voice, no emoji-bullet crutch, no engagement-bait tacked on for its own sake.',
          needs:['A calendar from Content Calendar', 'Brand file for voice/tone']},
         {id:'social-community', name:'Community', status:'scaf',
-         role:'Drafts replies to comments/DMs and monitors brand mentions — never posts.',
+         role:'Drafts replies to comments/DMs and monitors brand mentions, never posts.',
          detail:'Drafted replies in the client\'s real voice, plus a mention-monitoring summary. Escalates anything that looks like a real complaint or PR risk immediately.',
          needs:['Read access to the client\'s real social accounts/mentions']},
         {id:'social-analytics', name:'Analytics', status:'scaf',
-         role:'Reads organic social performance — what\'s actually working.',
+         role:'Reads organic social performance, what\'s actually working.',
          detail:'Real numbers from the platform\'s own analytics, feeding clear signal back to Content Calendar and Post Writing on what to do more or less of.',
          needs:['Read access to the client\'s real platform analytics']},
       ]
@@ -441,7 +445,7 @@
       ]
     },
     { id:'intake', name:'Intake', phase:'Phase 4', future:true,
-      note:'Unlocks onboarding new customers once Phase 1–3 are proven.',
+      note:'Unlocks onboarding new customers once Phases 1 to 3 are proven.',
       agents:[
         {id:'discovery-intake', name:'Discovery', status:'not', role:'Runs new-client discovery and requirements gathering.'},
         {id:'contract-pricing', name:'Pricing', status:'not', role:'Drafts scope and pricing for a new customer.'},
@@ -450,112 +454,55 @@
     },
   ];
 
-  const STATUS_LABEL = {not:'Not started', scaf:'Scaffolded', op:'Operational'};
-  const NS = 'http://www.w3.org/2000/svg';
-  function el(tag, attrs){
-    const n = document.createElementNS(NS, tag);
-    for(const k in attrs) n.setAttribute(k, attrs[k]);
-    return n;
+  const STATUS = {
+    not:  { cls: 'stop',  label: 'Not started' },
+    scaf: { cls: 'build', label: 'Scaffolded' },
+    op:   { cls: 'live',  label: 'Operational' }
+  };
+  const glyph = (s) => `<span class="glyph${STATUS[s].cls === 'stop' ? '' : ' glyph--' + STATUS[s].cls}" aria-hidden="true"></span>`;
+  const statusChip = (s) => `<span class="status status--${STATUS[s].cls}">${glyph(s)}${STATUS[s].label}</span>`;
+
+  // The Chief of Staff counts as one scaffolded agent.
+  const tally = { not: 0, scaf: 1, op: 0 };
+  MINDS.forEach(m => m.agents.forEach(a => { tally[a.status]++; }));
+  const total = tally.not + tally.scaf + tally.op;
+  const setText = (id, v) => { const n = document.getElementById(id); if (n) n.textContent = v; };
+  setText('n-minds', MINDS.length);
+  setText('n-agents', total);
+  setText('n-built', tally.scaf + tally.op);
+  setText('k-not', tally.not);
+  setText('k-scaf', tally.scaf);
+  setText('k-op', tally.op);
+  const scoreBar = document.getElementById('score-bar');
+  scoreBar.setAttribute('aria-label', `Agents by state: ${tally.not} not started, ${tally.scaf} scaffolded, ${tally.op} operational`);
+  scoreBar.innerHTML = `<i class="r" style="--w:${tally.not}"></i><i class="b" style="--w:${tally.scaf}"></i><i class="g" style="--w:${tally.op}"></i>`;
+
+  // 13 Minds read better as two rows, seven then six.
+  const ROW1_IDS = ['paid-social', 'seo-geo', 'design', 'writing-docs', 'research', 'sales', 'finance'];
+  const rows = [MINDS.filter(m => ROW1_IDS.includes(m.id)), MINDS.filter(m => !ROW1_IDS.includes(m.id))];
+
+  function mindHTML(m) {
+    const c = { not: 0, scaf: 0, op: 0 };
+    m.agents.forEach(a => { c[a.status]++; });
+    const list = m.agents.map(a =>
+      `<li><button type="button" class="agent" data-agent="${a.id}" aria-label="${a.name}, ${STATUS[a.status].label}">${glyph(a.status)}<span>${a.name}</span></button></li>`
+    ).join('');
+    return `<article class="mind">
+      <div class="rgb-bar" aria-hidden="true"><i class="r" style="--w:${c.not}"></i><i class="b" style="--w:${c.scaf}"></i><i class="g" style="--w:${c.op}"></i></div>
+      <h3><button type="button" class="mind-title" data-agent="${m.id}">${m.name}</button></h3>
+      <ul class="agents">${list}</ul>
+    </article>`;
   }
-
-  const VB_W = 2400, VB_H = 1320;
-  const OPERATOR = {x: 1680, y: 46};
-  const COS = {x: 1680, y: 156};
-
-  // 13 Minds no longer fit one row legibly — split into two rows of mind
-  // nodes, each with its own agent grid underneath.
-  const ROW1_IDS = ['paid-social','seo-geo','design','writing-docs','research','sales','finance'];
-  const ROW1_Y = 300, ROW1_AGENT_Y = 458;
-  const ROW2_Y = 800, ROW2_AGENT_Y = 958;
-
-  function xsFor(n) {
-    const left = 1032, right = 2328;
-    const step = (right - left) / (n - 1);
-    return Array.from({length: n}, (_, i) => Math.round(left + i * step));
-  }
-  const row1Minds = MINDS.filter(m => ROW1_IDS.includes(m.id));
-  const row2Minds = MINDS.filter(m => !ROW1_IDS.includes(m.id));
-  const row1Xs = xsFor(row1Minds.length);
-  const row2Xs = xsFor(row2Minds.length);
-  row1Minds.forEach((m, i) => { m.x = row1Xs[i]; m.y = ROW1_Y; });
-  row2Minds.forEach((m, i) => { m.x = row2Xs[i]; m.y = ROW2_Y; });
-
-  MINDS.forEach(m=>{
-    const agentY = m.y === ROW1_Y ? ROW1_AGENT_Y : ROW2_AGENT_Y;
-    const n = m.agents.length;
-    const grid = n === 4
-      ? [[-52,0],[52,0],[-52,66],[52,66]]
-      : [[-44,0],[44,0],[0,58]];
-    m.agents.forEach((a,j)=>{ const [dx,dy] = grid[j]||[0,0]; a.x = m.x + dx; a.y = agentY + dy; });
-  });
-
-  const svg = document.getElementById('graph');
-  function updateGraphAspect(){
-    svg.setAttribute('preserveAspectRatio', window.matchMedia('(max-width:860px)').matches ? 'xMidYMax meet' : 'xMidYMid meet');
-  }
-  updateGraphAspect();
-  window.addEventListener('resize', updateGraphAspect);
-  const edgesLayer = el('g', {class:'edges'});
-  const ambLayer = el('g', {class:'ambient'});
-  const nodesLayer = el('g', {class:'nodes'});
-  svg.append(ambLayer, edgesLayer, nodesLayer);
-
-  function edgeClass(status){ return status==='op' ? 'op' : status==='scaf' ? 'scaf' : 'not'; }
-  function line(a,b,cls){
-    const l = el('line', {x1:a.x, y1:a.y, x2:b.x, y2:b.y, class:'edge '+cls});
-    edgesLayer.appendChild(l);
-  }
-  function curve(a,b,cls){
-    const mx = (a.x+b.x)/2, my = (a.y+b.y)/2 - 26;
-    const p = el('path', {d:`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x} ${b.y}`, class:'edge '+cls});
-    edgesLayer.appendChild(p);
-  }
-
-  line(OPERATOR, COS, 'scaf');
-  MINDS.forEach(m=>{
-    curve(COS, m, m.future ? 'not' : 'scaf');
-    m.agents.forEach(a=> line(m, a, edgeClass(a.status)));
-  });
-
-  // ambient background points + long signal lines
-  for(let i=0;i<70;i++){
-    const cx = Math.random()*VB_W, cy = Math.random()*VB_H*0.85;
-    ambLayer.appendChild(el('circle', {cx, cy, r: (Math.random()*1.6+0.5).toFixed(2), class:'amb'}));
-  }
-  [[OPERATOR,{x:2380,y:250}], [COS,{x:2380,y:40}]].forEach(([a,b])=>{
-    edgesLayer.appendChild(el('line', {x1:a.x,y1:a.y,x2:b.x,y2:b.y, class:'edge not', 'stroke-dasharray':'2 5'}));
-  });
-
-  function makeNode(n, cls, r, labelBelow, fontSize){
-    const attrs = {class:'node '+cls};
-    if(n.id){ attrs.tabindex = '0'; attrs.role = 'button'; attrs['data-agent'] = n.id; }
-    const g = el('g', attrs);
-    g.appendChild(el('circle', {class:'hit', cx:n.x, cy:n.y, r: r+20, fill:'transparent'}));
-    g.appendChild(el('circle', {class:'ring', cx:n.x, cy:n.y, r: r+6}));
-    g.appendChild(el('circle', {class:'core', cx:n.x, cy:n.y, r: r*0.42}));
-    if(labelBelow){
-      const t = el('text', {class:'label', x:n.x, y:n.y + r + 20, 'font-size': fontSize||11});
-      t.textContent = labelBelow;
-      g.appendChild(t);
-    }
-    nodesLayer.appendChild(g);
-    return g;
-  }
-
-  makeNode({...OPERATOR, id:null}, 'you', 12, 'OPERATOR');
-  makeNode({...COS, id:'chief-of-staff'}, 'hub', 16, 'CHIEF OF STAFF');
-  MINDS.forEach(m=>{
-    makeNode(m, m.future ? 'not' : 'scaf', 12, m.name.toUpperCase());
-    m.agents.forEach(a=> makeNode(a, edgeClass(a.status), 7, a.name, m.future ? 9.5 : 11));
-  });
+  document.getElementById('mind-rows').innerHTML = rows
+    .map(r => `<div class="mind-row">${r.map(mindHTML).join('')}</div>`).join('');
 
   const AGENT_INDEX = {};
-  MINDS.forEach(m=>m.agents.forEach(a=>AGENT_INDEX[a.id] = {...a, mindName:m.name}));
+  MINDS.forEach(m => m.agents.forEach(a => AGENT_INDEX[a.id] = { ...a, mindName: m.name }));
   AGENT_INDEX['chief-of-staff'] = {
-    id:'chief-of-staff', name:'Chief of Staff', status:'scaf', mindName:'Orchestrator',
-    role:'Plans every cycle and gates every external action for approval.',
-    detail:'Reads the sealed client’s config and decides what each Mind should do, returning a structured plan the harness executes. It has no ability to call other agents itself — that division of labor is the point — and every proposed spend or publish action gets surfaced for a human to approve before anything goes live.',
-    needs:['Nothing blocking on its own — it runs as soon as a Mind has work to plan for']
+    id: 'chief-of-staff', name: 'Chief of Staff', status: 'scaf', mindName: 'Orchestrator',
+    role: 'Plans every cycle and gates every external action for approval.',
+    detail: 'Reads the sealed client’s config and decides what each Mind should do, returning a structured plan the harness executes. It has no ability to call other agents itself, and that division of labor is the point. Every proposed spend or publish action gets surfaced for a human to approve before anything goes live.',
+    needs: ['Nothing blocking on its own: it runs as soon as a Mind has work to plan for']
   };
 
   const MIND_INDEX = {};
@@ -563,67 +510,70 @@
 
   const overlay = document.getElementById('overlay');
   const panelContent = document.getElementById('panel-content');
+  let opener = null;
 
-  function openMind(m){
-    const rows = m.agents.map(a =>
-      `<li><span class="chip ${a.status}" style="margin:0 8px 4px 0;">${STATUS_LABEL[a.status]}</span>${a.name}</li>`
-    ).join('');
+  function openMind(m) {
+    const rowsHtml = m.agents.map(a => `<li>${statusChip(a.status)}<span>${a.name}</span></li>`).join('');
     panelContent.innerHTML = `
-      <div class="mind-tag">${m.phase}</div>
-      <h3 id="panel-title">${m.name}</h3>
-      <div class="agent-id mono">${m.agents.length} agent${m.agents.length===1?'':'s'}</div>
-      <span class="chip ${m.future ? 'not' : 'scaf'}">${m.future ? 'Not started' : 'Active build'}</span>
-      <div class="panel-block"><h4>What this Mind covers</h4><p>${m.note}</p></div>
-      <div class="panel-block"><h4>Agents in this Mind</h4><ul style="list-style:none; padding:0; margin:0;">${rows}</ul></div>
+      <p class="panel-kind">${m.phase}</p>
+      <h2 id="panel-title">${m.name}</h2>
+      <p class="ident">${m.agents.length} agent${m.agents.length === 1 ? '' : 's'}</p>
+      ${statusChip(m.future ? 'not' : 'scaf').replace(/Scaffolded/, 'Active build')}
+      <div class="panel-block"><h3>What this Mind covers</h3><p>${m.note}</p></div>
+      <div class="panel-block"><h3>Agents in this Mind</h3><ul class="panel-list">${rowsHtml}</ul></div>
     `;
-    overlay.classList.add('open');
-    location.hash = 'agent=' + m.id;
-    document.getElementById('panel-close').focus();
+    showPanel('agent=' + m.id);
   }
 
-  function openAgent(id){
+  function openAgent(id) {
     const a = AGENT_INDEX[id];
-    if(!a){ if(MIND_INDEX[id]) openMind(MIND_INDEX[id]); return; }
+    if (!a) { if (MIND_INDEX[id]) openMind(MIND_INDEX[id]); return; }
     const needsHtml = a.needs && a.needs.length
-      ? `<div class="panel-block"><h4>Needed to go operational</h4><ul>${a.needs.map(n=>`<li>${n}</li>`).join('')}</ul></div>`
+      ? `<div class="panel-block"><h3>Needed to go operational</h3><ul>${a.needs.map(n => `<li>${n}</li>`).join('')}</ul></div>`
       : '';
-    const runsHtml = `<div class="panel-block"><h4>Recent output</h4><div class="empty-state">No runs yet — this pilot hasn’t gone live. Once it has, its reports show up here.</div></div>`;
+    const runsHtml = `<div class="panel-block"><h3>Recent output</h3><div class="empty-state">No runs yet. This pilot hasn’t gone live. Once it has, its reports show up here.</div></div>`;
     panelContent.innerHTML = `
-      <div class="mind-tag">${a.mindName}</div>
-      <h3 id="panel-title">${a.name}</h3>
-      <div class="agent-id mono">${a.id}</div>
-      <span class="chip ${a.status}">${STATUS_LABEL[a.status]}</span>
-      <div class="panel-block"><h4>What it does</h4><p>${a.detail || a.role}</p></div>
+      <p class="panel-kind">${a.mindName}</p>
+      <h2 id="panel-title">${a.name}</h2>
+      <p class="ident">${a.id}</p>
+      ${statusChip(a.status)}
+      <div class="panel-block"><h3>What it does</h3><p>${a.detail || a.role}</p></div>
       ${needsHtml}
       ${runsHtml}
     `;
-    overlay.classList.add('open');
-    location.hash = 'agent=' + id;
-    document.getElementById('panel-close').focus();
-  }
-  function closePanel(){
-    overlay.classList.remove('open');
-    if(location.hash.startsWith('#agent=')) history.replaceState(null,'',location.pathname+location.search);
+    showPanel('agent=' + id);
   }
 
-  document.addEventListener('click', e=>{
+  function showPanel(hash) {
+    if (!overlay.classList.contains('open')) opener = document.activeElement;
+    overlay.classList.add('open');
+    location.hash = hash;
+    document.getElementById('panel-close').focus();
+  }
+  function closePanel() {
+    if (!overlay.classList.contains('open')) return;
+    overlay.classList.remove('open');
+    if (location.hash.startsWith('#agent=')) history.replaceState(null, '', location.pathname + location.search);
+    if (opener && opener.focus) opener.focus();
+    opener = null;
+  }
+
+  document.addEventListener('click', e => {
     const node = e.target.closest('[data-agent]');
-    if(node && node.getAttribute('data-agent')){ openAgent(node.getAttribute('data-agent')); return; }
-    if(e.target === overlay){ closePanel(); }
+    if (node && node.getAttribute('data-agent')) { openAgent(node.getAttribute('data-agent')); return; }
+    if (e.target === overlay) closePanel();
   });
-  document.addEventListener('keydown', e=>{
-    if(e.key==='Escape') closePanel();
-    if(e.key==='Enter' && document.activeElement && document.activeElement.matches('[data-agent]')){
-      const id = document.activeElement.getAttribute('data-agent');
-      if(id) openAgent(id);
-    }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closePanel();
   });
   document.getElementById('panel-close').addEventListener('click', closePanel);
 
   window.addEventListener('hashchange', checkHash);
-  function checkHash(){
+  function checkHash() {
     const m = location.hash.match(/agent=([\w-]+)/);
-    if(m && (AGENT_INDEX[m[1]] || MIND_INDEX[m[1]])) openAgent(m[1]);
+    if (m && (AGENT_INDEX[m[1]] || MIND_INDEX[m[1]])) openAgent(m[1]);
   }
   checkHash();
 </script>
+</body>
+</html>

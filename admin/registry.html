@@ -4,167 +4,182 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Harness Admin</title>
+<title>Harness admin</title>
+<meta name="description" content="Owner-only status of the Claude Code harness: what the registry scan found, what is installed, and what the JEV fork layer decided.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
+<link rel="stylesheet" href="/assets/system.css">
 <style>
-  :root{
-    --bg:#08090C; --surface:#0D0F14; --surface-2:#12141A; --border:#22252C;
-    --ink:#F3F4F6; --ink-2:#B7BBC4; --ink-mute:#6E7280;
-    --lead:#E0954F;  --lead-dim:#5A3F22;      /* Sonnet main session */
-    --inst:#5B9BFF;  --inst-dim:#1E3352;      /* what you install */
-    --jev:#E3C565;   --jev-dim:#4A3F1C;       /* JEV fork layer */
-    --reg:#A58BFF;   --reg-dim:#2E2650;       /* registry scan */
-    --split:#E0664F; --split-dim:#4A241E;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--ink)}
-  body{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:13px;line-height:1.45;padding:20px 16px 40px}
-  a{color:inherit}
-  .wrap{max-width:1080px;margin:0 auto}
-  .hidden{display:none!important}
+/* Hallmark · shape: app screen · genre: modern-minimal · theme: custom · redesign: full · job: sign up · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
+ * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: none, an app screen · nav: title row with the key under it · footer: the status line · imagery: none · signature: the registry list beside three ruled zones, each rule in the colour of the thing it holds
+ * axes: light/geometric-sans/chromatic-blue · posture: Full palette, blue is Sonnet and the action, green is installed and sharp, red only means a failure · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: S, a status board looks like every status board; the heavy rule over each zone takes the colour of what the zone holds, so the legend is the layout */
+html, body { overflow-x: clip; }
+:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { cursor: not-allowed; }
+.hidden { display: none !important; }
+.shell { max-width: var(--container); margin-inline: auto; padding: 0 var(--gutter) var(--space-2xl); }
 
-  /* sign-in */
-  .login{max-width:360px;margin:12vh auto 0;background:var(--surface-2);border:1px solid var(--border);border-radius:14px;padding:28px 24px}
-  .login h1{font-size:15px;margin:0 0 4px;letter-spacing:.02em}
-  .login p{color:var(--ink-mute);margin:0 0 20px;font-size:12px}
-  .login label{display:block;font-size:11px;color:var(--ink-2);margin:0 0 5px}
-  .login input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--ink);font:inherit;margin-bottom:14px}
-  .login input:focus{outline:none;border-color:var(--lead)}
-  .btn{background:var(--lead);color:#1A1206;border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;width:100%}
-  .btn.ghost{background:none;border:1px solid var(--border);color:var(--ink-2);width:auto;padding:6px 12px;font-weight:400}
-  .err{color:var(--split);background:var(--split-dim);border-radius:8px;padding:8px 10px;font-size:12px;margin-bottom:14px}
+/* sign-in */
+.login { max-width: 24rem; margin: var(--space-3xl) auto 0; padding-top: var(--space-lg); border-top: var(--rule-heavy) solid var(--color-blue); }
+.login h1 { font-size: var(--text-2xl); }
+.login .sub { color: var(--color-ink-2); margin: var(--space-xs) 0 var(--space-lg); }
+.login .row { margin-bottom: var(--space-md); }
+.login .btn { width: 100%; }
+.login .notice { margin-bottom: var(--space-md); }
 
-  /* header */
-  .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px}
-  .title{font-weight:700;letter-spacing:.06em;font-size:14px}
-  .title .n{color:var(--lead)} .title .one{color:var(--jev)}
-  .who{color:var(--ink-mute);font-size:11px;display:flex;gap:10px;align-items:center}
-  .legend{display:flex;flex-wrap:wrap;gap:6px 18px;color:var(--ink-2);font-size:11.5px;margin:10px 0 18px}
-  .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+/* header */
+.top { display: flex; justify-content: space-between; align-items: end; gap: var(--space-lg); flex-wrap: wrap; padding-block: var(--space-xl) var(--space-lg); }
+.top h1 { font-size: var(--text-3xl); }
+.facts { display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-lg); margin-top: var(--space-xs); color: var(--color-ink-2); font-size: var(--text-sm); }
+.who { display: flex; align-items: center; gap: var(--space-md); color: var(--color-ink-2); font-size: var(--text-sm); }
+.key { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-bottom: var(--space-xl); }
+.swatch-ink { background: var(--color-ink); color: var(--color-paper); }
+.swatch-plain { background: transparent; border: var(--rule-hair) solid var(--color-ink); color: var(--color-ink); }
 
-  .grid{display:grid;grid-template-columns:240px 1fr;gap:18px}
-  @media (max-width:760px){.grid{grid-template-columns:1fr}}
+.grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: var(--space-xl); align-items: start; }
+@media (max-width: 60rem) { .grid { grid-template-columns: minmax(0, 1fr); } }
 
-  .box{border:1.5px solid var(--border);border-radius:6px;background:var(--surface);padding:12px 14px}
-  .box h2{margin:0 0 8px;font-size:12.5px;text-align:center;letter-spacing:.04em}
-  .reg{border-color:var(--reg)} .reg h2{color:var(--reg)}
-  .lead{border-color:var(--lead)} .lead h2{color:var(--lead)}
-  .jev{border-color:var(--jev)} .jev h2{color:var(--jev)}
-  .kind{border-color:var(--inst)} .kind h2{color:var(--ink)}
-  .center{text-align:center}
-  .mute{color:var(--ink-mute)} .ink2{color:var(--ink-2)}
+.zone { border-top: var(--rule-heavy) solid var(--color-ink); padding-top: var(--space-md); }
+.zone h2 { font-size: var(--text-xl); line-height: 1.15; margin-bottom: var(--space-xs); }
+.zone--reg { border-color: var(--color-ink); }
+.zone--lead { border-color: var(--color-blue); }
+.zone--jev { border-color: var(--color-ink); }
+.zone--kind { border-color: var(--color-green); }
+.mute { color: var(--color-ink-2); }
+.center { text-align: left; }
+.ink2 { color: var(--color-ink-2); }
 
-  /* registry list */
-  .slots{list-style:none;margin:0;padding:0}
-  .slot{padding:7px 0;border-bottom:1px dashed var(--border)}
-  .slot:last-child{border-bottom:0}
-  .slot .row{display:flex;justify-content:space-between;gap:8px}
-  .slot .name{color:var(--ink)}
-  .slot .ok{color:var(--reg)}
-  .slot .sub{color:var(--reg);font-size:11.5px;padding-left:12px}
-  .slot .src{color:var(--ink-mute);font-size:10.5px;padding-left:12px;word-break:break-all}
+/* registry list */
+.slots { list-style: none; margin: var(--space-md) 0 0; padding: 0; }
+.slot { padding: var(--space-sm) 0; border-top: var(--rule-hair) solid var(--color-rule); }
+.slot .row { display: flex; justify-content: space-between; gap: var(--space-xs); font-weight: 700; }
+.slot .ok { color: var(--color-green-text); font-weight: 700; font-size: var(--text-sm); }
+.slot .sub { color: var(--color-ink-2); font-size: var(--text-sm); }
+.slot .src { font-family: var(--font-outlier); color: var(--color-muted); font-size: var(--text-xs); word-break: break-all; margin-top: var(--space-2xs); }
 
-  /* flow */
-  .flow{display:flex;flex-direction:column;gap:14px}
-  .tabs{display:flex;justify-content:center;gap:14px;margin:6px 0}
-  .tabs span{color:var(--ink-mute)} .tabs b{color:var(--lead);font-weight:700}
-  .bar{height:12px;background:var(--surface-2);border-radius:2px;overflow:hidden;position:relative}
-  .bar > span{position:absolute;inset:0 auto 0 0;background:var(--inst)}
-  .bar.lead > span{background:var(--lead)}
-  .bar.sharp > span{background:var(--jev)} .bar.split > span{background:var(--split)}
-  .q{display:grid;grid-template-columns:110px 1fr 120px;gap:10px;align-items:center;margin:6px 0}
-  .q .lab{color:var(--ink-2)}
-  .q .val.sharp{color:var(--jev)} .q .val.split{color:var(--split)}
-  .q .pick{grid-column:1/-1;color:var(--ink-mute);font-size:11px;margin:-4px 0 2px 120px}
-  @media (max-width:520px){.q{grid-template-columns:90px 1fr 92px}.q .pick{margin-left:0}}
-  .rule{text-align:center;color:var(--ink-mute);font-size:11.5px;margin-top:6px}
-  .rule b{color:var(--jev);font-weight:400}
-  .lands{text-align:center;color:var(--ink-2)} .lands b{color:var(--inst);font-weight:700}
-  .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-  @media (max-width:620px){.kinds{grid-template-columns:1fr}}
-  .kind .tag{color:var(--inst);text-align:center;margin-bottom:8px}
-  .kind .stat{display:flex;justify-content:space-between;font-size:11.5px;color:var(--ink-2);margin-top:6px}
-  .kind .top3{font-size:11px;color:var(--ink-mute);margin-top:6px;min-height:30px}
-  .verdicts{display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin-top:6px}
-  .verdicts b{color:var(--ink)}
+/* flow */
+.flow { display: flex; flex-direction: column; gap: var(--space-xl); min-width: 0; }
+.tabs { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin: var(--space-md) 0; font-size: var(--text-md); }
+.tabs span { color: var(--color-ink-2); }
+.tabs b { font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); color: var(--color-ink); font-variant-numeric: tabular-nums; margin-left: var(--space-2xs); }
+.bar { height: var(--space-md); background: var(--color-paper-3); position: relative; overflow: hidden; }
+.bar > span { position: absolute; inset: 0 auto 0 0; background: var(--color-green); }
+.bar.lead > span { background: var(--color-blue); }
+.bar.sharp > span { background: var(--color-green); }
+.bar.split > span { background: var(--color-blue); }
+.q { display: grid; grid-template-columns: 8rem minmax(0, 1fr) 9rem; gap: var(--space-md); align-items: center; margin: var(--space-md) 0 0; }
+.q .lab { color: var(--color-ink-2); }
+.q .val { font-variant-numeric: tabular-nums; font-weight: 700; }
+.q .val.sharp { color: var(--color-green-text); }
+.q .val.split { color: var(--color-blue-text); }
+.q .pick { grid-column: 1 / -1; color: var(--color-muted); font-size: var(--text-sm); margin-top: calc(var(--space-xs) * -1); }
+.rule { color: var(--color-ink-2); font-size: var(--text-sm); margin-top: var(--space-md); display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-lg); }
+.rule b { font-weight: 700; color: var(--color-green-text); }
+.rule .split { color: var(--color-blue-text); font-weight: 700; }
+.lands { font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); letter-spacing: var(--tracking-display); }
+.kinds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); }
+@media (max-width: 40rem) { .kinds { grid-template-columns: minmax(0, 1fr); } .q { grid-template-columns: 6rem minmax(0, 1fr) 7rem; } }
+.kind { border-top: var(--rule-hair) solid var(--color-ink); padding-top: var(--space-sm); }
+.kind h2 { font-size: var(--text-lg); }
+.kind .tag { color: var(--color-ink-2); font-size: var(--text-sm); margin-bottom: var(--space-sm); }
+.kind .stat { display: flex; justify-content: space-between; gap: var(--space-xs); font-size: var(--text-sm); color: var(--color-ink-2); margin-top: var(--space-sm); }
+.kind .top3 { font-size: var(--text-sm); color: var(--color-muted); margin-top: var(--space-xs); min-height: 2lh; }
+.verdicts { display: flex; flex-wrap: wrap; gap: var(--space-lg); margin-top: var(--space-md); }
+.verdicts b { font-family: var(--font-display); font-weight: 800; font-size: var(--text-xl); margin-left: var(--space-2xs); color: var(--color-ink); font-variant-numeric: tabular-nums; }
 
-  /* log */
-  .log{margin-top:20px;border:1px solid var(--border);border-radius:6px;padding:10px 14px;background:var(--surface)}
-  .log h3{margin:-20px 0 8px;display:inline-block;background:var(--bg);padding:0 8px;font-size:12px;color:var(--ink-2);font-weight:400}
-  .line{display:grid;grid-template-columns:70px 84px 1fr;gap:10px;font-size:12px;padding:2px 0}
-  .line .s-jev{color:var(--jev)} .line .s-hooks{color:var(--inst)} .line .s-registry{color:var(--reg)}
-  .line .msg{color:var(--ink-2);overflow-wrap:anywhere}
-  .statusline{margin-top:14px;color:var(--ink-2);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 22px}
-  .statusline b{color:var(--lead);font-weight:400} .statusline .j{color:var(--jev)}
-  .empty{color:var(--ink-mute);font-style:italic}
+/* log */
+.log { margin-top: var(--space-xl); border-top: var(--rule-heavy) solid var(--color-ink); padding-top: var(--space-md); }
+.log h2 { font-size: var(--text-xl); margin-bottom: var(--space-md); }
+.line { display: grid; grid-template-columns: 5.5rem 6rem minmax(0, 1fr); gap: var(--space-md); padding: var(--space-xs) 0; border-top: var(--rule-hair) solid var(--color-rule); font-size: var(--text-sm); }
+.line .time { font-family: var(--font-outlier); color: var(--color-muted); font-size: var(--text-xs); }
+.line .s-jev { font-weight: 700; color: var(--color-ink); }
+.line .s-hooks { font-weight: 700; color: var(--color-green-text); }
+.line .s-registry { font-weight: 700; color: var(--color-blue-text); }
+.line .msg { color: var(--color-ink-2); overflow-wrap: anywhere; }
+.statusline { margin-top: var(--space-xl); color: var(--color-ink-2); font-size: var(--text-sm); display: flex; flex-wrap: wrap; gap: var(--space-xs) var(--space-lg); }
+.statusline b { font-weight: 700; color: var(--color-ink); font-variant-numeric: tabular-nums; }
+.empty { color: var(--color-ink-2); }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="rgb-bar" aria-hidden="true"><i class="r"></i><i class="g"></i><i class="b"></i></div>
+<div class="shell">
 
-  <section id="loginView" class="login hidden">
-    <h1>HARNESS ADMIN</h1>
-    <p>Owner access only.</p>
-    <div id="err" class="err hidden"></div>
+  <section id="loginView" class="login hidden" aria-labelledby="loginTitle">
+    <h1 id="loginTitle">Harness admin</h1>
+    <p class="sub">Owner access only.</p>
+    <div id="err" class="notice notice--error hidden" role="alert"></div>
     <form id="loginForm">
-      <label for="email">Email</label>
-      <input id="email" type="email" autocomplete="username" required>
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-      <button class="btn" type="submit">Sign in</button>
+      <div class="row">
+        <label class="label" for="email">Email</label>
+        <input class="input" id="email" name="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="row">
+        <label class="label" for="password">Password</label>
+        <input class="input" id="password" name="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn--primary" type="submit">Sign in</button>
     </form>
   </section>
 
   <section id="dash" class="hidden">
     <div class="top">
-      <div class="title">CLAUDE CODE HARNESS · <span class="n" id="hRepos">10 REPOS</span> · <span class="one">ONE .CLAUDE FOLDER</span></div>
-      <div class="who"><span id="updated">waiting for first snapshot</span><button class="btn ghost" id="signOut" type="button">Sign out</button></div>
+      <div>
+        <h1>Claude Code harness</h1>
+        <div class="facts"><span id="hRepos">10 repos</span><span>One .claude folder</span></div>
+      </div>
+      <div class="who"><span id="updated">Waiting for first snapshot</span><button class="btn" id="signOut" type="button">Sign out</button></div>
     </div>
-    <div class="legend">
-      <span><i style="background:var(--lead)"></i>sonnet · session</span>
-      <span><i style="background:var(--inst)"></i>what you install</span>
-      <span><i style="background:var(--jev)"></i>jev · forks</span>
-      <span><i style="background:var(--reg)"></i>registry scan</span>
+    <div class="key">
+      <span class="status status--build">Sonnet session</span>
+      <span class="status status--live">What you install</span>
+      <span class="status swatch-ink">JEV forks</span>
+      <span class="status swatch-plain">Registry scan</span>
     </div>
 
     <div class="grid">
-      <aside class="box reg">
-        <h2>REGISTRY</h2>
-        <div class="center mute" id="scanned">scanned 0/10</div>
+      <aside class="zone zone--reg">
+        <h2>Registry</h2>
+        <div class="mute" id="scanned">Scanned 0 of 10</div>
         <ul class="slots" id="slots"></ul>
       </aside>
 
       <div class="flow">
-        <div class="box lead">
-          <h2 id="leadName">Sonnet · main session</h2>
-          <div class="center ink2">installed from the registry</div>
+        <div class="zone zone--lead">
+          <h2 id="leadName">Sonnet, main session</h2>
+          <div class="ink2">Installed from the registry</div>
           <div class="tabs" id="leadTabs"></div>
           <div class="bar lead"><span id="leadBar" style="width:0"></span></div>
-          <div class="center mute" style="margin-top:6px" id="leadAdded">.claude/ · added 0 of 10</div>
+          <div class="mute" style="margin-top:var(--space-xs)" id="leadAdded">.claude/ has 0 of 10 added</div>
         </div>
 
-        <div class="box jev">
-          <div style="display:flex;justify-content:space-between;align-items:baseline">
-            <h2 style="margin:0">JEV · fork layer</h2>
-            <span class="mute">forks <b style="color:var(--jev)" id="forks">0</b></span>
+        <div class="zone zone--jev">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-md);flex-wrap:wrap">
+            <h2 style="margin:0">JEV fork layer</h2>
+            <span class="mute">Forks <b id="forks">0</b></span>
           </div>
           <div id="jevQs"></div>
-          <div class="rule"><b>sharp → runs in code</b> · <span style="color:var(--split)">split → Sonnet</span> · <span id="jevCost"></span></div>
+          <div class="rule"><b>Sharp runs in code.</b><span class="split">Split goes to Sonnet.</span><span id="jevCost"></span></div>
         </div>
 
-        <div class="lands">what lands in .claude · <b>three kinds</b></div>
+        <h2 class="lands">Three kinds land in .claude</h2>
 
         <div class="kinds" id="kinds"></div>
 
-        <div class="box lead">
-          <h2>back to Sonnet · lead</h2>
-          <div class="center ink2">one team, one repo · skeptic grades, librarian files</div>
+        <div class="zone zone--lead">
+          <h2>Back to Sonnet, the lead</h2>
+          <div class="ink2">One team, one repo. The skeptic grades, the librarian files.</div>
           <div class="verdicts" id="verdicts"></div>
         </div>
       </div>
     </div>
 
     <div class="log">
-      <h3>session log · last 7 days</h3>
+      <h2>Session log, last 7 days</h2>
       <div id="log"></div>
     </div>
 
@@ -207,7 +222,7 @@
     if (!user) { $("dash").classList.add("hidden"); $("loginView").classList.remove("hidden"); return; }
     unsub = onSnapshot(doc(db, "harness", "status"), (snap) => {
       $("loginView").classList.add("hidden"); $("dash").classList.remove("hidden");
-      if (!snap.exists()) { $("updated").textContent = "no snapshot yet · run tools/push_status.py"; return; }
+      if (!snap.exists()) { $("updated").textContent = "No snapshot yet. Run tools/push_status.py"; return; }
       render(JSON.parse(snap.data().json));
     }, () => {
       signOut(auth);
@@ -229,28 +244,28 @@
   };
 
   function render(s) {
-    $("updated").textContent = "snapshot " + ago(s.updatedAt);
-    $("leadName").textContent = s.lead || "Sonnet · main session";
+    $("updated").textContent = "Snapshot " + ago(s.updatedAt);
+    $("leadName").textContent = s.lead || "Sonnet, main session";
     const reg = s.registry || [];
-    $("hRepos").textContent = `${reg.length} REPOS`;
-    $("scanned").textContent = `scanned ${reg.length}/10`;
+    $("hRepos").textContent = `${reg.length} repos`;
+    $("scanned").textContent = `Scanned ${reg.length} of 10`;
 
     $("slots").innerHTML = reg.map((r) => {
-      const subs = Object.entries(r.counts).map(([k, n]) => `<div class="sub">» ${n} ${esc(kindLabel[k] || k)}</div>`).join("");
-      return `<li class="slot"><div class="row"><span class="name">✓ ${esc(r.slot)}</span><span class="ok">✓</span></div>${subs}
+      const subs = Object.entries(r.counts).map(([k, n]) => `<div class="sub">${n} ${esc(kindLabel[k] || k)}</div>`).join("");
+      return `<li class="slot"><div class="row"><span class="name">${esc(r.slot)}</span><span class="ok">scanned</span></div>${subs}
         <div class="src"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.repo)}</a>${r.commit ? " @" + esc(r.commit) : ""}</div></li>`;
     }).join("");
 
     const inst = s.installed || {};
     const nA = (inst.agents || []).length, nS = (inst.skills || []).length, nH = (inst.hooks || []).length;
-    $("leadTabs").innerHTML = `<span>agents <b>${nA}</b></span><span>skills <b>${nS}</b></span><span>hooks <b>${nH}</b></span>`;
+    $("leadTabs").innerHTML = `<span>Agents <b>${nA}</b></span><span>Skills <b>${nS}</b></span><span>Hooks <b>${nH}</b></span>`;
     $("leadBar").style.width = `${Math.round(100 * reg.length / 10)}%`;
-    $("leadAdded").textContent = `.claude/ · added ${reg.length} of 10`;
+    $("leadAdded").textContent = `.claude/ has ${reg.length} of 10 added`;
 
     const j = s.jev || {};
     $("forks").textContent = (j.forks_total || 0).toLocaleString();
-    $("jevCost").textContent = `week cost $${(j.cost_week || 0).toFixed(4)}`;
-    const qs = [["which_agent", "which agent"], ["which_skill", "which skill"], ["retry_or_stop", "retry or stop"]];
+    $("jevCost").textContent = `Week cost $${(j.cost_week || 0).toFixed(4)}`;
+    const qs = [["which_agent", "Which agent"], ["which_skill", "Which skill"], ["retry_or_stop", "Retry or stop"]];
     $("jevQs").innerHTML = qs.map(([k, lab]) => {
       const q = j[k] || {};
       const mode = q.last_mode || "";
@@ -258,35 +273,36 @@
       const rate = q.n ? Math.round(100 * q.sharp / q.n) : 0;
       return `<div class="q"><span class="lab">${lab}</span>
         <div class="bar ${mode}"><span style="width:${Math.round(p * 100)}%"></span></div>
-        <span class="val ${mode}">${q.n ? p.toFixed(2) + " " + mode : "no calls yet"}</span>
-        <span class="pick">${q.n ? `last → ${esc(q.last_pick || "none")} · ${q.sharp}/${q.n} sharp (${rate}%)` : ""}</span></div>`;
+        <span class="val ${mode}">${q.n ? p.toFixed(2) + " " + mode : "No calls yet"}</span>
+        <span class="pick">${q.n ? `Last pick ${esc(q.last_pick || "none")}, ${q.sharp} of ${q.n} sharp (${rate}%)` : ""}</span></div>`;
     }).join("");
 
     const u = s.usage_week || {};
-    const top = (obj) => Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n, c]) => `${esc(n)} ×${c}`).join(" · ");
+    const top = (obj) => Object.entries(obj || {}).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n, c]) => `${esc(n)} ×${c}`).join(", ");
     const evTotal = Object.values(u.hook_events || {}).reduce((a, b) => a + b, 0);
     const usedA = Object.keys(u.agents || {}).length, usedS = Object.keys(u.skills || {}).length;
     const kinds = [
-      ["subagents", "delegated work", nA, usedA, `${usedA} of ${nA} used this week`, top(u.agents) || "none called yet"],
-      ["skills", "progressive load", nS, usedS, `${usedS} of ${nS} loaded this week`, top(u.skills) || "none loaded yet"],
-      ["hooks", "deterministic", nH, nH, `${evTotal.toLocaleString()} events · ${(inst.hook_events || []).length} hook points`, top(u.hook_events) || "no events yet"],
+      ["Subagents", "Delegated work", nA, usedA, `${usedA} of ${nA} used this week`, top(u.agents) || "None called yet"],
+      ["Skills", "Progressive load", nS, usedS, `${usedS} of ${nS} loaded this week`, top(u.skills) || "None loaded yet"],
+      ["Hooks", "Deterministic", nH, nH, `${evTotal.toLocaleString()} events across ${(inst.hook_events || []).length} hook points`, top(u.hook_events) || "No events yet"],
     ];
     $("kinds").innerHTML = kinds.map(([h, tag, n, used, stat, t]) => `
-      <div class="box kind"><h2>${h}</h2><div class="tag">${tag}</div>
+      <div class="kind"><h2>${h}</h2><div class="tag">${tag}</div>
         <div class="bar"><span style="width:${n ? Math.round(100 * used / n) : 0}%"></span></div>
-        <div class="stat"><span>${stat}</span><span>✓ wired</span></div>
+        <div class="stat"><span>${stat}</span><span>Wired</span></div>
         <div class="top3">${t}</div></div>`).join("");
 
     const v = s.verdicts || {};
-    $("verdicts").innerHTML = ["VERIFIED", "TRADE-OFF", "NO EFFECT"].map((k) => `<span class="mute">${k} <b>${v[k] || 0}</b></span>`).join("");
+    const pretty = (k) => k.charAt(0) + k.slice(1).toLowerCase().replace("-", "-");
+    $("verdicts").innerHTML = ["VERIFIED", "TRADE-OFF", "NO EFFECT"].map((k) => `<span class="mute">${pretty(k)} <b>${v[k] || 0}</b></span>`).join("");
 
     const log = s.log || [];
-    $("log").innerHTML = log.length ? log.slice(-14).map((l) => `<div class="line"><span class="mute">${esc((l.ts || "").slice(11, 19))}</span>
+    $("log").innerHTML = log.length ? log.slice(-14).map((l) => `<div class="line"><span class="time">${esc((l.ts || "").slice(11, 19))}</span>
       <span class="s-${esc(l.src)}">${esc(l.src)}</span><span class="msg">${esc(l.msg)}</span></div>`).join("")
       : `<div class="empty">No harness activity in the last 7 days.</div>`;
 
-    $("statusline").innerHTML = `<span>registry <b>[${reg.length}]</b></span><span>added <b>[${reg.length}]</b></span>
-      <span>sessions <b>[${u.sessions || 0}]</b></span><span class="j">jev [ ${(j.forks_total || 0).toLocaleString()} forks ]</span>`;
+    $("statusline").innerHTML = `<span>Registry <b>${reg.length}</b></span><span>Added <b>${reg.length}</b></span>
+      <span>Sessions <b>${u.sessions || 0}</b></span><span>JEV forks <b>${(j.forks_total || 0).toLocaleString()}</b></span>`;
   }
 </script>
 </body>
