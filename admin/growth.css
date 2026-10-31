@@ -229,3 +229,36 @@ dialog::backdrop { background: color-mix(in oklab, var(--color-ink) 45%, transpa
 .rgb-bar > .r { background: var(--color-red); }
 .rgb-bar > .g { background: var(--color-green); }
 .rgb-bar > .b { background: var(--color-blue); }
+
+/* Agent org chart: operator -> Chief of Staff -> teams -> specialists, on a night canvas */
+.oc-host { min-width: 0; }
+.oc-panel { position: relative; background: #0B0E1A; border-radius: 6px; overflow: hidden; }
+.oc-canvas { display: block; width: 100%; }
+.oc-legend { position: absolute; left: var(--space-md); bottom: var(--space-sm); display: flex; flex-wrap: wrap; gap: var(--space-2xs) var(--space-lg); font-size: var(--text-xs); color: #C9CDE4; }
+.oc-legend i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: var(--space-xs); }
+.oc-card { position: absolute; top: var(--space-md); right: var(--space-md); width: min(20rem, 42%); max-height: 38%; overflow: auto; padding: var(--space-md); background: rgba(20, 24, 44, 0.88); border: 1px solid rgba(140, 150, 225, 0.28); border-radius: 10px; color: #E6E8F5; backdrop-filter: blur(6px); }
+.oc-card h3 { color: #FFFFFF; font-size: var(--text-lg); margin-bottom: var(--space-xs); }
+.oc-card p { font-size: var(--text-sm); color: #C9CDE4; margin-bottom: var(--space-xs); }
+.oc-card .oc-eyebrow { font-family: var(--font-outlier); font-size: var(--text-xs); letter-spacing: 0.06em; text-transform: uppercase; color: #A9B4FF; }
+.oc-card .oc-meta b { color: #FFFFFF; font-weight: 700; margin-right: var(--space-2xs); }
+.oc-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2xs) var(--space-sm); }
+.oc-list button, .oc-card .oc-open { min-height: 0; padding: var(--space-3xs) 0; background: none; border: 0; color: #E6E8F5; font-size: var(--text-sm); font-weight: 400; justify-content: flex-start; text-align: left; }
+.oc-list button:hover:not(:disabled), .oc-card .oc-open:hover:not(:disabled) { background: none; color: #FFFFFF; text-decoration: underline; }
+.oc-card .oc-open { margin-top: var(--space-xs); color: #A9B4FF; font-weight: 700; }
+.oc-dot { display: inline-block; flex: none; width: 7px; height: 7px; border-radius: 50%; margin-right: var(--space-xs); background: #8FB4FF; opacity: 0.45; }
+.oc-dot.running { background: #6E8BFF; opacity: 1; box-shadow: 0 0 0 3px rgba(110, 139, 255, 0.3); }
+.oc-dot.done { background: #C4B5FD; opacity: 1; }
+.oc-dot.failed { background: var(--color-red); opacity: 1; }
+.oc-stats { display: flex; flex-wrap: wrap; gap: var(--space-md) var(--space-xl); padding: var(--space-lg) 0 var(--space-md); }
+.oc-stats div { display: grid; }
+.oc-stats b { font-family: var(--font-display); font-size: var(--text-2xl); font-weight: 800; line-height: 1; }
+.oc-stats span { font-family: var(--font-outlier); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.06em; color: var(--color-ink-2); margin-top: var(--space-2xs); }
+.oc-label { font-family: var(--font-outlier); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-blue-text); margin: var(--space-md) 0 var(--space-xs); }
+.oc-pills { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+.oc-pills button { min-height: 2rem; padding: 0 var(--space-sm); border-radius: 999px; font-size: var(--text-sm); font-weight: 400; }
+.oc-pills small { margin-left: var(--space-2xs); color: var(--color-muted); }
+@media (max-width: 680px) {
+  .oc-card { position: static; width: auto; max-height: none; border-radius: 0; border-width: 1px 0 0; }
+  .oc-legend { position: static; padding: var(--space-sm) var(--space-md); grid-auto-flow: row; }
+  .oc-stats { gap: var(--space-md) var(--space-lg); }
+}
