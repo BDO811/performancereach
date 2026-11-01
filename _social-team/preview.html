@@ -1,0 +1,32 @@
+<!doctype html>
+<!-- Local preview of the Social team view with fictional data. Jekyll skips this folder, so it never publishes. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Social team preview</title>
+<link rel="stylesheet" href="/admin/growth.css"></head>
+<body><div id="app"><main><header><h1>Social team</h1></header><p id="notice" role="status" hidden></p><section id="view"></section></main></div>
+<dialog id="editor"><form id="editorForm"><h2 id="editorTitle"></h2><div id="editorBody"></div><div class="dialog-actions"><button type="button" id="cancelEditor">Cancel</button><button id="saveEditor" type="submit" class="primary">Save</button></div></form></dialog>
+<script type="module">
+import {renderSocial,handleSocial,handleSocialChange} from '/admin/social.js';
+const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const mode=new URLSearchParams(location.search).get('mode')||'filled';
+const files={};const owner=['owner/brand-voice.md','owner/budget-cap.md','owner/approval-bar.md','owner/positioning.md'];
+owner.forEach(k=>files[k]=mode==='new'?'[FILL IN: x]\n[FILL IN: y]':'# filled');
+['brand-brain/voice-guide','brand-brain/tone-rules','content/content-calendar','social/hashtag-rules','reporting/kpi-model'].forEach((k,i)=>files['brand-os/'+k+'.md']=i<3&&mode!=='new'?'# filled':'[FILL IN: x]');
+let inputs={productId:'demo',stopped:mode==='stopped',files,tools:{}},calls=[];
+const state={productId:'demo',updatedAt:new Date().toISOString(),pendingBriefs:mode==='new'?[]:['drafts/briefs/2026-11-02-content-engine-roast.md'],
+ queue:mode==='new'?[]:[{id:'Q-20261102-01',title:'URGENT Reply to a one-star review',section:'open',urgent:true,overCap:false,ticked:[],fields:{What:'Post the drafted public reply.','Why it waits':'Any reply to a negative review always waits.',File:'drafts/2026-11-02-gbp-reply-long-wait.md',Spend:'none','Requested by':'reviews-reputation for brief B-20261102-01','Owner note':''}},{id:'Q-20261102-02',title:'OVER CAP Boost the roast post',section:'open',urgent:false,overCap:true,ticked:[],fields:{What:'Boost for 50 USD.','Why it waits':'Paid spend.',File:'-',Spend:'50 USD on Instagram'}}],
+ held:mode==='new'?[]:[{id:'H-20261102-01',title:'Instagram caption',section:'open',ticked:[],fields:{File:'drafts/x.md','Rule it broke':'Words we never use: game-changer','Line that failed':'This roast is a game-changer.'}}],
+ drafts:mode==='new'?[]:[{path:'drafts/2026-11-02-gbp-reply-long-wait.md',name:'2026-11-02-gbp-reply-long-wait.md',meta:{channel:'gbp',voice_check:'pass'},modifiedAt:new Date().toISOString(),content:'---\nchannel: gbp\nvoice_check: pass\n---\nThanks for telling us. [VERIFY]'},{path:'drafts/2026-11-02-linkedin-new-roast.md',name:'2026-11-02-linkedin-new-roast.md',meta:{channel:'linkedin',voice_check:'pass'},modifiedAt:new Date().toISOString(),content:'---\nchannel: linkedin\nvoice_check: pass\n---\nThe new roast is in. [PASTE]'}],
+ briefs:[],log:['2026-11-02 09:00 | orchestrator | wrote week plan | drafts/briefs/2026-11-02-week-plan.md'],run:mode==='running'?{label:"This week's loop",startedAt:new Date().toISOString(),status:'running',costUsd:.42,steps:[{label:'orchestrator runs the week',status:'done',result:'3 briefs'},{label:'content-engine on roast',status:'running'}]}:null,
+ runs:mode==='new'?[]:[{label:"This week's loop",startedAt:new Date().toISOString(),status:'completed',costUsd:1.23,steps:[{label:'orchestrator runs the week',status:'done',result:'3 briefs'}]}]};
+const tag=s=>{const k=String(s).toLowerCase();const c=/ready|done|completed|pass|connected/.test(k)?'tag--live':/stop|open|block|fail|urgent|over cap/.test(k)?'tag--stop':'tag--build';return `<span class="tag ${c}">${esc(s)}</span>`;};
+const ctx={$,esc,tag,date:v=>new Date(v).toLocaleString(),now:()=>new Date().toISOString(),uid:()=>String(Math.random()).slice(2),
+ put:async(p,v)=>{calls.push([p,v]);window.calls=calls;},mutate:async(p,fn)=>{inputs=fn(inputs);render();},
+ field:(l,id,v='')=>`<label>${esc(l)}<input id="${id}" value="${esc(v)}"></label>`,area:(l,id,v='')=>`<label>${esc(l)}<textarea id="${id}">${esc(v)}</textarea></label>`,
+ openEditor:(t,b,save)=>{$('editorTitle').textContent=t;$('editorBody').innerHTML=b;window.saveEditor=save;$('editor').showModal();},notice:m=>{$('notice').textContent=m;$('notice').hidden=false;},render,
+ product:()=>({name:'Demo',accounts:{linkedin:{},x:{}},pillars:['One']}),productId:()=>'demo',state:()=>state,inputs:()=>inputs};
+function render(){renderSocial(ctx);}
+$('view').onclick=e=>{const b=e.target.closest('button');if(b&&(b.dataset.social||b.dataset.socialTab))handleSocial(b,ctx).catch(err=>ctx.notice(err.message));};
+$('view').onchange=e=>handleSocialChange(e,ctx);
+$('cancelEditor').onclick=()=>$('editor').close();$('editorForm').onsubmit=async e=>{e.preventDefault();await window.saveEditor();$('editor').close();};
+render();
+</script></body></html>
