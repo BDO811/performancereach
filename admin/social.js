@@ -69,25 +69,25 @@ function readiness(state, inputs) {
 }
 
 function desk(ctx, state, inputs) {
-  const { esc, tag, date } = ctx, { missing, first } = readiness(state, inputs), { open, held } = socialCounts(state);
+  const { esc, tag, date } = ctx, { missing, first } = readiness(state, inputs), { open, held } = socialCounts(state), blocked = inputs.stopped || missing.length || first.length;
   const run = state.run, stale = run && Date.now() - new Date(run.startedAt).getTime() > 3 * 36e5, active = run && !stale;
   const status = inputs.stopped ? tag('Stopped') : missing.length ? tag('Blocked: owner files') : active ? tag('Running') : tag('Ready');
   const next = inputs.stopped ? 'The kill switch is on. Every agent refuses to act until you release it.'
     : missing.length ? `Fill ${missing.length} owner ${missing.length === 1 ? 'file' : 'files'} before the first run. Agents stop on any open prompt.`
-    : first.length ? `The owner files are done. Fill ${first.map(f => f.split('/').pop()).join(', ')} so drafts have a voice and a calendar to work from.`
+    : first.length ? `The owner files are done. Fill ${first.map(f => f.split('/').pop()).join(', ')} so drafts have a voice and a calendar to work from. Runs stay blocked until then.`
     : open + held ? `${open + held} ${open + held === 1 ? 'item waits' : 'items wait'} for you in the queue.`
     : (state.pendingBriefs || []).length ? `${state.pendingBriefs.length} briefs are waiting for their departments.` : 'Nothing waits for you. Add this week\'s exports, then run the week.';
   return `<div class="row wrap"><div>${status}<p class="lead">${esc(next)}</p></div>
   <div class="actions"><button data-social="toggleStop" class="${inputs.stopped ? '' : 'social-stop'}">${inputs.stopped ? 'Release the kill switch' : 'Kill switch: stop everything'}</button></div></div>
   <div class="actions">
-   <button data-social="week" ${inputs.stopped || missing.length || active ? 'disabled' : ''}>Run this week's loop</button>
+   <button data-social="week" ${blocked || active ? 'disabled' : ''}>Run this week's loop</button>
    <button data-social="export">Add an export</button>
-   <button data-social="handoffs" ${inputs.stopped || missing.length || active || !(state.pendingBriefs || []).length ? 'disabled' : ''}>Run pending briefs (${(state.pendingBriefs || []).length})</button>
-   <button data-social="report" ${inputs.stopped || missing.length || active ? 'disabled' : ''}>Write the results note</button>
-   <button data-social="learn" ${inputs.stopped || missing.length || active ? 'disabled' : ''}>Suggest brand file updates</button>
+   <button data-social="handoffs" ${blocked || active || !(state.pendingBriefs || []).length ? 'disabled' : ''}>Run pending briefs (${(state.pendingBriefs || []).length})</button>
+   <button data-social="report" ${blocked || active ? 'disabled' : ''}>Write the results note</button>
+   <button data-social="learn" ${blocked || active ? 'disabled' : ''}>Suggest brand file updates</button>
   </div>
   <ol class="social-moves">${MOVES.map(([m, d]) => `<li><strong>${esc(m)}</strong><span>${esc(d)}</span></li>`).join('')}</ol>
-  ${missing.length ? `<section class="section"><h2>Owner files to fill</h2>${missing.map(k => `<p>${tag('Open')} <strong>${esc(OWNER_LABELS[k][0])}</strong>, ${prompts(inputs.files[k])} prompts left. <button class="subtle" data-social="editFile" data-file="${esc(k)}">Fill it in</button></p>`).join('')}</section>` : ''}
+  ${missing.length + first.length ? `<section class="section"><h2>Fill these before the first run</h2>${[...missing, ...first].map(k => `<p>${tag('Open')} <strong>${esc(OWNER_LABELS[k]?.[0] || k.split('/').pop())}</strong>, ${prompts(inputs.files[k])} prompts left. <button class="subtle" data-social="editFile" data-file="${esc(k)}">Fill it in</button></p>`).join('')}</section>` : ''}
   ${active ? runBlock(ctx, run, true) : ''}
   <section class="section"><h2>Recent runs</h2>${(state.runs || []).length ? state.runs.map(r => runBlock(ctx, r)).join('') : '<p>No runs yet.</p>'}</section>
   <p class="meta">Each step spends at most $2 and each run at most $8. Only one model call runs at a time on the Mac, shared with the rest of Growth Studio. Last update ${esc(date(state.updatedAt))}.</p>`;
@@ -120,9 +120,9 @@ function queue(ctx, state) {
 function drafts(ctx, state) {
   const { esc, tag, date } = ctx, list = state.drafts || [], briefs = state.briefs || [], pending = new Set(state.pendingBriefs || []);
   return `<p>Everything the departments wrote. Nothing here is live. Copy a [PASTE] version to post it yourself, or send it to Content studio, which asks you to approve the exact revision.</p>
-  ${list.map(d => { const m = d.meta || {}; return `<article class="post"><div class="row wrap"><div><span class="meta">${esc(m.channel || 'draft')}, ${esc(date(d.modifiedAt))}</span><h3>${esc(d.name)}</h3></div><div>${m.voice_check ? tag('voice ' + m.voice_check) : ''} ${/\[VERIFY\]/.test(d.content) ? tag('needs review: VERIFY') : ''} ${/\[PASTE\]/.test(d.content) ? tag('ready: PASTE') : ''}</div></div>
+  ${list.map(d => { const m = d.meta || {}; return `<article class="post"><div class="row wrap"><div><span class="meta">${esc(m.channel || 'draft')}, ${esc(date(d.modifiedAt))}</span><h3>${esc(d.name)}</h3></div><div>${m.voice_check ? tag('voice ' + m.voice_check.split(/\s/)[0]) : ''} ${/\[VERIFY\b/.test(d.content) ? tag('needs review: VERIFY') : ''} ${/\[PASTE\]/.test(d.content) ? tag('ready: PASTE') : ''}</div></div>
   <details><summary>Read it</summary><pre class="report">${esc(d.content)}</pre>${d.truncated ? '<p class="meta">Shortened here. The full file is in the Mac workspace.</p>' : ''}</details>
-  <div class="actions"><button data-social="copyDraft" data-path="${esc(d.path)}">Copy text</button><button data-social="toStudio" data-path="${esc(d.path)}" ${/\[VERIFY\]/.test(d.content) ? 'disabled' : ''}>Send to Content studio</button></div></article>`; }).join('') || '<p>No drafts yet. Run the week to get the first ones.</p>'}
+  <div class="actions"><button data-social="copyDraft" data-path="${esc(d.path)}">Copy text</button><button data-social="toStudio" data-path="${esc(d.path)}" ${/\[VERIFY\b/.test(d.content) ? 'disabled' : ''}>Send to Content studio</button></div></article>`; }).join('') || '<p>No drafts yet. Run the week to get the first ones.</p>'}
   <section class="section"><h2>Briefs (${briefs.length})</h2>${briefs.map(b => `<details class="task"><summary>${esc(b.name)} ${pending.has(b.path) ? tag('pending') : tag(b.meta?.department ? 'done' : 'plan')}</summary><pre class="report">${esc(b.content)}</pre></details>`).join('') || '<p>No briefs yet.</p>'}</section>`;
 }
 
@@ -137,12 +137,12 @@ function brand(ctx, state, inputs) {
   Object.keys(inputs.files).filter(k => k.startsWith('brand-os/') && k.split('/').length === 3).sort().forEach(k => (groups[k.split('/')[1]] ||= []).push(k));
   const filled = Object.keys(inputs.files).filter(k => k.startsWith('brand-os/') && k.split('/').length === 3 && !hasPrompt(inputs.files[k])).length;
   const total = Object.values(groups).flat().length;
-  return `<div class="row wrap"><p>What the team knows about this brand. ${filled} of ${total} files are filled. Fill the first three before the first run. Agents can update these files, and your edit wins if you both change one during a run.</p><button data-social="export">Add an export</button></div>
+  return `<div class="row wrap"><p>What the team knows about this brand. ${filled} of ${total} files are filled. The three marked fill first block every run until they are done. Agents can update these files, and your edit wins if you both change one during a run.</p><button data-social="export">Add an export</button></div>
   ${Object.entries(groups).map(([g, files]) => `<section class="section"><h2>${esc(g)}</h2><div class="table-wrap"><table><tbody>${files.map(k => `<tr><td><strong>${esc(k.split('/').pop())}</strong>${FIRST_FILES.includes(k) ? ' <span class="meta">fill first</span>' : ''}</td><td>${hasPrompt(inputs.files[k]) ? tag(`Open: ${prompts(inputs.files[k])}`) : tag('Ready')}</td><td><button data-social="editFile" data-file="${esc(k)}">Edit</button></td></tr>`).join('')}</tbody></table></div></section>`).join('')}`;
 }
 
 function playbooks(ctx, state, inputs) {
-  const { esc } = ctx, blocked = inputs.stopped || readiness(state, inputs).missing.length;
+  const { esc } = ctx, ready = readiness(state, inputs), blocked = inputs.stopped || ready.missing.length || ready.first.length;
   return `<p>For the moments that break a normal week. Each event goes to the orchestrator first and jumps ahead of the weekly plan. None of them publishes.</p>
   <div class="table-wrap"><table><thead><tr><th>Event</th><th>First department</th><th>Who approves</th><th></th></tr></thead><tbody>${PLAYBOOKS.map(p => `<tr><td><strong>${esc(p.name)}</strong></td><td>${esc(p.first)}</td><td>${esc(p.gate)}</td><td><button data-social="playbook" data-playbook="${p.id}" ${blocked ? 'disabled' : ''}>Fire</button></td></tr>`).join('')}</tbody></table></div>`;
 }

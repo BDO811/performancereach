@@ -36,7 +36,7 @@ Workspaces: `/Users/amitmehta/Downloads/Serasona-Growth-Harness/social-team/work
 - **No shell, no MCP.** Agents get file tools and web search. They cannot publish, send or spend, because nothing they have can do it.
 - **Sonnet only.** A run that reports any other model fails.
 - **Spend limits.** $2 per step and $8 per run.
-- **Unfilled owner files block the run** before any model is called.
+- **Unfilled files block the run** before any model is called: the 4 owner files plus voice-guide, tone-rules and content-calendar. A live test showed a voice check passes everything when the rule file is empty.
 
 ## Not connected yet
 

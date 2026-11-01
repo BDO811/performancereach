@@ -1,8 +1,8 @@
 import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
 import {getAuth,onAuthStateChanged,signInWithEmailAndPassword,signOut} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import {getFirestore,doc,collection,onSnapshot,setDoc,runTransaction} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
-import {mountOrgChart} from '/admin/orgchart.js?v=social-1';
-import {renderSocial,handleSocial,handleSocialChange} from '/admin/social.js?v=social-1';
+import {mountOrgChart} from '/admin/orgchart.js?v=social-2';
+import {renderSocial,handleSocial,handleSocialChange} from '/admin/social.js?v=social-2';
 const firebase=initializeApp({apiKey:'AIzaSyCr30bj-pa3sv9H8h7rrijkvVmJWg5IH6A',authDomain:'performancereach.firebaseapp.com',projectId:'performancereach',storageBucket:'performancereach.firebasestorage.app',messagingSenderId:'118723320454',appId:'1:118723320454:web:54b8b4a2a9a449d98d8f07'});
 const auth=getAuth(firebase),db=getFirestore(firebase),OWNER='zIuLOI79JcTd4hRmujybDMpK1Z13';
 const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
