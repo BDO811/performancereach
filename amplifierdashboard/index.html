@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Amplifier Client Ledger</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>/* Layout: glass top bar with sliding pill nav, stage tiles, chip + sort rail, 5-up card grid, slide-over detail. Warm dark glass, single theme by design. */
+:host, :root {
+  --bg: #100d0b;
+  --glass: rgba(46, 37, 31, 0.56);
+  --glass-hi: rgba(64, 52, 44, 0.72);
+  --line: rgba(255, 236, 218, 0.08);
+  --line-hi: rgba(255, 236, 218, 0.16);
+  --fg: #f5ede5;
+  --muted: #b3a597;
+  --faint: #7d7066;
+  --peach: #f2a07b;
+  --peach-ink: #2b140a;
+  --lav: #9ea9ff;
+  --gold: #e8b64f;
+  --mint: #5ccaa6;
+  --coral: #ee8a6b;
+  --rose: #f07c8a;
+  --sky: #7cc4f0;
+  --display: "Outfit", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --mono: "Geist Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+.shell {
+  position: relative; min-height: 100%; color: var(--fg); font: 14px/1.45 var(--display);
+  background: var(--bg); overflow: hidden; border-radius: inherit;
+}
+.atmo { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.atmo i { position: absolute; border-radius: 50%; filter: blur(90px); opacity: .55; }
+.atmo i:nth-child(1) { width: 620px; height: 620px; left: -160px; top: -220px; background: #5a3a26; }
+.atmo i:nth-child(2) { width: 520px; height: 520px; right: -120px; top: 140px; background: #3d3a2a; }
+.atmo i:nth-child(3) { width: 700px; height: 500px; left: 30%; bottom: -260px; background: #4a2f2a; }
+.atmo::after { content: ""; position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size: 56px 56px; mask-image: radial-gradient(ellipse at 50% 20%, #000 30%, transparent 75%); }
+.wrap { position: relative; max-width: 1360px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 16px 56px; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--peach); outline-offset: 2px; }
+.glass { background: var(--glass); border: 1px solid var(--line); backdrop-filter: blur(22px) saturate(1.2); -webkit-backdrop-filter: blur(22px) saturate(1.2); }
+.mono { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* top bar */
+.bar { display: flex; align-items: center; gap: 14px; padding: 8px 10px; border-radius: 18px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.logo { width: 36px; height: 36px; border-radius: 11px; background: linear-gradient(145deg, #f6b08b, #e07f5a); display: grid; place-items: center; color: var(--peach-ink); box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.brand b { display: block; font-weight: 600; font-size: 15px; line-height: 1.1; }
+.brand small { display: block; color: var(--faint); font-size: 11px; }
+.nav { position: relative; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: rgba(20,16,13,.55); border: 1px solid var(--line); margin: 0 auto; overflow-x: auto; scrollbar-width: none; max-width: 100%; }
+.nav::-webkit-scrollbar { display: none; }
+.pill { position: absolute; top: 4px; bottom: 4px; left: 0; right: 0; border-radius: 999px; background: rgba(255,240,226,.13); border: 1px solid var(--line-hi); box-shadow: 0 6px 18px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.08); pointer-events: none; }
+.nav button, .seg button { position: relative; z-index: 1; border: 0; background: none; padding: 7px 14px; border-radius: 999px; color: var(--muted); font-size: 13px; white-space: nowrap; transition: color .25s; }
+.nav button[aria-pressed="true"], .seg button[aria-pressed="true"] { color: var(--fg); }
+.nav button .ct { font-family: var(--mono); font-size: 11px; color: var(--faint); margin-left: 6px; }
+.tools { display: flex; align-items: center; gap: 8px; }
+.iconbtn { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; border: 1px solid var(--line); background: rgba(20,16,13,.5); color: var(--muted); position: relative; }
+.iconbtn .dot { position: absolute; top: 6px; right: 6px; min-width: 15px; height: 15px; padding: 0 3px; border-radius: 8px; background: var(--peach); color: var(--peach-ink); font: 600 9.5px/15px var(--mono); }
+.avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-weight: 600; font-size: 12px; background: #efe3d6; color: #3a2a1e; position: relative; border: 0; }
+.avatar::after { content: ""; position: absolute; right: 0; bottom: 1px; width: 9px; height: 9px; border-radius: 50%; background: var(--mint); border: 2px solid var(--bg); }
+
+/* heading */
+.head { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; margin: 30px 2px 16px; flex-wrap: wrap; }
+.head h1 { margin: 0; font-weight: 500; font-size: clamp(30px, 4vw, 40px); letter-spacing: -0.02em; line-height: 1; text-wrap: balance; }
+.head p { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+.cta { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 10px 16px; background: var(--peach); color: var(--peach-ink); font-weight: 600; font-size: 13px; box-shadow: 0 8px 24px rgba(242,160,123,.25); }
+.cta.ghost { background: rgba(255,240,226,.08); color: var(--fg); box-shadow: none; border: 1px solid var(--line-hi); }
+
+/* tiles */
+.tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.tile { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 18px; text-align: left; transition: background .2s, border-color .2s, transform .2s; }
+.tile:hover { background: var(--glass-hi); border-color: var(--line-hi); transform: translateY(-1px); }
+.tile .ic { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; flex: none; color: #1a1210; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+.tile small { display: block; color: var(--muted); font-size: 12px; }
+.tile b { display: block; font-family: var(--mono); font-weight: 500; font-size: 24px; line-height: 1.15; letter-spacing: -0.02em; }
+.tile span.sub { display: block; color: var(--faint); font-size: 11.5px; }
+
+/* rail */
+.rail { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 22px 0 14px; }
+.chip { border: 1px solid var(--line); background: rgba(30,24,20,.6); border-radius: 999px; padding: 6px 13px; font-size: 12.5px; color: var(--muted); }
+.chip[aria-pressed="true"] { background: #f1e6da; color: #2a1d14; border-color: transparent; }
+.search { flex: 1 1 220px; max-width: 340px; margin-left: auto; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 999px; min-width: 0; }
+.search input { flex: 1; min-width: 0; background: none; border: 0; outline: 0; padding: 9px 0; font-size: 13px; }
+.search input::placeholder { color: var(--faint); }
+.seg { position: relative; display: flex; gap: 2px; padding: 3px; border-radius: 999px; background: rgba(20,16,13,.55); border: 1px solid var(--line); }
+.seg .pill { top: 3px; bottom: 3px; background: #f1e6da; border: 0; box-shadow: none; }
+.seg button { padding: 6px 12px; font-size: 12.5px; }
+.seg button[aria-pressed="true"] { color: #2a1d14; }
+
+/* grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 12px; }
+.card { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 14px; border-radius: 20px; text-align: left; border: 1px solid var(--line); background: var(--glass); backdrop-filter: blur(22px) saturate(1.2); -webkit-backdrop-filter: blur(22px) saturate(1.2); transition: transform .25s cubic-bezier(.2,.8,.2,1), background .2s, border-color .2s; min-width: 0; }
+.card:hover { transform: translateY(-2px); background: var(--glass-hi); border-color: var(--line-hi); }
+.card .top { display: flex; gap: 10px; align-items: center; min-width: 0; }
+.mono-av { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; flex: none; font-weight: 600; font-size: 12.5px; background: #ece2d6; color: #3a2a1e; }
+.card .nm { min-width: 0; }
+.card .nm b { display: block; font-weight: 500; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .nm small { display: block; color: var(--faint); font-size: 11.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card .mid { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.card .mid small { display: block; color: var(--faint); font-size: 11px; }
+.card .mid b { display: block; font-family: var(--mono); font-weight: 500; font-size: 22px; letter-spacing: -0.02em; line-height: 1.1; }
+.card .mid b.stale { color: var(--gold); }
+.spark { width: 104px; height: 40px; flex: none; }
+.card .foot { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.tag { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: rgba(255,240,226,.08); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.tag.flag::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-right: 5px; vertical-align: 1px; }
+.tag.gtm { color: #c9b8ff; }
+.tag.wait { color: var(--gold); }
+.tag.drive { color: var(--sky); }
+.own { margin-left: auto; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-size: 9.5px; font-weight: 600; background: #e9ded2; color: #3a2a1e; flex: none; }
+.empty { grid-column: 1 / -1; padding: 40px; text-align: center; color: var(--muted); border-radius: 20px; }
+
+/* drawer */
+.scrim { position: fixed; inset: 0; background: rgba(8,6,5,.5); backdrop-filter: blur(4px); opacity: 0; pointer-events: none; transition: opacity .3s; z-index: 50; }
+.scrim.on { opacity: 1; pointer-events: auto; }
+.drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(480px, 100%); z-index: 51; transform: translateX(104%); transition: transform .45s cubic-bezier(.2,.8,.2,1); border-radius: 22px 0 0 22px; overflow-y: auto;
+  padding: calc(22px + env(safe-area-inset-top, 0px)) max(22px, env(safe-area-inset-right, 0px)) 28px 22px; background: rgba(28,22,18,.92); border-left: 1px solid var(--line-hi); }
+.drawer.on { transform: none; }
+.drawer .x { position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); }
+.drawer h2 { margin: 6px 0 4px; font-weight: 500; font-size: 26px; letter-spacing: -0.02em; padding-right: 44px; }
+.drawer .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 18px; }
+.kv { display: grid; gap: 14px; padding: 16px; border-radius: 16px; margin-bottom: 18px; }
+.kv span { display: block; font-size: 11px; color: var(--faint); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 2px; }
+.kv p { margin: 0; color: var(--fg); }
+.kv a { color: var(--peach); }
+.threads h3 { font-size: 11px; color: var(--faint); text-transform: uppercase; letter-spacing: .06em; font-weight: 500; margin: 0 0 8px; }
+.th { display: grid; grid-template-columns: 64px 64px minmax(0, 1fr); gap: 10px; padding: 10px 2px; border-top: 1px solid var(--line); color: var(--fg); text-decoration: none; align-items: baseline; }
+.th:hover .s { color: var(--peach); }
+.th .d { color: var(--muted); font-size: 12px; }
+.th .k { font-size: 10.5px; color: var(--faint); text-transform: uppercase; letter-spacing: .05em; }
+.th .s { overflow-wrap: anywhere; transition: color .2s; }
+.note { color: var(--faint); font-size: 13px; border-top: 1px solid var(--line); padding-top: 10px; }
+
+/* gate + banners */
+.gate { max-width: 420px; margin: 12vh auto; padding: 28px; border-radius: 24px; display: grid; gap: 14px; }
+.gate h1 { margin: 0; font-weight: 500; font-size: 30px; letter-spacing: -0.02em; }
+.gate p { margin: 0; color: var(--muted); }
+.gate .err { color: var(--rose); font-size: 13px; min-height: 1em; }
+.banner { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 14px; border-radius: 16px; margin-top: 14px; color: var(--muted); font-size: 13px; }
+.banner b { color: var(--fg); font-weight: 500; }
+.foot-note { margin-top: 26px; color: var(--faint); font-size: 12px; max-width: 72ch; }
+
+/* entrance */
+@keyframes rise { from { opacity: .001; transform: translateY(10px) scale(.985); } to { opacity: 1; transform: none; } }
+.anim .card, .anim .tile { animation: rise .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 28ms); }
+
+@media (max-width: 980px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .nav { order: 3; flex-basis: 100%; margin: 0; } .tools { margin-left: auto; } }
+@media (max-width: 520px) { .tiles { grid-template-columns: 1fr; } .search { max-width: none; margin-left: 0; flex-basis: 100%; } .tools .iconbtn.hide-sm { display: none; } }
+@media (prefers-reduced-motion: reduce) { .anim .card, .anim .tile { animation: none; } .card, .tile, .drawer, .scrim { transition: none; } }
+
+html,body{margin:0;background:#100d0b;min-height:100%} #app-root{min-height:100vh}</style>
+</head><body>
+<div id="app-root"></div>
+<script>window.__LEDGER_CFG__={"mode": "live", "firebase": {"apiKey": "AIzaSyAQJTwyluTfOHY17x7bX8_ViWq4z27wI6E", "authDomain": "amplifier-ledger.firebaseapp.com", "projectId": "amplifier-ledger", "storageBucket": "amplifier-ledger.firebasestorage.app", "messagingSenderId": "995312018066", "appId": "1:995312018066:web:2407c05a836983c2943c4b"}};</script>
+<script>function mountLedger(R, OPT) {
+  const NOW = OPT.now || Date.now();
+  const ALLOWED = ["mehta@helix.harvard7.net", "amit@amplifierhealth.com"];
+  const STAGES = [
+    ["active", "Active", "Active / paying", "var(--mint)"],
+    ["advanced", "Pilots", "Advanced / pilot", "var(--lav)"],
+    ["early", "Early", "Early discussion", "var(--sky)"],
+    ["proposal", "Proposals", "Proposal out", "var(--gold)"],
+    ["partner", "Partners", "Grant / partner", "#d7a6ff"],
+    ["stalled", "Stalled", "Stalled", "var(--rose)"],
+    ["target", "Targets", "Target", "var(--faint)"]];
+  const S = Object.fromEntries(STAGES.map(s => [s[0], s]));
+  const INIT = { Amit: "AM", Jeremy: "JB", Camille: "CN", Troy: "TA", Maxwell: "MS", Max: "MM", Derek: "DD", Bryan: "BR" };
+  const DIR = { out: "Sent", in: "Received", int: "Internal", cal: "Calendar" };
+  const st = { nav: "all", chip: "all", sort: "recent", q: "", open: null, data: [], user: null, firstPaint: true };
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]));
+  const days = t => Math.floor((NOW - t) / 864e5);
+  const rel = t => !t ? "—" : days(t) <= 0 ? "Today" : days(t) === 1 ? "1d ago" : days(t) < 60 ? days(t) + "d ago" : new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const fmt = t => new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const initials = n => n.replace(/[^A-Za-z0-9 &/]/g, "").split(/[\s/&]+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase() || "?";
+  const awaiting = c => c.threads.length && c.threads[0].d === "out" && days(c.last) >= 7;
+  const ICON = {
+    bolt: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
+    flask: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6L4 19a2 2 0 0 0 2 3h12a2 2 0 0 0 2-3l-6-10V3"/></svg>',
+    doc: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>',
+    clock: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+    search: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
+    bell: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"/></svg>',
+    wave: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 12h2M7 8v8M11 5v14M15 9v6M19 11v2"/></svg>',
+    x: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+    plus: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>' };
+
+  R.innerHTML = `<div class="shell"><div class="atmo"><i></i><i></i><i></i></div><div class="wrap" id="wrap"></div>
+    <div class="scrim" id="scrim"></div><aside class="drawer" id="drawer" aria-hidden="true"></aside></div>`;
+  const $ = s => R.querySelector(s), $$ = s => [...R.querySelectorAll(s)];
+  const wrap = $("#wrap");
+
+  /* ---------- liquid pill: leading edge moves first and faster, trailing edge catches up ---------- */
+  function slidePill(bar, instant) {
+    const pill = bar.querySelector(".pill"), t = bar.querySelector('[aria-pressed="true"]');
+    if (!pill || !t) return;
+    const l = t.offsetLeft, r = bar.scrollWidth - (t.offsetLeft + t.offsetWidth);
+    const prev = pill.__st || { l, r };
+    const fwd = l > prev.l;
+    const out = "cubic-bezier(.215,.61,.355,1)", inout = "cubic-bezier(.645,.045,.355,1)";
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    pill.style.transition = instant || reduce ? "none" : fwd
+      ? `right .36s ${out}, left .55s ${inout}` : `left .36s ${out}, right .55s ${inout}`;
+    pill.style.left = l + "px"; pill.style.right = r + "px";
+    pill.__st = { l, r };
+    const sl = l - bar.clientWidth / 2 + t.offsetWidth / 2;
+    if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: sl, behavior: reduce ? "auto" : "smooth" });
+  }
+
+  function spark(c) {
+    const W = 104, H = 40, N = 20, b = new Array(N).fill(0);
+    c.threads.forEach(t => { const w = Math.floor((NOW - t.t) / (7 * 864e5)); if (w >= 0 && w < N) b[N - 1 - w]++; });
+    const col = S[c.stage][3];
+    if (!c.threads.length) return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><path d="M2 ${H - 6} H${W - 2}" stroke="var(--line-hi)" stroke-width="1.5" stroke-dasharray="3 4" fill="none"/></svg>`;
+    const sm = b.map((v, i) => (b[i - 1] || 0) * .25 + v * .5 + (b[i + 1] || 0) * .25);
+    const mx = Math.max(1, ...sm);
+    const pts = sm.map((v, i) => [2 + i * (W - 4) / (N - 1), H - 4 - v / mx * (H - 10)]);
+    const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const id = "g" + Math.random().toString(36).slice(2, 8), e = pts[N - 1];
+    return `<svg class="spark" viewBox="0 0 ${W} ${H}" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${col}" stop-opacity=".45"/><stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>
+      <path d="${d} L${W - 2} ${H} L2 ${H} Z" fill="url(#${id})"/><path d="${d}" fill="none" stroke="${col}" stroke-width="1.6" stroke-linejoin="round"/><circle cx="${e[0]}" cy="${e[1]}" r="2.4" fill="${col}"/></svg>`;
+  }
+
+  /* ---------- views ---------- */
+  function gate(msg) {
+    wrap.innerHTML = `<div class="gate glass"><div class="logo">${ICON.wave}</div><h1>Amplifier Ledger</h1>
+      <p>Sign in with your Google account to open the client pipeline.</p>
+      <button class="cta" id="signin">Continue with Google</button><div class="err" role="alert">${esc(msg || "")}</div></div>`;
+    $("#signin").onclick = () => OPT.signIn().catch(e => gate(e.code === "auth/popup-closed-by-user" ? "" : "Sign-in did not complete: " + (e.message || e)));
+  }
+
+  function filtered() {
+    const q = st.q.toLowerCase();
+    let rows = st.data.filter(c =>
+      (st.nav === "all" || c.stage === st.nav) &&
+      (st.chip === "all" || (st.chip === "wait" ? awaiting(c) : c.origin === st.chip)) &&
+      (!q || [c.name, c.contact, c.status, c.next, c.owner, ...c.threads.map(t => t.s)].join(" ").toLowerCase().includes(q)));
+    const k = { recent: (a, b) => (b.last || 0) - (a.last || 0), activity: (a, b) => b.threads.length - a.threads.length || (b.last || 0) - (a.last || 0), az: (a, b) => a.name.localeCompare(b.name) }[st.sort];
+    return rows.sort(k);
+  }
+
+  function shell() {
+    const all = st.data, n = s => all.filter(c => c.stage === s).length;
+    const wait = all.filter(awaiting).length, gtm = all.filter(c => c.origin === "gtm").length;
+    const thr = all.reduce((a, c) => a + c.threads.length, 0);
+    const tile = (k, ic, col, label, val, sub, i) => `<button class="tile glass" data-tile="${k}" style="--i:${i}"><span class="ic" style="background:${col}">${ICON[ic]}</span><span><small>${label}</small><b>${val}</b><span class="sub">${sub}</span></span></button>`;
+    const ownerInit = st.user ? (st.user.displayName || st.user.email || "AM").split(/[\s@.]/).slice(0, 2).map(w => w[0]).join("").toUpperCase() : "AM";
+    wrap.innerHTML = `
+      <header class="bar glass">
+        <div class="brand"><span class="logo">${ICON.wave}</span><span><b>Amplifier</b><small>Client Ledger</small></span></div>
+        <nav class="nav" id="nav" aria-label="Stage"><span class="pill"></span>
+          <button data-nav="all" aria-pressed="${st.nav === "all"}">All<span class="ct">${all.length}</span></button>
+          ${STAGES.map(s => `<button data-nav="${s[0]}" aria-pressed="${st.nav === s[0]}">${s[1]}<span class="ct">${n(s[0])}</span></button>`).join("")}
+        </nav>
+        <div class="tools">
+          <button class="iconbtn hide-sm" id="bell" title="Awaiting reply 7+ days">${ICON.bell}${wait ? `<span class="dot">${wait}</span>` : ""}</button>
+          <button class="avatar" id="me" title="${esc(st.user ? st.user.email + " · sign out" : "Preview")}">${esc(ownerInit)}</button>
+        </div>
+      </header>
+      <section class="head">
+        <div><h1>Opportunities</h1><p>${all.length} companies across ${STAGES.length} stages · ${thr} email threads · ${gtm} with the GTM team</p></div>
+        ${OPT.mode === "preview" ? `<span class="tag">Preview · snapshot Oct 31</span>` : `<span class="tag mono" id="sync">Live · Firestore</span>`}
+      </section>
+      <div id="banner"></div>
+      <section class="tiles anim">
+        ${tile("active", "bolt", "var(--mint)", "Active / paying", n("active"), "customers live today", 0)}
+        ${tile("advanced", "flask", "var(--lav)", "Advanced / pilot", n("advanced"), "pilots and scoped deals", 1)}
+        ${tile("proposal", "doc", "var(--gold)", "Proposal out", n("proposal"), "awaiting first reply", 2)}
+        ${tile("wait", "clock", "var(--coral)", "Awaiting reply", wait, "our email last, 7+ days", 3)}
+      </section>
+      <section class="rail">
+        ${[["all", "All"], ["email", "Email"], ["gtm", "GTM team"], ["drive", "Drive proposal"], ["wait", "Awaiting reply"]].map(([k, l]) => `<button class="chip" data-chip="${k}" aria-pressed="${st.chip === k}">${l}</button>`).join("")}
+        <label class="search glass">${ICON.search}<input id="q" type="search" placeholder="Company, contact or subject" value="${esc(st.q)}"></label>
+        <div class="seg" id="seg"><span class="pill"></span>
+          ${[["recent", "Recent"], ["activity", "Activity"], ["az", "A–Z"]].map(([k, l]) => `<button data-sort="${k}" aria-pressed="${st.sort === k}">${l}</button>`).join("")}
+        </div>
+      </section>
+      <section class="grid" id="grid"></section>
+      <p class="foot-note">${OPT.mode === "preview" ? "Preview build with this morning's data. The live page signs in with Google and reads Firestore." : "Synced nightly from Gmail, Slack and Notion. GTM team = surfaced in Slack, no email thread yet."}</p>`;
+    $$("[data-nav]").forEach(b => b.onclick = () => { st.nav = b.dataset.nav; $$("[data-nav]").forEach(x => x.setAttribute("aria-pressed", x === b)); slidePill($("#nav")); grid(true); });
+    $$("[data-sort]").forEach(b => b.onclick = () => { st.sort = b.dataset.sort; $$("[data-sort]").forEach(x => x.setAttribute("aria-pressed", x === b)); slidePill($("#seg")); grid(true); });
+    $$("[data-chip]").forEach(b => b.onclick = () => { st.chip = b.dataset.chip; $$("[data-chip]").forEach(x => x.setAttribute("aria-pressed", x === b)); grid(true); });
+    $$("[data-tile]").forEach(b => b.onclick = () => {
+      const k = b.dataset.tile;
+      if (k === "wait") { st.chip = "wait"; st.nav = "all"; } else { st.nav = k; st.chip = "all"; }
+      $$("[data-nav]").forEach(x => x.setAttribute("aria-pressed", x.dataset.nav === st.nav));
+      $$("[data-chip]").forEach(x => x.setAttribute("aria-pressed", x.dataset.chip === st.chip));
+      slidePill($("#nav")); grid(true);
+    });
+    $("#bell").onclick = () => R.querySelector('[data-tile="wait"]').click();
+    $("#q").oninput = e => { st.q = e.target.value; grid(false); };
+    $("#me").onclick = () => { if (OPT.signOut && st.user) OPT.signOut(); };
+    requestAnimationFrame(() => { slidePill($("#nav"), true); slidePill($("#seg"), true); });
+    grid(true);
+  }
+
+  function grid(animate) {
+    const g = $("#grid"); if (!g) return;
+    const rows = filtered();
+    g.classList.toggle("anim", !!animate);
+    g.innerHTML = rows.map((c, i) => {
+      const s = S[c.stage], aw = awaiting(c), own = (c.owner || "").split(" / ")[0];
+      const flag = c.origin === "gtm" ? `<span class="tag flag gtm">GTM team</span>` : c.origin === "drive" ? `<span class="tag flag drive">Not sent</span>` : aw ? `<span class="tag flag wait">Awaiting ${days(c.last)}d</span>` : `<span class="tag flag" style="color:${s[3]}">${c.threads.length} thread${c.threads.length === 1 ? "" : "s"}</span>`;
+      return `<button class="card" data-id="${esc(c.id)}" style="--i:${Math.min(i, 24)}">
+        <span class="top"><span class="mono-av">${esc(initials(c.name))}</span><span class="nm"><b>${esc(c.name)}</b><small>${esc(c.contact || c.status)}</small></span></span>
+        <span class="mid"><span><small>Last touch</small><b class="${aw ? "stale" : ""}">${rel(c.last)}</b></span>${spark(c)}</span>
+        <span class="foot"><span class="tag">${s[1]}</span>${flag}<span class="own" title="${esc(c.owner)}">${INIT[own] || initials(own || "?")}</span></span>
+      </button>`; }).join("") || `<div class="empty glass">No opportunities match these filters.</div>`;
+    $$(".card").forEach(b => b.onclick = () => drawer(b.dataset.id));
+  }
+
+  function drawer(id) {
+    const c = st.data.find(x => x.id === id); if (!c) return;
+    const s = S[c.stage], aw = awaiting(c);
+    const th = c.threads.length ? c.threads.map(t => `<a class="th" target="_blank" rel="noopener" href="https://mail.google.com/mail/u/0/#all/${esc(t.id)}"><span class="d mono">${fmt(t.t)}</span><span class="k">${DIR[t.d] || t.d}</span><span class="s">${esc(t.s)}</span></a>`).join("")
+      : `<div class="note">${c.origin === "gtm" ? "GTM team opportunity. Surfaced in #customers-discovery-insights with no email thread yet; the nightly sync attaches threads when they appear." : "Proposal drafted in Drive. No send found in email."}</div>`;
+    const d = $("#drawer");
+    d.innerHTML = `<button class="iconbtn x" id="close" aria-label="Close">${ICON.x}</button>
+      <span class="mono-av" style="width:48px;height:48px;font-size:15px">${esc(initials(c.name))}</span>
+      <h2>${esc(c.name)}</h2>
+      <div class="tags"><span class="tag" style="color:${s[3]}">${s[2]}</span>${c.origin === "gtm" ? '<span class="tag flag gtm">GTM team</span>' : ""}${aw ? `<span class="tag flag wait">Awaiting reply · ${days(c.last)}d</span>` : ""}<span class="tag">${esc(c.owner)}</span></div>
+      <div class="kv glass"><div><span>Status</span><p>${esc(c.status)}</p></div><div><span>Next step</span><p>${esc(c.next)}</p></div>
+        ${c.contact ? `<div><span>Contacts</span><p>${esc(c.contact)}</p></div>` : ""}
+        ${c.drive ? `<div><span>Proposal</span><p><a href="${esc(c.drive)}" target="_blank" rel="noopener">Open in Drive</a></p></div>` : ""}
+        <div><span>Last touch</span><p>${c.last ? fmt(c.last) + " · " + rel(c.last) : "No email yet"}</p></div></div>
+      <div class="threads"><h3>Email threads · ${c.threads.length}</h3>${th}</div>`;
+    d.classList.add("on"); d.setAttribute("aria-hidden", "false"); $("#scrim").classList.add("on");
+    const close = () => { d.classList.remove("on"); d.setAttribute("aria-hidden", "true"); $("#scrim").classList.remove("on"); };
+    $("#close").onclick = close; $("#scrim").onclick = close; $("#close").focus();
+    R.addEventListener("keydown", e => { if (e.key === "Escape") close(); }, { once: true });
+  }
+
+  addEventListener("resize", () => { const n = $("#nav"), g = $("#seg"); n && slidePill(n, true); g && slidePill(g, true); });
+
+  return {
+    gate, setUser(u) { st.user = u; },
+    setData(rows) { st.data = rows; if (!$("#grid")) shell(); else { const keepQ = st.q; shell(); st.q = keepQ; } },
+    banner(html) { const b = $("#banner"); if (b) b.innerHTML = html; return b; }
+  };
+}
+
+/* ---------- boot ---------- */
+(function boot() {
+  const R = window.__LEDGER_ROOT__ || document.getElementById("app-root");
+  const CFG = window.__LEDGER_CFG__;
+  const norm = c => ({ ...c, threads: (c.threads || []).slice().sort((a, b) => b.t - a.t), last: (c.threads && c.threads.length) ? Math.max(...c.threads.map(t => t.t)) : (c.last || null) });
+  if (CFG.mode === "preview") {
+    const ui = mountLedger(R, { mode: "preview", now: CFG.now });
+    ui.setData(CFG.seed.map(norm));
+    return;
+  }
+  const V = "10.12.2", base = `https://www.gstatic.com/firebasejs/${V}/`;
+  const load = src => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = () => no(new Error("Could not load " + src)); document.head.appendChild(s); });
+  let ui;
+  (async () => {
+    await load(base + "firebase-app-compat.js");
+    await Promise.all([load(base + "firebase-auth-compat.js"), load(base + "firebase-firestore-compat.js")]);
+    const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(CFG.firebase);
+    const auth = firebase.auth(), db = firebase.firestore();
+    const provider = new firebase.auth.GoogleAuthProvider(); provider.setCustomParameters({ prompt: "select_account" });
+    ui = mountLedger(R, { mode: "live", signIn: () => auth.signInWithPopup(provider), signOut: () => auth.signOut() });
+    let unsub = null;
+    auth.onAuthStateChanged(user => {
+      if (unsub) { unsub(); unsub = null; }
+      if (!user) { ui.gate(); return; }
+      ui.setUser(user);
+      unsub = db.collection("opportunities").onSnapshot(snap => {
+        const rows = snap.docs.map(d => norm({ id: d.id, ...d.data() }));
+        ui.setData(rows);
+        if (!rows.length && CFG.seed && CFG.seed.length) {
+          const b = ui.banner(`<div class="banner glass"><span><b>Firestore is empty.</b> Load the ${CFG.seed.length} opportunities from the Oct 31 build.</span><button class="cta" id="import">Load ${CFG.seed.length} opportunities</button></div>`);
+          b.querySelector("#import").onclick = async e => {
+            e.target.disabled = true; e.target.textContent = "Loading…";
+            const batch = db.batch();
+            CFG.seed.forEach(c => { const { id, ...rest } = c; batch.set(db.collection("opportunities").doc(id), { ...rest, syncedAt: firebase.firestore.FieldValue.serverTimestamp() }, { merge: true }); });
+            try { await batch.commit(); } catch (err) { e.target.disabled = false; e.target.textContent = "Retry"; b.querySelector("span").textContent = "Import failed: " + err.message; }
+          };
+        }
+      }, err => {
+        auth.signOut();
+        ui.gate(err.code === "permission-denied" ? `${user.email} does not have access. Sign in with mehta@helix.harvard7.net or amit@amplifierhealth.com.` : "Could not load data: " + err.message);
+      });
+    });
+  })().catch(e => { (ui || mountLedger(R, { mode: "live" })).gate("Could not start: " + e.message); });
+})();
+</script>
+</body></html>
