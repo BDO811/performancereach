@@ -169,7 +169,7 @@
   $("closeModal").onclick=$("cancelBtn").onclick=closeForm;
   $("overlay").addEventListener("click",e=>{if(e.target===$("overlay"))closeForm()});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")closeForm()});
-  $("shortcutLink").onclick=e=>{e.preventDefault();alert("On iPhone: open Shortcuts → + → Add Action “Receive What’s On Screen” / Share Sheet input (URLs) → add “URL” with this address: https://athemventures.com/ideas/?url= followed by the Shortcut Input → “Open URLs”. When you share a link from Instagram or TikTok, the inbox form opens with the link ready to save. Screenshot email capture is not connected yet.");};
+  $("shortcutLink").onclick=e=>{e.preventDefault();alert("On iPhone, create a Shortcut, enable “Show in Share Sheet,” and set its input type to URLs. Add a URL action with https://athemventures.com/ideas/?url= plus the Shortcut Input, then add “Open URLs.” Sharing an Instagram or TikTok link opens the save form with the link ready. Screenshot email capture still needs the mailbox connection.");};
   const incoming=new URLSearchParams(location.search).get("url");
   if(incoming){try{$("urlInput").value=new URL(incoming).href}catch{};history.replaceState({}, "", location.pathname);openForm({url:incoming,title:"",source:guessSource(incoming)})}
   render();
