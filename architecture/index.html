@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="/assets/system.css">
+<link rel="stylesheet" href="/architecture/social-media.css">
 <style>
 /* Hallmark · shape: Control Room · genre: modern-minimal · theme: custom · redesign: full · job: hire · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
  * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: Poster, the head set at poster scale and anchored low, over a tall three-colour bar that counts the real agents · nav: wordmark left, one link right, no rule under · footer: one line, the wordmark and the first customer · imagery: none, the org chart is the product · signature: the tall bar and the thirteen branches that share its three colours
@@ -26,6 +27,8 @@ button:disabled { cursor: not-allowed; }
 .nav-row { display: flex; align-items: center; justify-content: space-between; min-height: 72px; gap: var(--space-md); }
 .nav .wordmark { display: inline-flex; align-items: center; gap: var(--space-sm); }
 .nav-link { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+.nav-links { display: flex; flex-wrap: wrap; gap: var(--space-lg); }
+.catalog-note { color: var(--color-ink-2); font-size: var(--text-sm); max-width: 75ch; }
 
 .hero { min-height: calc(100dvh - 80px); display: flex; flex-direction: column; justify-content: flex-end; gap: var(--space-2xl); padding-block: var(--space-xl) var(--space-2xl); }
 .hero h1 { font-size: clamp(3rem, 7vw, 6.5rem); max-width: 17ch; }
@@ -114,6 +117,7 @@ button:disabled { cursor: not-allowed; }
   .rules { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 40rem) {
+  .nav-row { flex-wrap: wrap; padding-block: var(--space-sm); gap: var(--space-xs); }
   .mind-row { grid-template-columns: minmax(0, 1fr); }
 }
 </style>
@@ -127,7 +131,7 @@ button:disabled { cursor: not-allowed; }
       <svg width="30" height="12" viewBox="0 0 30 12" aria-hidden="true" focusable="false"><rect x="0" y="1" width="10" height="10" fill="var(--color-red)"/><polygon points="15,1 20,11 10,11" transform="translate(0 0)" fill="var(--color-blue)"/><circle cx="25" cy="6" r="5" fill="var(--color-green)"/></svg>
       <span>performance<b>reach</b></span>
     </a>
-    <a class="nav-link link" href="#status">Status</a>
+    <nav class="nav-links" aria-label="Architecture sections"><a class="nav-link link" href="#social-media">Social Media</a><a class="nav-link link" href="#status">Status</a></nav>
   </div>
 </header>
 
@@ -141,8 +145,8 @@ button:disabled { cursor: not-allowed; }
     <dl class="stats">
       <div class="stat"><dt>Operator</dt><dd id="n-operator">1</dd></div>
       <div class="stat"><dt>Minds</dt><dd id="n-minds">13</dd></div>
-      <div class="stat"><dt>Agents</dt><dd id="n-agents">50</dd></div>
-      <div class="stat"><dt>Built</dt><dd id="n-built">41</dd></div>
+      <div class="stat"><dt>Agency agents</dt><dd id="n-agents">50</dd></div>
+      <div class="stat"><dt>Scaffolded</dt><dd id="n-built">41</dd></div>
       <div class="stat"><dt>Customer</dt><dd>1</dd></div>
     </dl>
   </div>
@@ -150,9 +154,10 @@ button:disabled { cursor: not-allowed; }
     <div class="rgb-bar rgb-bar--tall" role="img" aria-label="Agents by state: 9 not started, 41 scaffolded, 0 operational" id="score-bar"><i class="r" style="--w:9"></i><i class="b" style="--w:41"></i><i class="g" style="--w:0"></i></div>
     <div class="key">
       <span class="status status--stop"><span class="glyph" aria-hidden="true"></span><span id="k-not">9</span> Not started</span>
-      <span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span><span id="k-scaf">41</span> Scaffolded, needs credentials</span>
+      <span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span><span id="k-scaf">41</span> Scaffolded</span>
       <span class="status status--live"><span class="glyph glyph--live" aria-hidden="true"></span><span id="k-op">0</span> Operational</span>
     </div>
+    <p class="catalog-note">This is the agency catalog. Its statuses describe the architecture; current worker activity, connections and run history are shown in <a class="link" href="/admin/">Growth Studio</a>. The product Social team has its own nine-role harness below.</p>
   </div>
 </section>
 
@@ -170,17 +175,24 @@ button:disabled { cursor: not-allowed; }
   </div>
 </section>
 
+<section class="band" id="social-media" aria-labelledby="social-media-h">
+  <div class="container">
+    <h2 id="social-media-h">SOCIAL MEDIA</h2>
+    <div id="social-media-content"><p class="intro">The product Social team uses nine agents, eight event playbooks and 27 Brand OS templates. <a class="link" href="/admin/#social">Open Social team in Growth Studio</a> or <a class="link" href="https://dandy-bug-77c.notion.site/AI-Native-Social-Media-Agent-Team-402a1f98521280859feede9319ce1aa0">read the original guide</a>.</p></div>
+  </div>
+</section>
+
 <section class="band" id="status" aria-labelledby="status-h">
   <div class="container">
     <h2 id="status-h">Right now</h2>
     <dl class="ledger">
       <div class="ledger-row">
-        <dt><span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span>41 built across ten Minds</span></dt>
-        <dd>Paid Social, SEO/GEO, Design, Writing/Docs, Research, Sales, Finance, Customer Success, Legal/Compliance and Social Media. Most are waiting on real client data or platform access.</dd>
+        <dt><span class="status status--build"><span class="glyph glyph--build" aria-hidden="true"></span>41 scaffolded agency roles</span></dt>
+        <dd>Forty specialists across ten Minds, plus the Chief of Staff. Their needs include real client context, data and platform access. The product Social team adds a separate nine-role harness in Growth Studio.</dd>
       </div>
       <div class="ledger-row">
         <dt><span class="status status--plain">Can run today</span></dt>
-        <dd>GEO/citation tracking and the whole Research Mind need no credentials.</dd>
+        <dd>Manual GEO/citation tests, public market and competitor research, and editing can start without platform credentials. Customer research and quantitative analysis still need real client data. A successful run must be verified in Growth Studio.</dd>
       </div>
       <div class="ledger-row">
         <dt><span class="status status--stop"><span class="glyph" aria-hidden="true"></span>Scoped, not started</span></dt>
@@ -469,7 +481,7 @@ button:disabled { cursor: not-allowed; }
   const setText = (id, v) => { const n = document.getElementById(id); if (n) n.textContent = v; };
   setText('n-minds', MINDS.length);
   setText('n-agents', total);
-  setText('n-built', tally.scaf + tally.op);
+  setText('n-built', tally.scaf);
   setText('k-not', tally.not);
   setText('k-scaf', tally.scaf);
   setText('k-op', tally.op);
@@ -521,6 +533,7 @@ button:disabled { cursor: not-allowed; }
       ${statusChip(m.future ? 'not' : 'scaf').replace(/Scaffolded/, 'Active build')}
       <div class="panel-block"><h3>What this Mind covers</h3><p>${m.note}</p></div>
       <div class="panel-block"><h3>Agents in this Mind</h3><ul class="panel-list">${rowsHtml}</ul></div>
+      ${m.id === 'social' ? '<div class="panel-block"><h3>Product Social team</h3><p>Growth Studio also contains a separate nine-agent harness with Brand OS, event playbooks and owner queues.</p><a class="link" href="#social-media" data-open-social>Explore the SOCIAL MEDIA harness</a></div>' : ''}
     `;
     showPanel('agent=' + m.id);
   }
@@ -531,7 +544,7 @@ button:disabled { cursor: not-allowed; }
     const needsHtml = a.needs && a.needs.length
       ? `<div class="panel-block"><h3>Needed to go operational</h3><ul>${a.needs.map(n => `<li>${n}</li>`).join('')}</ul></div>`
       : '';
-    const runsHtml = `<div class="panel-block"><h3>Recent output</h3><div class="empty-state">No runs yet. This pilot hasn’t gone live. Once it has, its reports show up here.</div></div>`;
+    const runsHtml = `<div class="panel-block"><h3>Run history</h3><div class="empty-state">This catalog does not read live execution records. <a class="link" href="/admin/#runs">Open runs and outputs in Growth Studio</a> for recorded activity.</div></div>`;
     panelContent.innerHTML = `
       <p class="panel-kind">${a.mindName}</p>
       <h2 id="panel-title">${a.name}</h2>
@@ -559,6 +572,7 @@ button:disabled { cursor: not-allowed; }
   }
 
   document.addEventListener('click', e => {
+    if (e.target.closest('[data-open-social]')) { closePanel(); return; }
     const node = e.target.closest('[data-agent]');
     if (node && node.getAttribute('data-agent')) { openAgent(node.getAttribute('data-agent')); return; }
     if (e.target === overlay) closePanel();
@@ -575,5 +589,6 @@ button:disabled { cursor: not-allowed; }
   }
   checkHash();
 </script>
+<script type="module" src="/architecture/social-media.js"></script>
 </body>
 </html>
