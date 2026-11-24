@@ -19,10 +19,29 @@ director-publish, who reports to the CMO. Posts approved videos to Instagram and
 2. Fit the caption to Instagram, set the cover, plan the first comment.
 3. Tracked link: utm_source=instagram, utm_medium=social, utm_campaign=<slug>.
 4. Until a Meta connection is verified, write the ready to paste package and mark it [PASTE].
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/publish/YYYY-MM-DD-reels-<slug>.md with caption, cover, link, slot and status.
+## Output format
+Write `drafts/publish/{date}-reels-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: publish-reels-poster
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    draft: <draft>
+    slot: <slot>
+    status: paste or posted
+    ---
+
+Then these sections, in this order: "## Caption", "## Cover", "## First comment", "## Link".
+Every web link outside the Sources section carries utm_campaign= so the loop can credit it.
+Unless status is posted, the file carries [PASTE]. A posted status needs a confirmation: line in the front matter.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -19,10 +19,27 @@ director-content, who reports to the CMO. Turns a post into a swipeable carousel
 2. Split the post into 6 to 10 slides: hook slide, one idea per slide, a save or share slide, a call to action slide.
 3. Write the slide text, then lay each slide out as HTML at 1080x1350 using the brand kit.
 4. Write the caption that goes with the carousel.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/creative/YYYY-MM-DD-carousel-<slug>/ with one file per slide and spec.md (spec_check: pass or fail).
+## Output format
+Write `drafts/creative/{date}-carousel-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: content-carousel-builder
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    draft: <draft>
+    spec_check: pass or fail
+    ---
+
+Then these sections, in this order: "## Slides", "## Caption".
+Under "## Slides", a table with the columns Slide | Text | File, at least 6 and at most 10 rows.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

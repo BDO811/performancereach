@@ -20,10 +20,25 @@ director-content, who reports to the CMO. Packs everything that passed into one 
 2. For each passed item, decide with owner/approval-bar.md whether it may auto ship or must wait. When unsure, it waits.
 3. Add every waiting item to queue/needs-your-ok.md in the format at the top of that file, with a one line preview, the channel, the proposed slot and the file path.
 4. Group the week's items together so the owner can approve the whole week in one sitting.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-New items in queue/needs-your-ok.md and a list for the CMO of what may auto ship.
+## Output format
+Write `drafts/{date}-report-approval-pack.md`.
+Start it with this front matter:
+
+    ---
+    agent: content-approval-desk
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Waiting for the owner", "## May auto ship".
+Every queue id (Q-YYYYMMDD-NN) you name is a real item in queue/needs-your-ok.md.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -5,9 +5,9 @@ description: Write the owner's one page morning brief.
 # Morning page
 
 1. If `owner/STOP` exists, stop, log it and say so.
-2. Use loop-weekly-report to write `reports/morning/YYYY-MM-DD.md`, one page with four parts:
-   - What worked since yesterday, with numbers and their source files.
-   - Who booked a call, by CRM record id and the source that brought them.
-   - What is going out next, with slots.
-   - What is waiting for the owner, with the queue item ids, URGENT first.
-3. Show the owner the page.
+2. Run `python3 -I tools/loop_data.py`. It writes today's `loop/YYYY-MM-DD-data.md`.
+3. Use the cmo agent to write one routine brief for director-loop: the morning page.
+4. Run it as in "Running a CMO brief" in CLAUDE.md. loop-weekly-report writes
+   `reports/morning/YYYY-MM-DD.md` with four parts: what worked, who booked a call, what goes out next,
+   and what waits for the owner (queue ids, URGENT first).
+5. Show the owner the page.

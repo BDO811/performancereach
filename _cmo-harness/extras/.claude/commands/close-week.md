@@ -5,10 +5,10 @@ description: Close the week. Measure what made money and feed it into next week'
 # Close the week
 
 1. If `owner/STOP` exists, stop, log it and say so.
-2. Use the cmo agent to brief director-loop and director-finance.
-3. Use director-loop on its brief: loop-post-analyst, loop-revenue-tracker, loop-call-tracker,
-   loop-email-analyst, cross-channel-aggregator when paid and SEO data are in, loop-weekly-report,
-   then loop-feeder.
-4. Use director-finance on its brief: finance-reporting for spend and return this week.
-5. Use the cmo agent with the returns. It checks `loop/next-week-inputs.md` is written and tells the
-   owner the week's result against `owner/targets.md`.
+2. Run `python3 -I tools/loop_data.py`. It writes `loop/YYYY-MM-DD-data.md` from this week's exports.
+   Read its Notes and its "Exports with no rows" line, and tell the owner which exports are missing.
+3. Use the cmo agent to write the close of week briefs: director-loop, director-finance
+   (finance-reporting), and director-paid and director-social when they ran this week.
+4. Run each brief as in "Running a CMO brief" in CLAUDE.md. director-loop goes first.
+5. Use the cmo agent in mode 2 on the returns. Check `loop/next-week-inputs.md` was rewritten by
+   loop-feeder, then tell the owner the week against `owner/targets.md`.

@@ -10,6 +10,7 @@ Run:  python3 -I _cmo-harness/build.py
 import json
 import re
 import shutil
+import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -52,6 +53,27 @@ DIRECTORS = [
 ]
 
 LOOP_BY_ID = {d['id']: d for d in LOOP['departments']}
+CONTRACTS = json.loads((HERE / 'catalog/contracts.json').read_text())
+for _m in MINDS.values():
+    for _a in _m['agents']:
+        _c = CONTRACTS['agents'].get(_a['id'])
+        if _c is not None and 'output' not in _c and 'outputs' not in _c:
+            _c['output'] = f"drafts/{_m['id']}/{{date}}-{_a['id']}-{{slug}}.md"
+
+sys.path.insert(0, str(HERE / 'extras/tools'))
+import contracts_check  # noqa: E402
+
+
+def output_format(agent_id):
+    c = CONTRACTS['agents'][agent_id]
+    return ('## Output format\n' + contracts_check.output_template(agent_id, c, CONTRACTS['rules_text']) +
+            '\n\nThe runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.'
+            '\nIf it prints problems, fix those and nothing else.')
+
+
+def uses_loop_data(agent_id):
+    c = CONTRACTS['agents'][agent_id]
+    return any('loop_data' in s.get('rules', []) for s in (c.get('outputs') or [c]))
 
 MIND_NEVER = {
     'paid-social': ['Change a budget, bid, audience or campaign status. You recommend. The owner decides.'],
@@ -84,6 +106,11 @@ COMMON_NEVER = ['Edit, rename or delete anything in owner/.',
                 'Publish, send, schedule live, spend or sign. Those wait for the owner.']
 
 
+def loop_read(agent_id):
+    return ('- loop/YYYY-MM-DD-data.md, the newest one: the week\'s numbers from tools/loop_data.py. Quote them.\n'
+            if uses_loop_data(agent_id) else '')
+
+
 def loop_agent(a, dept, director):
     tools = WEB_TOOLS if a.get('web') else FILE_TOOLS
     desc = (f"{dept['name']} department, {a['name']}. {a['role']} Reports to {director['id']}. "
@@ -94,15 +121,14 @@ def loop_agent(a, dept, director):
 
 ## Read before every job
 - The brief from your director in drafts/briefs/
-{bullets(a['reads'])}
+{loop_read(a['id'])}{bullets(a['reads'])}
 
 ## Steps
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 {numbered(a['steps'], 2)}
-{len(a['steps']) + 2}. Log one line in logs/activity.md for every file you write.
+{len(a['steps']) + 2}. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-{a['output']}
+{output_format(a['id'])}
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export
@@ -137,15 +163,17 @@ architecture page.
 - The brief from your director in drafts/briefs/
 - owner/positioning.md and owner/brand-voice.md
 - Any brand-os/ or exports/ file the brief names
-
+{loop_read(a['id'])}
 ## Steps
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 2. Read the brief. If it asks for work outside your job, return it to your director unchanged.
 3. Do the job. Every fact, number and quote has a source. Anything you could not source is [VERIFY].
-4. Save to drafts/{folder}/YYYY-MM-DD-{a['id']}-<slug>.md with front matter: agent, brief, sources, status.
+4. Write your output in the format below.
 5. Anything that would spend, go live, send, sign or name a real person goes to queue/needs-your-ok.md
    in the format at the top of that file.
 6. Log one line in logs/activity.md for every file you write.
+
+{output_format(a['id'])}
 
 ## Return to your director
 The file path, what you did, what is waiting for the owner, and what you could not finish.
@@ -169,6 +197,11 @@ def team_list(d):
     return '| Agent | Name | Job |\n|---|---|---|\n' + '\n'.join(rows)
 
 
+def director_common(d):
+    common = (HERE / 'specs/_director-common.md').read_text().rstrip()
+    return common.replace('{{DIRECTOR}}', d['id']).replace('{{DEPT}}', d['id'].replace('director-', ''))
+
+
 def director(d):
     desc = (f"Director of {d['name']}. {d['job']} Reports to the CMO. Use after the CMO writes a brief for "
             f"{d['name']}, and when its agents return work.")
@@ -187,32 +220,19 @@ briefing rules in the Social team section of CLAUDE.md for their work."""
 ## Your team
 {team_list(d)}{social}
 
-## Read before every job
-- The CMO's brief for you in drafts/briefs/cmo/
-- owner/targets.md, owner/approval-bar.md and owner/budget-cap.md
-- The last 20 lines of logs/activity.md and the open items in queue/
+## How to staff a brief
+Brief the agents on your team whose job matches what the CMO brief asks for, using each agent's own
+output pattern from its file. Agents that gather or analyse run first; agents that write, build or
+package from their work run after them and depend on them. Anything public facing must pass
+content-brand-check before it reaches the owner: ask the CMO to route it there in your return.
 
-## Steps
-1. Stop check. If owner/STOP exists, do nothing and return "stopped".
-2. Split the CMO's brief into one brief per agent job. Save each as
-   drafts/briefs/{d['id'].replace('director-', '')}/B-YYYYMMDD-NN-<agent>.md with: the agent, the goal, the inputs,
-   the output file, the deadline in the week and the check it must pass.
-3. List the briefs in your return, in the order to run them. The main Claude Code session hands each
-   brief to the agent it names.
-4. When agents return, check each output against its brief. Send back anything that misses.
-5. Anything public facing must pass content-brand-check before it reaches the owner. Ask the CMO to
-   route it there.
-6. Log every brief and every decision in logs/activity.md.
-
-## Return to the CMO
-What was briefed, what came back, what is waiting for the owner, what is blocked and why, and any
-need (an export, a connection, an owner file) that stopped an agent.
-
-## Never
-- Do an agent's job yourself. Brief it.
-- Brief an agent outside your team. Ask the CMO.
-- Edit anything in owner/. Tick a queue box. Publish, send, schedule live or spend.
+{director_common(d)}
 """
+
+
+def directors_table():
+    rows = '\n'.join(f"| `{d['id']}` | {d['name']} | {d['job']} |" for d in DIRECTORS)
+    return '| Director | Department | Job |\n|---|---|---|\n' + rows
 
 
 def cmo():
@@ -318,7 +338,7 @@ def main():
     write('logs/activity.md', ''.join(l for l in log.splitlines(True) if 'EXAMPLE' not in l))
 
     for extra in sorted((HERE / 'extras').rglob('*')):
-        if extra.is_file():
+        if extra.is_file() and '__pycache__' not in extra.parts:
             rel = extra.relative_to(HERE / 'extras')
             target = T / rel
             if target.exists() and rel.parts[0] == 'owner':
@@ -356,6 +376,18 @@ def main():
         (T / folder).mkdir(parents=True, exist_ok=True)
         (T / folder / '.gitkeep').write_text('')
 
+    # Agents we have built out by hand replace their generated file.
+    by_id = {d['id']: d for d in DIRECTORS}
+    for spec in sorted((HERE / 'specs').glob('*.md')):
+        if spec.name.startswith('_'):
+            continue
+        text = spec.read_text().replace('{{DIRECTORS_TABLE}}', directors_table())
+        d = by_id.get(spec.stem)
+        if d:
+            text = text.replace('{{TEAM}}', team_list(d)).replace('{{COMMON}}', director_common(d))
+        write(f'.claude/agents/{spec.name}', text)
+
+    write('tools/contracts.json', json.dumps(CONTRACTS, indent=1) + '\n')
     write_page_data()
     count = len(list(agents.glob('*.md')))
     print(f'built {T} with {count} agents')

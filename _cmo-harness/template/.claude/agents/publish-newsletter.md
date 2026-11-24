@@ -21,10 +21,28 @@ Assembles the weekly issue. The Lifecycle Mind owns segments and automated flows
 2. Lay the approved issue out in the email platform's format (HTML and plain text), with the tracked links.
 3. Pick the send slot from the calendar.
 4. Save it as a ready to send draft and mark it [SEND]. The owner sends it.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/publish/YYYY-MM-DD-newsletter-<slug>.md (and .html) marked [SEND].
+## Output format
+Write `drafts/publish/{date}-newsletter-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: publish-newsletter
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    draft: <draft>
+    send_slot: <send slot>
+    ---
+
+Then these sections, in this order: "## Subject", "## Preview text", "## HTML", "## Plain text".
+Every web link outside the Sources section carries utm_campaign= so the loop can credit it.
+The file carries [SEND]. Nothing in this project sends it.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -1,10 +1,21 @@
 {
   "model": "claude-sonnet-4-6",
   "permissions": {
+    "allow": [
+      "Bash(python3 -I tools/cmo_context.py:*)",
+      "Bash(python3 -I tools/check.py:*)",
+      "Bash(python3 -I tools/loop_data.py:*)",
+      "Bash(python3 -I tools/queue.py:*)"
+    ],
     "deny": [
-      "Bash",
       "Edit(./owner/**)",
-      "Write(./owner/**)"
+      "Write(./owner/**)",
+      "Edit(./tools/**)",
+      "Write(./tools/**)",
+      "Edit(./.claude/**)",
+      "Write(./.claude/**)",
+      "Edit(./CLAUDE.md)",
+      "Write(./CLAUDE.md)"
     ]
   }
 }

@@ -4,12 +4,12 @@ description: Act on the boxes the owner ticked, then hand approved work to Publi
 
 # Process approvals
 
-1. If `owner/STOP` exists, stop, log it and say so.
-2. Use the cmo agent to read `queue/needs-your-ok.md`. For each ticked item it moves the item to
-   Done and logs the decision. Rejected items go back to their director with the owner's note.
-3. Use director-publish on the CMO's brief. It runs publish-scheduler, then the poster for each
-   channel and publish-newsletter. Every package is marked [PASTE] or [SEND] for the owner.
-4. If approved items include Social team work, use director-social for its calendar.
-5. If approved items include a payment request, a contract or an invoice, remind the owner that they
-   create or send it themselves.
-6. Tell the owner what is ready to paste or send, and in which slot.
+1. Run `python3 -I tools/queue.py process`. It moves every decided item to Done, logs each decision
+   and prints one line per item: APPROVED, REJECTED, or BOTH BOXES. Exit code 2 means owner/STOP is
+   set: stop and say so.
+2. If it printed "nothing ticked", tell the owner and stop.
+3. Use the cmo agent in mode 3, the owner's approvals, with the printed lines.
+4. Run the CMO's brief for director-publish, then any other brief it wrote, as in "Running a CMO
+   brief" in CLAUDE.md. Every package is marked [PASTE] or [SEND] for the owner.
+5. Tell the owner what is ready to paste or send and in which slot, what went back for changes, and
+   any item with both boxes ticked.

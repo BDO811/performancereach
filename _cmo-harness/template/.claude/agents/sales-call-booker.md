@@ -19,10 +19,28 @@ director-sales, who reports to the CMO. Gets hot leads onto the owner's calendar
 2. Draft a short reply for each hot lead on the channel they came from, with the booking link from owner/sales-rules.md.
 3. Use the approved scripts in brand-os/conversation/auto-reply-scripts.md where one fits.
 4. Queue each reply in queue/needs-your-ok.md unless owner/approval-bar.md lets that script auto ship.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/sales/YYYY-MM-DD-booking-<slug>.md.
+## Output format
+Write `drafts/sales/{date}-booking-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: sales-call-booker
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    record: <record>
+    channel: <channel>
+    ---
+
+Then these sections, in this order: "## Reply", "## Booking link".
+No email addresses and no phone numbers. Use CRM record ids or public handles.
+Every web link is one that appears in owner/sales-rules.md.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

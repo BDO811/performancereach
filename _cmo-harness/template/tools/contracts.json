@@ -1,0 +1,1773 @@
+{
+ "_about": "Output contract for every agent. Every output has front matter agent, brief, sources plus the keys in front. {date} is YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens, {channel} is a channel from CLAUDE.md. Mind agents without an output use drafts/<mind>/{date}-<agent>-{slug}.md. Rules are explained in rules_text.",
+ "rules_text": {
+  "links": "Every cell in the {col} column is a web link (http or https) or a path to a file in this workspace.",
+  "utm": "Every web link outside the Sources section carries utm_campaign= so the loop can credit it.",
+  "no_pii": "No email addresses and no phone numbers. Use CRM record ids or public handles.",
+  "no_card": "No card, bank or account numbers.",
+  "loop_data": "Cite the loop data file (loop/YYYY-MM-DD-data.md) you took the numbers from. Never recompute a number it gives.",
+  "queue_ids": "Every queue id (Q-YYYYMMDD-NN) you name is a real item in queue/needs-your-ok.md.",
+  "paste": "Unless status is posted, the file carries [PASTE]. A posted status needs a confirmation: line in the front matter.",
+  "send": "The file carries [SEND]. Nothing in this project sends it.",
+  "render": "Unless render is done, the file carries [RENDER].",
+  "hex": "Every cell in the Hex column is a colour like #1A2B3C.",
+  "owner_link": "Every web link is one that appears in owner/sales-rules.md.",
+  "cite_paths": "Every list line under This week names its source file in brackets, like (loop/2026-11-22-revenue.md)."
+ },
+ "agents": {
+  "research-trend-scout": {
+   "output": "research/{date}-trends.md",
+   "sections": [
+    "Questions",
+    "Angles",
+    "Sources"
+   ],
+   "table": {
+    "in": "Questions",
+    "cols": [
+     "Question",
+     "Source",
+     "Fit",
+     "Signal",
+     "Angle"
+    ],
+    "min": 5,
+    "max": 10,
+    "ints": {
+     "Fit": [
+      1,
+      5
+     ],
+     "Signal": [
+      1,
+      5
+     ]
+    }
+   },
+   "rules": [
+    "links:Source"
+   ]
+  },
+  "research-audience-listener": {
+   "output": "research/{date}-audience-voice.md",
+   "sections": [
+    "Groups",
+    "Sources"
+   ],
+   "table": {
+    "in": "Groups",
+    "cols": [
+     "Group",
+     "Count",
+     "Channel",
+     "Their words"
+    ],
+    "min": 1,
+    "ints": {
+     "Count": [
+      1,
+      100000
+     ]
+    }
+   },
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "research-comment-miner": {
+   "output": "research/{date}-comment-mine.md",
+   "sections": [
+    "Ideas",
+    "Sources"
+   ],
+   "table": {
+    "in": "Ideas",
+    "cols": [
+     "Idea",
+     "Asked by",
+     "Source comment",
+     "Link"
+    ],
+    "min": 1,
+    "ints": {
+     "Asked by": [
+      1,
+      100000
+     ]
+    }
+   },
+   "rules": [
+    "no_pii",
+    "links:Link"
+   ]
+  },
+  "research-competitor-watch": {
+   "output": "research/{date}-competitors.md",
+   "sections": [
+    "Changes",
+    "What it means",
+    "Sources"
+   ],
+   "table": {
+    "in": "Changes",
+    "cols": [
+     "Competitor",
+     "What changed",
+     "Date seen",
+     "Link"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "links:Link"
+   ]
+  },
+  "research-market": {
+   "sections": [
+    "Question",
+    "Market definition",
+    "Size",
+    "Segments",
+    "Trends",
+    "What it means",
+    "Sources"
+   ],
+   "table": {
+    "in": "Size",
+    "cols": [
+     "Measure",
+     "Value",
+     "Method",
+     "Source"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "links:Source"
+   ],
+   "output": "drafts/research/{date}-research-market-{slug}.md"
+  },
+  "research-competitive": {
+   "sections": [
+    "Competitors",
+    "Positioning map",
+    "Pricing",
+    "Messaging",
+    "Openings",
+    "Sources"
+   ],
+   "table": {
+    "in": "Competitors",
+    "cols": [
+     "Competitor",
+     "Positioning",
+     "Price point",
+     "Source"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "links:Source"
+   ],
+   "output": "drafts/research/{date}-research-competitive-{slug}.md"
+  },
+  "research-customer": {
+   "sections": [
+    "Who we heard from",
+    "Patterns",
+    "Jobs to be done",
+    "Their words",
+    "Sources"
+   ],
+   "table": {
+    "in": "Patterns",
+    "cols": [
+     "Pattern",
+     "How many",
+     "Evidence"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/research/{date}-research-customer-{slug}.md"
+  },
+  "research-data": {
+   "sections": [
+    "Question",
+    "Data used",
+    "Findings",
+    "Data coverage",
+    "Sources"
+   ],
+   "table": {
+    "in": "Findings",
+    "cols": [
+     "Finding",
+     "Number",
+     "Source"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "links:Source"
+   ],
+   "output": "drafts/research/{date}-research-data-{slug}.md"
+  },
+  "research-post-writer": {
+   "output": "drafts/{date}-{channel}-{slug}.md",
+   "front": [
+    "channel",
+    "voice_check"
+   ],
+   "values": {
+    "voice_check": [
+     "pending",
+     "pass",
+     "fail"
+    ]
+   },
+   "sections": [
+    "Hook",
+    "Body",
+    "Call to action",
+    "Sources"
+   ],
+   "rules": [
+    "utm"
+   ]
+  },
+  "research-email-writer": {
+   "output": "drafts/{date}-email-{slug}.md",
+   "front": [
+    "channel",
+    "voice_check"
+   ],
+   "values": {
+    "channel": [
+     "email"
+    ],
+    "voice_check": [
+     "pending",
+     "pass",
+     "fail"
+    ]
+   },
+   "sections": [
+    "Subject lines",
+    "Preview text",
+    "Body",
+    "Call to action",
+    "Sources"
+   ],
+   "rules": [
+    "utm"
+   ]
+  },
+  "content-visual-designer": {
+   "output": "drafts/creative/{date}-{slug}.md",
+   "front": [
+    "draft",
+    "size",
+    "spec_check"
+   ],
+   "values": {
+    "spec_check": [
+     "pass",
+     "fail"
+    ]
+   },
+   "sections": [
+    "Files",
+    "Text on the visual",
+    "Brand rules used",
+    "Image prompts"
+   ]
+  },
+  "content-carousel-builder": {
+   "output": "drafts/creative/{date}-carousel-{slug}.md",
+   "front": [
+    "draft",
+    "spec_check"
+   ],
+   "values": {
+    "spec_check": [
+     "pass",
+     "fail"
+    ]
+   },
+   "sections": [
+    "Slides",
+    "Caption"
+   ],
+   "table": {
+    "in": "Slides",
+    "cols": [
+     "Slide",
+     "Text",
+     "File"
+    ],
+    "min": 6,
+    "max": 10
+   }
+  },
+  "content-voiceover": {
+   "output": "drafts/audio/{date}-{slug}.md",
+   "front": [
+    "script",
+    "voice",
+    "render"
+   ],
+   "values": {
+    "render": [
+     "pending",
+     "done"
+    ]
+   },
+   "sections": [
+    "Script for speech",
+    "ElevenLabs request"
+   ],
+   "rules": [
+    "render"
+   ]
+  },
+  "content-video-editor": {
+   "output": "drafts/video/{date}-{slug}.md",
+   "front": [
+    "script",
+    "spec_check",
+    "render"
+   ],
+   "values": {
+    "spec_check": [
+     "pass",
+     "fail"
+    ],
+    "render": [
+     "pending",
+     "done"
+    ]
+   },
+   "sections": [
+    "Edit list",
+    "Platform notes",
+    "Captions"
+   ],
+   "table": {
+    "in": "Edit list",
+    "cols": [
+     "Start",
+     "End",
+     "Shot",
+     "On screen text"
+    ],
+    "min": 3
+   },
+   "rules": [
+    "render"
+   ]
+  },
+  "content-brand-check": {
+   "output": "drafts/{date}-report-brand-check.md",
+   "sections": [
+    "Results",
+    "Held"
+   ],
+   "table": {
+    "in": "Results",
+    "cols": [
+     "File",
+     "Result",
+     "Rule"
+    ],
+    "min": 1,
+    "enums": {
+     "Result": [
+      "pass",
+      "fail"
+     ]
+    }
+   },
+   "rules": [
+    "links:File"
+   ]
+  },
+  "content-approval-desk": {
+   "output": "drafts/{date}-report-approval-pack.md",
+   "sections": [
+    "Waiting for the owner",
+    "May auto ship"
+   ],
+   "rules": [
+    "queue_ids"
+   ]
+  },
+  "publish-scheduler": {
+   "output": "drafts/{date}-schedule-week.md",
+   "sections": [
+    "Schedule"
+   ],
+   "table": {
+    "in": "Schedule",
+    "cols": [
+     "File",
+     "Channel",
+     "Slot",
+     "Poster",
+     "Status"
+    ],
+    "min": 1,
+    "enums": {
+     "Status": [
+      "slotted",
+      "waiting"
+     ]
+    }
+   },
+   "rules": [
+    "links:File"
+   ]
+  },
+  "publish-tiktok-poster": {
+   "output": "drafts/publish/{date}-tiktok-{slug}.md",
+   "front": [
+    "draft",
+    "slot",
+    "status"
+   ],
+   "values": {
+    "status": [
+     "paste",
+     "posted"
+    ]
+   },
+   "sections": [
+    "Caption",
+    "Hashtags",
+    "Cover text",
+    "Link"
+   ],
+   "rules": [
+    "utm",
+    "paste"
+   ]
+  },
+  "publish-reels-poster": {
+   "output": "drafts/publish/{date}-reels-{slug}.md",
+   "front": [
+    "draft",
+    "slot",
+    "status"
+   ],
+   "values": {
+    "status": [
+     "paste",
+     "posted"
+    ]
+   },
+   "sections": [
+    "Caption",
+    "Cover",
+    "First comment",
+    "Link"
+   ],
+   "rules": [
+    "utm",
+    "paste"
+   ]
+  },
+  "publish-shorts-poster": {
+   "output": "drafts/publish/{date}-shorts-{slug}.md",
+   "front": [
+    "draft",
+    "slot",
+    "status"
+   ],
+   "values": {
+    "status": [
+     "paste",
+     "posted"
+    ]
+   },
+   "sections": [
+    "Title",
+    "Description",
+    "Tags",
+    "Link"
+   ],
+   "rules": [
+    "utm",
+    "paste"
+   ]
+  },
+  "publish-x-poster": {
+   "output": "drafts/publish/{date}-x-{slug}.md",
+   "front": [
+    "draft",
+    "slot",
+    "status"
+   ],
+   "values": {
+    "status": [
+     "paste",
+     "posted"
+    ]
+   },
+   "sections": [
+    "Posts",
+    "Link"
+   ],
+   "rules": [
+    "utm",
+    "paste"
+   ]
+  },
+  "publish-newsletter": {
+   "output": "drafts/publish/{date}-newsletter-{slug}.md",
+   "front": [
+    "draft",
+    "send_slot"
+   ],
+   "sections": [
+    "Subject",
+    "Preview text",
+    "HTML",
+    "Plain text"
+   ],
+   "rules": [
+    "utm",
+    "send"
+   ]
+  },
+  "loop-post-analyst": {
+   "output": "loop/{date}-posts.md",
+   "sections": [
+    "Ranking",
+    "Top three",
+    "Bottom three",
+    "Sources"
+   ],
+   "table": {
+    "in": "Ranking",
+    "cols": [
+     "Post",
+     "Channel",
+     "Views",
+     "Saves",
+     "Link clicks",
+     "Note"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "loop_data"
+   ]
+  },
+  "loop-revenue-tracker": {
+   "output": "loop/{date}-revenue.md",
+   "sections": [
+    "By campaign",
+    "By channel",
+    "Unattributed",
+    "Sources"
+   ],
+   "table": {
+    "in": "By campaign",
+    "cols": [
+     "Campaign",
+     "Revenue",
+     "Deals",
+     "How it was linked"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "loop_data"
+   ]
+  },
+  "loop-call-tracker": {
+   "output": "loop/{date}-calls.md",
+   "sections": [
+    "Calls",
+    "No shows",
+    "Sources"
+   ],
+   "table": {
+    "in": "Calls",
+    "cols": [
+     "Campaign or source",
+     "Booked",
+     "Showed",
+     "No show"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "loop_data",
+    "no_pii"
+   ]
+  },
+  "loop-email-analyst": {
+   "output": "loop/{date}-email.md",
+   "sections": [
+    "Sends",
+    "Compared with the last four",
+    "Sources"
+   ],
+   "table": {
+    "in": "Sends",
+    "cols": [
+     "Send",
+     "Delivered",
+     "Clicks",
+     "Replies",
+     "Unsubscribes",
+     "Revenue"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "loop_data"
+   ]
+  },
+  "loop-weekly-report": {
+   "outputs": [
+    {
+     "output": "reports/weekly/{date}.md",
+     "sections": [
+      "Against targets",
+      "Revenue and calls",
+      "Spend",
+      "What worked",
+      "What did not",
+      "Sources"
+     ],
+     "rules": [
+      "loop_data"
+     ]
+    },
+    {
+     "output": "reports/morning/{date}.md",
+     "sections": [
+      "What worked",
+      "Who booked a call",
+      "What goes out next",
+      "Waiting for you"
+     ],
+     "rules": [
+      "queue_ids",
+      "no_pii"
+     ]
+    }
+   ]
+  },
+  "loop-feeder": {
+   "output": "loop/next-week-inputs.md",
+   "front_free": true,
+   "sections": [
+    "This week",
+    "History"
+   ],
+   "rules": [
+    "cite_paths"
+   ]
+  },
+  "sales-lead-scorer": {
+   "output": "drafts/leads/{date}-scored.md",
+   "sections": [
+    "Leads",
+    "Sources"
+   ],
+   "table": {
+    "in": "Leads",
+    "cols": [
+     "Record",
+     "Score",
+     "Reason",
+     "Source"
+    ],
+    "min": 1,
+    "enums": {
+     "Score": [
+      "hot",
+      "warm",
+      "cold"
+     ]
+    }
+   },
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "sales-call-booker": {
+   "output": "drafts/sales/{date}-booking-{slug}.md",
+   "front": [
+    "record",
+    "channel"
+   ],
+   "sections": [
+    "Reply",
+    "Booking link"
+   ],
+   "rules": [
+    "no_pii",
+    "owner_link"
+   ]
+  },
+  "sales-reminder": {
+   "output": "drafts/sales/{date}-reminders.md",
+   "sections": [
+    "Reminders"
+   ],
+   "table": {
+    "in": "Reminders",
+    "cols": [
+     "Record",
+     "Call time",
+     "Send at",
+     "Message"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_pii",
+    "send"
+   ]
+  },
+  "sales-follow-up": {
+   "output": "drafts/sales/{date}-followup-{slug}.md",
+   "front": [
+    "record",
+    "kind"
+   ],
+   "values": {
+    "kind": [
+     "after-call",
+     "no-show"
+    ]
+   },
+   "sections": [
+    "Message",
+    "From the call notes"
+   ],
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "sales-payment-link": {
+   "output": "drafts/sales/{date}-payment-{slug}.md",
+   "front": [
+    "record",
+    "offer",
+    "amount",
+    "currency",
+    "queue"
+   ],
+   "sections": [
+    "Request",
+    "Matches sales rules"
+   ],
+   "rules": [
+    "queue_ids",
+    "no_card",
+    "no_pii"
+   ]
+  },
+  "sales-crm-sync": {
+   "output": "drafts/crm/{date}-updates.csv",
+   "csv": [
+    "record_id",
+    "field",
+    "old_value",
+    "new_value",
+    "reason"
+   ]
+  },
+  "sales-prospecting": {
+   "sections": [
+    "Criteria",
+    "Prospects",
+    "Sources"
+   ],
+   "table": {
+    "in": "Prospects",
+    "cols": [
+     "Company",
+     "Why they fit",
+     "Signal",
+     "Source"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "links:Source",
+    "no_pii"
+   ],
+   "output": "drafts/sales/{date}-sales-prospecting-{slug}.md"
+  },
+  "sales-outreach": {
+   "sections": [
+    "Sequence",
+    "Personalisation",
+    "Sources"
+   ],
+   "table": {
+    "in": "Sequence",
+    "cols": [
+     "Step",
+     "Day",
+     "Channel",
+     "Message"
+    ],
+    "min": 2
+   },
+   "rules": [
+    "send",
+    "no_pii"
+   ],
+   "output": "drafts/sales/{date}-sales-outreach-{slug}.md"
+  },
+  "sales-meeting-prep": {
+   "sections": [
+    "Account",
+    "People and roles",
+    "Talking points",
+    "Questions to ask",
+    "Sources"
+   ],
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/sales/{date}-sales-meeting-prep-{slug}.md"
+  },
+  "sales-pipeline": {
+   "sections": [
+    "Pipeline",
+    "Stalled deals",
+    "Next actions"
+   ],
+   "table": {
+    "in": "Stalled deals",
+    "cols": [
+     "Record",
+     "Stage",
+     "Days stalled",
+     "Next action"
+    ],
+    "min": 0
+   },
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/sales/{date}-sales-pipeline-{slug}.md"
+  },
+  "discovery-intake": {
+   "sections": [
+    "Client",
+    "Goals",
+    "Current marketing",
+    "Constraints",
+    "Open questions"
+   ],
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/intake/{date}-discovery-intake-{slug}.md"
+  },
+  "contract-pricing": {
+   "front": [
+    "owner_gate"
+   ],
+   "values": {
+    "owner_gate": [
+     "queue"
+    ]
+   },
+   "sections": [
+    "Scope",
+    "Pricing",
+    "Assumptions",
+    "Owner decision"
+   ],
+   "output": "drafts/intake/{date}-contract-pricing-{slug}.md"
+  },
+  "onboarding-setup": {
+   "sections": [
+    "Workspace",
+    "Owner files to fill",
+    "Exports to connect",
+    "Checklist"
+   ],
+   "output": "drafts/intake/{date}-onboarding-setup-{slug}.md"
+  },
+  "community-comment-replier": {
+   "output": "drafts/community/{date}-comments.md",
+   "sections": [
+    "Replies"
+   ],
+   "table": {
+    "in": "Replies",
+    "cols": [
+     "Comment",
+     "Link",
+     "Reply",
+     "Status"
+    ],
+    "min": 1,
+    "enums": {
+     "Status": [
+      "auto",
+      "waits",
+      "escalated",
+      "lead"
+     ]
+    }
+   }
+  },
+  "community-dm-agent": {
+   "output": "drafts/community/{date}-dms.md",
+   "sections": [
+    "Replies"
+   ],
+   "table": {
+    "in": "Replies",
+    "cols": [
+     "Handle",
+     "Type",
+     "Reply",
+     "Status"
+    ],
+    "min": 1,
+    "enums": {
+     "Type": [
+      "lead",
+      "question",
+      "problem",
+      "spam"
+     ],
+     "Status": [
+      "auto",
+      "waits",
+      "escalated",
+      "lead"
+     ]
+    }
+   },
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "community-faq-builder": {
+   "output": "drafts/community/{date}-faq-proposals.md",
+   "sections": [
+    "Proposals"
+   ],
+   "table": {
+    "in": "Proposals",
+    "cols": [
+     "Question",
+     "Times asked",
+     "Draft answer",
+     "Source"
+    ],
+    "min": 1,
+    "ints": {
+     "Times asked": [
+      3,
+      100000
+     ]
+    }
+   }
+  },
+  "community-review-asker": {
+   "output": "drafts/community/{date}-review-asks.md",
+   "sections": [
+    "Asks"
+   ],
+   "table": {
+    "in": "Asks",
+    "cols": [
+     "Record",
+     "Milestone",
+     "Message"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "community-lead-catcher": {
+   "output": "drafts/leads/{date}-caught.md",
+   "sections": [
+    "Leads"
+   ],
+   "table": {
+    "in": "Leads",
+    "cols": [
+     "Handle",
+     "Channel",
+     "Their words",
+     "Link"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_pii"
+   ]
+  },
+  "community-escalation": {
+   "output": "drafts/community/{date}-escalations.md",
+   "sections": [
+    "Escalated",
+    "Paused threads"
+   ],
+   "table": {
+    "in": "Escalated",
+    "cols": [
+     "Queue item",
+     "What happened",
+     "Holding reply"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "queue_ids",
+    "no_pii"
+   ]
+  },
+  "success-support": {
+   "sections": [
+    "Tickets",
+    "Escalations"
+   ],
+   "table": {
+    "in": "Tickets",
+    "cols": [
+     "Ticket",
+     "Issue",
+     "Answer source",
+     "Status"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/success/{date}-success-support-{slug}.md"
+  },
+  "success-retention": {
+   "sections": [
+    "At risk accounts",
+    "Save plays",
+    "Sources"
+   ],
+   "table": {
+    "in": "At risk accounts",
+    "cols": [
+     "Account",
+     "Signal",
+     "Risk",
+     "Play"
+    ],
+    "min": 0,
+    "enums": {
+     "Risk": [
+      "high",
+      "medium",
+      "low"
+     ]
+    }
+   },
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/success/{date}-success-retention-{slug}.md"
+  },
+  "success-onboarding": {
+   "sections": [
+    "Client",
+    "Milestones",
+    "Owner tasks"
+   ],
+   "table": {
+    "in": "Milestones",
+    "cols": [
+     "Milestone",
+     "Due",
+     "Owner"
+    ],
+    "min": 1
+   },
+   "output": "drafts/success/{date}-success-onboarding-{slug}.md"
+  },
+  "success-feedback": {
+   "sections": [
+    "Themes",
+    "Their words",
+    "Requests",
+    "Sources"
+   ],
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/success/{date}-success-feedback-{slug}.md"
+  },
+  "cross-channel-aggregator": {
+   "sections": [
+    "Channels",
+    "Blended totals",
+    "Gaps",
+    "Sources"
+   ],
+   "table": {
+    "in": "Channels",
+    "cols": [
+     "Channel",
+     "Spend",
+     "Clicks",
+     "Calls",
+     "Revenue"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/analytics/{date}-cross-channel-aggregator-{slug}.md"
+  },
+  "weekly-report-builder": {
+   "sections": [
+    "Summary",
+    "Results",
+    "Next week",
+    "Sources"
+   ],
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/analytics/{date}-weekly-report-builder-{slug}.md"
+  },
+  "anomaly-alert": {
+   "sections": [
+    "Alerts",
+    "Checked",
+    "Sources"
+   ],
+   "table": {
+    "in": "Alerts",
+    "cols": [
+     "Metric",
+     "This week",
+     "Usual",
+     "Why it matters"
+    ],
+    "min": 0
+   },
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/analytics/{date}-anomaly-alert-{slug}.md"
+  },
+  "design-brand-identity": {
+   "sections": [
+    "Colours",
+    "Typefaces",
+    "Logo rules",
+    "Voice examples",
+    "Sources"
+   ],
+   "table": {
+    "in": "Colours",
+    "cols": [
+     "Name",
+     "Hex",
+     "Use"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "hex"
+   ],
+   "output": "drafts/design/{date}-design-brand-identity-{slug}.md"
+  },
+  "design-ad-creative": {
+   "sections": [
+    "Concepts",
+    "Sizes",
+    "Image prompts"
+   ],
+   "table": {
+    "in": "Concepts",
+    "cols": [
+     "Concept",
+     "Format",
+     "Hook",
+     "File"
+    ],
+    "min": 1
+   },
+   "output": "drafts/design/{date}-design-ad-creative-{slug}.md"
+  },
+  "design-web-ui": {
+   "sections": [
+    "Page",
+    "Layout",
+    "Copy",
+    "Components",
+    "Accessibility"
+   ],
+   "output": "drafts/design/{date}-design-web-ui-{slug}.md"
+  },
+  "design-deck": {
+   "sections": [
+    "Story",
+    "Slides",
+    "Sources"
+   ],
+   "table": {
+    "in": "Slides",
+    "cols": [
+     "Slide",
+     "Title",
+     "Point",
+     "Visual"
+    ],
+    "min": 3
+   },
+   "output": "drafts/design/{date}-design-deck-{slug}.md"
+  },
+  "docs-copywriting": {
+   "sections": [
+    "Variants",
+    "Landing page copy",
+    "Sources"
+   ],
+   "table": {
+    "in": "Variants",
+    "cols": [
+     "Variant",
+     "Headline",
+     "Body",
+     "Call to action"
+    ],
+    "min": 3,
+    "max": 5
+   },
+   "rules": [
+    "utm"
+   ],
+   "output": "drafts/writing-docs/{date}-docs-copywriting-{slug}.md"
+  },
+  "docs-content": {
+   "sections": [
+    "Brief",
+    "Article",
+    "Sources"
+   ],
+   "rules": [
+    "utm"
+   ],
+   "output": "drafts/writing-docs/{date}-docs-content-{slug}.md"
+  },
+  "docs-technical": {
+   "sections": [
+    "Audience",
+    "Document",
+    "Sources"
+   ],
+   "output": "drafts/writing-docs/{date}-docs-technical-{slug}.md"
+  },
+  "docs-editing": {
+   "sections": [
+    "File edited",
+    "Changes",
+    "Open questions"
+   ],
+   "table": {
+    "in": "Changes",
+    "cols": [
+     "Where",
+     "Before",
+     "After",
+     "Why"
+    ],
+    "min": 1
+   },
+   "output": "drafts/writing-docs/{date}-docs-editing-{slug}.md"
+  },
+  "gtm-paid-social-strategist": {
+   "front": [
+    "owner_gate"
+   ],
+   "values": {
+    "owner_gate": [
+     "queue"
+    ]
+   },
+   "sections": [
+    "Objective",
+    "Audiences",
+    "Placements",
+    "Test plan",
+    "What a win looks like",
+    "Budget range"
+   ],
+   "table": {
+    "in": "Test plan",
+    "cols": [
+     "Test",
+     "Variable",
+     "Budget",
+     "Win if"
+    ],
+    "min": 1
+   },
+   "output": "drafts/paid-social/{date}-gtm-paid-social-strategist-{slug}.md"
+  },
+  "gtm-paid-social-creative": {
+   "sections": [
+    "Ad sets",
+    "Copy variants",
+    "Creative brief"
+   ],
+   "table": {
+    "in": "Copy variants",
+    "cols": [
+     "Ad set",
+     "Variant",
+     "Primary text",
+     "Headline"
+    ],
+    "min": 3
+   },
+   "rules": [
+    "utm"
+   ],
+   "output": "drafts/paid-social/{date}-gtm-paid-social-creative-{slug}.md"
+  },
+  "gtm-paid-social-budget-bid": {
+   "front": [
+    "owner_gate"
+   ],
+   "values": {
+    "owner_gate": [
+     "queue"
+    ]
+   },
+   "sections": [
+    "Pacing",
+    "Recommendations",
+    "Sources"
+   ],
+   "table": {
+    "in": "Recommendations",
+    "cols": [
+     "Campaign",
+     "Change",
+     "From",
+     "To",
+     "Why"
+    ],
+    "min": 0
+   },
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/paid-social/{date}-gtm-paid-social-budget-bid-{slug}.md"
+  },
+  "gtm-paid-social-performance": {
+   "sections": [
+    "Results",
+    "Scale or pause",
+    "Sources"
+   ],
+   "table": {
+    "in": "Results",
+    "cols": [
+     "Campaign",
+     "Spend",
+     "Conversions",
+     "Cost per conversion",
+     "Call"
+    ],
+    "min": 1,
+    "enums": {
+     "Call": [
+      "scale",
+      "hold",
+      "pause"
+     ]
+    }
+   },
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/paid-social/{date}-gtm-paid-social-performance-{slug}.md"
+  },
+  "gtm-seo-keyword-research": {
+   "sections": [
+    "Keywords",
+    "Clusters",
+    "Sources"
+   ],
+   "table": {
+    "in": "Keywords",
+    "cols": [
+     "Keyword",
+     "Intent",
+     "Volume",
+     "Difficulty",
+     "Page"
+    ],
+    "min": 5
+   },
+   "output": "drafts/seo-geo/{date}-gtm-seo-keyword-research-{slug}.md"
+  },
+  "gtm-seo-content-brief": {
+   "sections": [
+    "Target query",
+    "Search intent",
+    "Outline",
+    "Must cover",
+    "Internal links",
+    "Sources"
+   ],
+   "output": "drafts/seo-geo/{date}-gtm-seo-content-brief-{slug}.md"
+  },
+  "gtm-seo-technical-audit": {
+   "sections": [
+    "Issues",
+    "Fix order",
+    "Sources"
+   ],
+   "table": {
+    "in": "Issues",
+    "cols": [
+     "Issue",
+     "Pages",
+     "Severity",
+     "Fix"
+    ],
+    "min": 1,
+    "enums": {
+     "Severity": [
+      "high",
+      "medium",
+      "low"
+     ]
+    }
+   },
+   "output": "drafts/seo-geo/{date}-gtm-seo-technical-audit-{slug}.md"
+  },
+  "gtm-seo-geo-citation": {
+   "sections": [
+    "Prompts tested",
+    "Results",
+    "Gaps"
+   ],
+   "table": {
+    "in": "Results",
+    "cols": [
+     "Prompt",
+     "Engine",
+     "Brand cited",
+     "Competitors cited",
+     "Date"
+    ],
+    "min": 1,
+    "enums": {
+     "Brand cited": [
+      "yes",
+      "no"
+     ]
+    }
+   },
+   "output": "drafts/seo-geo/{date}-gtm-seo-geo-citation-{slug}.md"
+  },
+  "segmentation": {
+   "sections": [
+    "Segments",
+    "Sources"
+   ],
+   "table": {
+    "in": "Segments",
+    "cols": [
+     "Segment",
+     "Rule",
+     "Size",
+     "Source"
+    ],
+    "min": 1
+   },
+   "output": "drafts/lifecycle/{date}-segmentation-{slug}.md"
+  },
+  "campaign-flow-builder": {
+   "sections": [
+    "Flow",
+    "Emails",
+    "Exit rules"
+   ],
+   "table": {
+    "in": "Flow",
+    "cols": [
+     "Step",
+     "Trigger",
+     "Wait",
+     "Email"
+    ],
+    "min": 2
+   },
+   "rules": [
+    "utm",
+    "send"
+   ],
+   "output": "drafts/lifecycle/{date}-campaign-flow-builder-{slug}.md"
+  },
+  "deliverability-monitor": {
+   "sections": [
+    "Sender health",
+    "Issues",
+    "Sources"
+   ],
+   "table": {
+    "in": "Issues",
+    "cols": [
+     "Issue",
+     "Evidence",
+     "Fix"
+    ],
+    "min": 0
+   },
+   "output": "drafts/lifecycle/{date}-deliverability-monitor-{slug}.md"
+  },
+  "finance-bookkeeping": {
+   "sections": [
+    "Entries",
+    "Unmatched",
+    "Sources"
+   ],
+   "table": {
+    "in": "Entries",
+    "cols": [
+     "Date",
+     "Description",
+     "Amount",
+     "Account"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_card"
+   ],
+   "output": "drafts/finance/{date}-finance-bookkeeping-{slug}.md"
+  },
+  "finance-invoicing": {
+   "front": [
+    "owner_gate",
+    "record"
+   ],
+   "values": {
+    "owner_gate": [
+     "queue"
+    ]
+   },
+   "sections": [
+    "Invoice",
+    "Line items",
+    "Terms"
+   ],
+   "table": {
+    "in": "Line items",
+    "cols": [
+     "Item",
+     "Quantity",
+     "Price",
+     "Total"
+    ],
+    "min": 1
+   },
+   "rules": [
+    "no_card",
+    "send",
+    "no_pii"
+   ],
+   "output": "drafts/finance/{date}-finance-invoicing-{slug}.md"
+  },
+  "finance-reporting": {
+   "sections": [
+    "Marketing spend",
+    "Return",
+    "Margin",
+    "Sources"
+   ],
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/finance/{date}-finance-reporting-{slug}.md"
+  },
+  "finance-forecasting": {
+   "sections": [
+    "Assumptions",
+    "Forecast",
+    "Scenarios",
+    "Sources"
+   ],
+   "table": {
+    "in": "Forecast",
+    "cols": [
+     "Month",
+     "Revenue",
+     "Spend",
+     "Calls"
+    ],
+    "min": 3
+   },
+   "output": "drafts/finance/{date}-finance-forecasting-{slug}.md"
+  },
+  "legal-contract-review": {
+   "front": [
+    "owner_gate"
+   ],
+   "values": {
+    "owner_gate": [
+     "queue"
+    ]
+   },
+   "sections": [
+    "Document",
+    "Clauses",
+    "Risks",
+    "For the owner"
+   ],
+   "table": {
+    "in": "Clauses",
+    "cols": [
+     "Clause",
+     "Issue",
+     "Suggested change",
+     "Risk"
+    ],
+    "min": 1,
+    "enums": {
+     "Risk": [
+      "high",
+      "medium",
+      "low"
+     ]
+    }
+   },
+   "output": "drafts/legal/{date}-legal-contract-review-{slug}.md"
+  },
+  "legal-compliance-check": {
+   "front": [
+    "result"
+   ],
+   "values": {
+    "result": [
+     "pass",
+     "fail",
+     "changes needed"
+    ]
+   },
+   "sections": [
+    "Item checked",
+    "Rules that apply",
+    "Changes needed",
+    "Sources"
+   ],
+   "output": "drafts/legal/{date}-legal-compliance-check-{slug}.md"
+  },
+  "legal-policy-docs": {
+   "sections": [
+    "Policy",
+    "Draft",
+    "Open questions"
+   ],
+   "output": "drafts/legal/{date}-legal-policy-docs-{slug}.md"
+  },
+  "legal-ip-trademark": {
+   "sections": [
+    "Mark",
+    "Search results",
+    "Risk",
+    "Next steps"
+   ],
+   "table": {
+    "in": "Search results",
+    "cols": [
+     "Mark",
+     "Owner",
+     "Class",
+     "Status",
+     "Source"
+    ],
+    "min": 0
+   },
+   "rules": [
+    "links:Source"
+   ],
+   "output": "drafts/legal/{date}-legal-ip-trademark-{slug}.md"
+  },
+  "social-calendar": {
+   "sections": [
+    "Calendar",
+    "Gaps"
+   ],
+   "table": {
+    "in": "Calendar",
+    "cols": [
+     "Date",
+     "Channel",
+     "Topic",
+     "Agent"
+    ],
+    "min": 1
+   },
+   "output": "drafts/social/{date}-social-calendar-{slug}.md"
+  },
+  "social-post-writing": {
+   "front": [
+    "voice_check"
+   ],
+   "values": {
+    "voice_check": [
+     "pending",
+     "pass",
+     "fail"
+    ]
+   },
+   "sections": [
+    "Posts",
+    "Sources"
+   ],
+   "rules": [
+    "utm"
+   ],
+   "output": "drafts/social/{date}-social-post-writing-{slug}.md"
+  },
+  "social-community": {
+   "sections": [
+    "Replies",
+    "Escalations"
+   ],
+   "rules": [
+    "no_pii"
+   ],
+   "output": "drafts/social/{date}-social-community-{slug}.md"
+  },
+  "social-analytics": {
+   "sections": [
+    "Results",
+    "What to repeat",
+    "Sources"
+   ],
+   "rules": [
+    "loop_data"
+   ],
+   "output": "drafts/social/{date}-social-analytics-{slug}.md"
+  }
+ }
+}

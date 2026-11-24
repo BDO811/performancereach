@@ -17,10 +17,18 @@ director-loop, who reports to the CMO. Feeds what worked into next week's plan.
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 2. Write three lists: double down (topics, formats and hooks that made money or booked calls), drop (what cost effort and earned nothing twice in a row), test (one new idea per channel).
 3. Give the reason and the source file for each line.
-4. Log one line in logs/activity.md for every file you write.
+4. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-loop/next-week-inputs.md (replace the This week section, keep the history below it).
+## Output format
+Write `loop/next-week-inputs.md`.
+This file has no front matter. Keep its existing layout.
+Then these sections, in this order: "## This week", "## History".
+Every list line under This week names its source file in brackets, like (loop/2026-11-22-revenue.md).
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -25,10 +25,27 @@ Short organic posts and scripts. docs-copywriting owns ads and landing pages, do
 2. Write each post the brief asks for: hook, body, call to action. For short video, write a script with a spoken hook in the first two seconds, beats and on screen text.
 3. Use the buyer phrases from research/ where they fit.
 4. Run your own voice check against owner/brand-voice.md before handing over. Content Brand Check runs the real one.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/YYYY-MM-DD-<channel>-<slug>.md with front matter: channel, brief, voice_check: pending, sources.
+## Output format
+Write `drafts/{date}-{channel}-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: research-post-writer
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    channel: <channel>
+    voice_check: pending or pass or fail
+    ---
+
+Then these sections, in this order: "## Hook", "## Body", "## Call to action", "## Sources".
+Every web link outside the Sources section carries utm_campaign= so the loop can credit it.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

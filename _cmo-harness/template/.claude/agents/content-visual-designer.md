@@ -24,10 +24,27 @@ Organic post visuals. design-ad-creative owns paid ad creative, design-brand-ide
 3. Use only the colours, fonts and logo rules in brand-os/creative/visual-specs.md. Never guess a brand colour.
 4. If a photo or illustration is needed, write the image prompt and mark it [RENDER] for a connected image tool or the owner.
 5. Check text size is readable on a phone and every claim on the visual matches the draft.
-6. Log one line in logs/activity.md for every file you write.
+6. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/creative/YYYY-MM-DD-<slug>.html (or .svg) plus a spec file with front matter: draft, size, spec_check: pass or fail.
+## Output format
+Write `drafts/creative/{date}-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: content-visual-designer
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    draft: <draft>
+    size: <size>
+    spec_check: pass or fail
+    ---
+
+Then these sections, in this order: "## Files", "## Text on the visual", "## Brand rules used", "## Image prompts".
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

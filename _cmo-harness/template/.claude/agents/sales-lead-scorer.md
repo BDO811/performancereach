@@ -19,10 +19,27 @@ director-sales, who reports to the CMO. Scores every new lead.
 2. Score each new lead hot, warm or cold with the rules in owner/sales-rules.md.
 3. Write the reason for each score in one line.
 4. Hot leads go to the Sales director first, flagged for Call Booker.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/leads/YYYY-MM-DD-scored.md.
+## Output format
+Write `drafts/leads/{date}-scored.md`.
+Start it with this front matter:
+
+    ---
+    agent: sales-lead-scorer
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Leads", "## Sources".
+Under "## Leads", a table with the columns Record | Score | Reason | Source, at least 1 rows.
+Score is one of: hot, warm, cold.
+No email addresses and no phone numbers. Use CRM record ids or public handles.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

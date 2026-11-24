@@ -7,17 +7,25 @@ argument-hint: "[optional focus for this week]"
 
 Owner's focus for this week, if any: $ARGUMENTS
 
-1. If `owner/STOP` exists, stop, log it and say so.
-2. Use the cmo agent to plan this week. It writes `reports/plans/YYYY-Www.md` and one brief per
-   director in `drafts/briefs/cmo/`, listed in run order.
-3. For each CMO brief, in order: use the director it names on that brief. The director writes one
-   brief per agent and lists them. Use each agent on its brief, one at a time. Then use the director
-   again with the returns.
-4. Order for a normal week: director-research, director-seo if briefed, director-content, then
-   director-paid and director-social if briefed.
-5. Use the cmo agent again with every director's return. It routes public facing work through
-   content-brand-check and content-approval-desk.
-6. Stop there. Tell the owner the week is waiting in `queue/needs-your-ok.md`, with the count of
-   items, what may auto ship, what was held and what is blocked.
+## 1. Facts first
+Run `python3 -I tools/cmo_context.py`. It writes `reports/plans/<week>-context.md`.
+If it exits with code 2, stop: show the owner the "Can the CMO plan" section of that file and do
+nothing else.
+
+## 2. The plan
+Use the cmo agent in mode 1, plan the week. Pass it the context file path and the owner's focus.
+
+## 3. Check the plan
+Run `python3 -I tools/check.py plan`. If it prints problems, use the cmo agent again with the printed
+problems and ask it to fix only those. Run the check again. After two failed fixes, stop and show the
+owner the problems.
+
+## 4. Run the briefs
+For each CMO brief in the plan's Briefs list, in order (wait for its depends_on to finish first),
+follow "Running a CMO brief" in CLAUDE.md.
+
+## 5. Hand over
+Stop when the week's drafts are in `queue/needs-your-ok.md`. Tell the owner how many items wait,
+what may auto ship, what was held for voice review and what is blocked.
 
 Publishing starts only after the owner ticks and runs `/process-approvals`.

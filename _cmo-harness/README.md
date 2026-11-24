@@ -42,14 +42,50 @@ tactical work goes to the loop agent, deep or client facing work goes to the Min
 The Social team's eight event playbooks (`/one-star-review-lands`, `/dm-lead-at-11pm` and the rest)
 work as before, through director-social.
 
+## How every agent is built
+
+Every agent is built out. Nothing has run against a real model yet: all checks run on fictional data.
+
+| Layer | Agents | Where | Checked by |
+|---|---|---|---|
+| CMO | 1 | `specs/cmo.md`: plan, returns, approvals, daily and close of week briefs, 0 to 12 scoring | `check.py plan`, `cmo_context.py`, `queue.py` |
+| Directors | 12 | `specs/director-*.md` staffing rules plus `specs/_director-common.md` (split and return) | `check.py agent-briefs`, `check.py return` |
+| Loop and Mind agents | 85 | job and steps from the catalogs, output format rendered from `catalog/contracts.json` | `check.py output` |
+| Social team departments | 8 | the guide's own files, rewired to director-social | their own Output sections and voice check |
+
+`catalog/contracts.json` is the single source for each agent's output: path, front matter, sections,
+table columns and limits, and rules (sources, UTM tags, no personal data, [PASTE]/[SEND]/[RENDER]
+markers, loop data citations, real queue ids). The build writes it into each agent's "Output format"
+section and into `tools/contracts.json`, so what an agent is told and what the check enforces cannot
+drift apart.
+
+`tools/loop_data.py` turns the week's exports (formats in `exports/README.md`) into
+`loop/YYYY-MM-DD-data.md`: posts, revenue by campaign, calls, email, spend and cost per call. Loop,
+analytics, paid and finance agents quote it and never do arithmetic.
+
+Every command runs each CMO brief the same way (CLAUDE.md, "Running a CMO brief"): director splits,
+check, each agent runs and its output is checked, director reviews, return is checked, CMO routes it.
+A failed check goes back to the agent that wrote the file, twice at most, then to the owner.
+
+| Test file | Covers |
+|---|---|
+| `tests/test_cmo_harness.py` | The build: counts, front matter, owner lock, queues, page data |
+| `tests/test_cmo.py` | Context facts, the plan check (14 broken plans), approvals |
+| `tests/test_director_research.py` | Agent brief and return checks on the Research reference split |
+| `tests/test_agents.py` | All 85 contracts: a valid sample passes and 545 broken versions fail; every agent file carries its contract; every director staffs only its team and covers all of it; loop data numbers |
+
 ## What is here
 
 | Path | What it is |
 |---|---|
 | `catalog/growth-loop.json` | The 36 loop agents: job, inputs, steps, output, lane, limits |
 | `catalog/agency-minds.json` | Snapshot of the `MINDS` list in `../architecture/index.html` |
+| `catalog/contracts.json` | The output contract for each of the 85 loop and Mind agents |
 | `extras/` | Files written for this harness: CLAUDE.md, the CMO commands, `owner/targets.md`, `owner/sales-rules.md`, the ElevenLabs section of `owner/brand-voice.md`, `brand-os/market/`, settings |
 | `build.py` | Builds `template/` from the catalogs, `extras/` and `../_social-team/template` |
+| `specs/` | The CMO and the 12 directors, written by hand. Each replaces the generated file |
+| `extras/tools/` | Scripts copied into every workspace: `cmo_context.py`, `loop_data.py`, `check.py`, `contracts_check.py`, `queue.py`, `harness.py` |
+| `fixtures/` | Fictional Northwind Coffee workspace and reference outputs, used by the tests |
 | `template/` | The built project. Do not edit it by hand: change a source and rebuild |
 | `new_workspace.py` | Copies the template into a new folder for one brand |
 | `tests/` | Checks the build. No model, no network |
@@ -69,6 +105,9 @@ packaged as [PASTE], emails as [SEND], audio and video as [RENDER], CRM updates 
 ```bash
 python3 -I _cmo-harness/build.py
 python3 -I _cmo-harness/tests/test_cmo_harness.py
+python3 -I _cmo-harness/tests/test_cmo.py
+python3 -I _cmo-harness/tests/test_director_research.py
+python3 -I _cmo-harness/tests/test_agents.py
 python3 -I _cmo-harness/new_workspace.py ~/Downloads/Serasona-Growth-Harness/cmo/performancereach
 ```
 

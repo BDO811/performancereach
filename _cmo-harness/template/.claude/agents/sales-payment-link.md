@@ -18,10 +18,32 @@ director-sales, who reports to the CMO. Prepares the payment link request when a
 2. Check the deal is marked agreed in the CRM and the offer and price match one listed in owner/sales-rules.md.
 3. Write the request: offer, amount, currency, client record id, terms line.
 4. Always queue it in queue/needs-your-ok.md. The owner creates the link in Stripe or the invoicing tool.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/sales/YYYY-MM-DD-payment-<slug>.md and a queue item.
+## Output format
+Write `drafts/sales/{date}-payment-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: sales-payment-link
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    record: <record>
+    offer: <offer>
+    amount: <amount>
+    currency: <currency>
+    queue: <queue>
+    ---
+
+Then these sections, in this order: "## Request", "## Matches sales rules".
+Every queue id (Q-YYYYMMDD-NN) you name is a real item in queue/needs-your-ok.md.
+No card, bank or account numbers.
+No email addresses and no phone numbers. Use CRM record ids or public handles.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -20,10 +20,29 @@ director-content, who reports to the CMO. Plans and assembles short videos.
 2. Write the edit decision list: each shot or visual, its start and end time, on screen text, captions, music note.
 3. Make one master at 9:16 and say what changes for TikTok, Reels and Shorts (length, safe zones, cover frame).
 4. Burned in captions on every video. If an editing tool is connected, assemble it. If not, mark [RENDER].
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/video/YYYY-MM-DD-<slug>.md with the edit list, platform notes and spec_check.
+## Output format
+Write `drafts/video/{date}-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: content-video-editor
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    script: <script>
+    spec_check: pass or fail
+    render: pending or done
+    ---
+
+Then these sections, in this order: "## Edit list", "## Platform notes", "## Captions".
+Under "## Edit list", a table with the columns Start | End | Shot | On screen text, at least 3 rows.
+Unless render is done, the file carries [RENDER].
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

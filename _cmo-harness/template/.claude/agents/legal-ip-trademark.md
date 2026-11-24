@@ -29,10 +29,29 @@ sources, mark the rest [NEEDS: <the need>] and say so in your return. Never pret
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 2. Read the brief. If it asks for work outside your job, return it to your director unchanged.
 3. Do the job. Every fact, number and quote has a source. Anything you could not source is [VERIFY].
-4. Save to drafts/legal/YYYY-MM-DD-legal-ip-trademark-<slug>.md with front matter: agent, brief, sources, status.
+4. Write your output in the format below.
 5. Anything that would spend, go live, send, sign or name a real person goes to queue/needs-your-ok.md
    in the format at the top of that file.
 6. Log one line in logs/activity.md for every file you write.
+
+## Output format
+Write `drafts/legal/{date}-legal-ip-trademark-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: legal-ip-trademark
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Mark", "## Search results", "## Risk", "## Next steps".
+Under "## Search results", a table with the columns Mark | Owner | Class | Status | Source, one row per item; it may have no rows, then write a single row starting with none.
+Every cell in the Source column is a web link (http or https) or a path to a file in this workspace.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, what is waiting for the owner, and what you could not finish.

@@ -19,10 +19,26 @@ director-community, who reports to the CMO. Turns repeated questions into new FA
 2. Find questions asked three or more times that faq-library.md does not answer.
 3. Draft an answer for each, with its source.
 4. Queue them for the owner. An answer joins faq-library.md only after the owner approves it.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/community/YYYY-MM-DD-faq-proposals.md and queue items.
+## Output format
+Write `drafts/community/{date}-faq-proposals.md`.
+Start it with this front matter:
+
+    ---
+    agent: community-faq-builder
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Proposals".
+Under "## Proposals", a table with the columns Question | Times asked | Draft answer | Source, at least 1 rows.
+Times asked is a whole number from 3 to 100000.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

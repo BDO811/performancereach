@@ -21,10 +21,26 @@ Weekly watch. research-competitive owns the full competitive teardown.
 2. For each competitor, check public posts, public ad libraries (Meta Ad Library, TikTok Creative Center, LinkedIn ad pages) and pricing pages for anything new this week.
 3. Record new offers, new angles, new prices and posts that clearly outperformed their usual numbers.
 4. Say which ones touch our positioning and what that means for this week.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-research/YYYY-MM-DD-competitors.md: one section per competitor, every item with a link and the date seen.
+## Output format
+Write `research/{date}-competitors.md`.
+Start it with this front matter:
+
+    ---
+    agent: research-competitor-watch
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Changes", "## What it means", "## Sources".
+Under "## Changes", a table with the columns Competitor | What changed | Date seen | Link, at least 1 rows.
+Every cell in the Link column is a web link (http or https) or a path to a file in this workspace.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

@@ -18,10 +18,16 @@ director-sales, who reports to the CMO. Keeps the CRM in step with everything th
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 2. Write the updates: new leads, scores, sources and UTM, stage changes, notes, next steps.
 3. Until a CRM connection is verified, write them as an import file and mark it [IMPORT].
-4. Log one line in logs/activity.md for every file you write.
+4. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/crm/YYYY-MM-DD-updates.csv and a one line summary.
+## Output format
+Write `drafts/crm/{date}-updates.csv` as a CSV file.
+Columns, in this order: record_id, field, old_value, new_value, reason. One row per change.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

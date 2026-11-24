@@ -18,10 +18,29 @@ director-publish, who reports to the CMO. Posts approved videos to YouTube Short
 2. Write the Shorts title (under 70 characters), description and tags.
 3. Tracked link: utm_source=youtube, utm_medium=social, utm_campaign=<slug>.
 4. Until a YouTube connection is verified, write the ready to paste package and mark it [PASTE].
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/publish/YYYY-MM-DD-shorts-<slug>.md with title, description, tags, link, slot and status.
+## Output format
+Write `drafts/publish/{date}-shorts-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: publish-shorts-poster
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    draft: <draft>
+    slot: <slot>
+    status: paste or posted
+    ---
+
+Then these sections, in this order: "## Title", "## Description", "## Tags", "## Link".
+Every web link outside the Sources section carries utm_campaign= so the loop can credit it.
+Unless status is posted, the file carries [PASTE]. A posted status needs a confirmation: line in the front matter.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

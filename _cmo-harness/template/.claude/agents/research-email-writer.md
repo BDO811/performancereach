@@ -20,10 +20,27 @@ director-research, who reports to the CMO. Writes the newsletter and the nurture
 2. Write the newsletter issue: subject line options, preview text, body, one call to action.
 3. Write any nurture email the brief asks for, tied to the week's topic.
 4. Every link gets UTM tags so the Loop can see which email made money: utm_source=newsletter, utm_medium=email, utm_campaign=<slug>.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/YYYY-MM-DD-email-<slug>.md with front matter: channel: email, brief, voice_check: pending, sources.
+## Output format
+Write `drafts/{date}-email-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: research-email-writer
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    channel: email
+    voice_check: pending or pass or fail
+    ---
+
+Then these sections, in this order: "## Subject lines", "## Preview text", "## Body", "## Call to action", "## Sources".
+Every web link outside the Sources section carries utm_campaign= so the loop can credit it.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

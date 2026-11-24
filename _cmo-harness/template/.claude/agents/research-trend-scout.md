@@ -24,10 +24,28 @@ Weekly and tactical. The Market Mind agent (research-market) owns sizing and str
 3. Keep only questions a buyer would ask. Drop news with no buyer question behind it.
 4. Score each one 1 to 5 for fit with owner/positioning.md and 1 to 5 for signal strength, and give the source link for each.
 5. Put the double down and test items from loop/next-week-inputs.md at the top so last week's results shape this week.
-6. Log one line in logs/activity.md for every file you write.
+6. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-research/YYYY-MM-DD-trends.md: the top 10 questions, each with source link, fit score, signal score and one suggested angle.
+## Output format
+Write `research/{date}-trends.md`.
+Start it with this front matter:
+
+    ---
+    agent: research-trend-scout
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Questions", "## Angles", "## Sources".
+Under "## Questions", a table with the columns Question | Source | Fit | Signal | Angle, at least 5 and at most 10 rows.
+Fit is a whole number from 1 to 5.
+Signal is a whole number from 1 to 5.
+Every cell in the Source column is a web link (http or https) or a path to a file in this workspace.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

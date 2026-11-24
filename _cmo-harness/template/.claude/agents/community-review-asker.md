@@ -18,10 +18,26 @@ director-community, who reports to the CMO. Asks happy clients for a review at t
 2. Find clients who just hit a milestone or said something positive, and who are on the may ask list.
 3. Draft a short personal ask with the review link.
 4. Queue every ask for the owner.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/community/YYYY-MM-DD-review-asks.md.
+## Output format
+Write `drafts/community/{date}-review-asks.md`.
+Start it with this front matter:
+
+    ---
+    agent: community-review-asker
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    ---
+
+Then these sections, in this order: "## Asks".
+Under "## Asks", a table with the columns Record | Milestone | Message, at least 1 rows.
+No email addresses and no phone numbers. Use CRM record ids or public handles.
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export

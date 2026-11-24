@@ -77,9 +77,10 @@ class Harness(unittest.TestCase):
         for name in ('targets', 'positioning', 'brand-voice', 'approval-bar', 'budget-cap', 'sales-rules'):
             self.assertIn('[FILL IN:', (T / f'owner/{name}.md').read_text(), name)
         self.assertFalse((T / 'owner/STOP').exists())
-        deny = json.loads((T / '.claude/settings.json').read_text())['permissions']['deny']
-        for rule in ('Bash', 'Edit(./owner/**)', 'Write(./owner/**)'):
-            self.assertIn(rule, deny)
+        perms = json.loads((T / '.claude/settings.json').read_text())['permissions']
+        for rule in ('Edit(./owner/**)', 'Write(./owner/**)'):
+            self.assertIn(rule, perms['deny'])
+        self.assertTrue(all(a.startswith('Bash(python3 -I tools/') for a in perms.get('allow', [])))
 
     def test_queues_start_empty(self):
         for name in ('needs-your-ok', 'held-for-voice-review'):

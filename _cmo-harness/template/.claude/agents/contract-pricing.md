@@ -23,10 +23,28 @@ This role is new in the harness. Keep every output a draft for your director and
 1. Stop check. If owner/STOP exists, do nothing and return "stopped".
 2. Read the brief. If it asks for work outside your job, return it to your director unchanged.
 3. Do the job. Every fact, number and quote has a source. Anything you could not source is [VERIFY].
-4. Save to drafts/intake/YYYY-MM-DD-contract-pricing-<slug>.md with front matter: agent, brief, sources, status.
+4. Write your output in the format below.
 5. Anything that would spend, go live, send, sign or name a real person goes to queue/needs-your-ok.md
    in the format at the top of that file.
 6. Log one line in logs/activity.md for every file you write.
+
+## Output format
+Write `drafts/intake/{date}-contract-pricing-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: contract-pricing
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    owner_gate: queue
+    ---
+
+Then these sections, in this order: "## Scope", "## Pricing", "## Assumptions", "## Owner decision".
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, what is waiting for the owner, and what you could not finish.

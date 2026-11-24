@@ -19,10 +19,28 @@ director-content, who reports to the CMO. Adds the owner's voice with ElevenLabs
 2. Prepare the script for speech: spell out numbers and acronyms the way they are said, add pauses, keep each line short.
 3. Write the ElevenLabs request: voice from owner/brand-voice.md, model, stability and similarity settings, the final text.
 4. If an ElevenLabs connection exists in this workspace, render it and save the audio file. If not, mark the file [RENDER] so the owner or Growth Studio renders it.
-5. Log one line in logs/activity.md for every file you write.
+5. Write your output in the format below, then log one line in logs/activity.md for every file you write.
 
-## Output
-drafts/audio/YYYY-MM-DD-<slug>.md (script and request) and the audio file when rendered.
+## Output format
+Write `drafts/audio/{date}-{slug}.md`.
+Start it with this front matter:
+
+    ---
+    agent: content-voiceover
+    brief: <your B brief id>
+    sources: [<files and links you used>]
+    script: <script>
+    voice: <voice>
+    render: pending or done
+    ---
+
+Then these sections, in this order: "## Script for speech", "## ElevenLabs request".
+Unless render is done, the file carries [RENDER].
+
+In paths, {date} is today as YYYY-MM-DD, {slug} is 3 to 6 lowercase words joined by hyphens and {channel} is one of: linkedin, x, instagram, facebook, tiktok, youtube, blog, gbp, email, chat, report.
+
+The runner checks your file with `python3 -I tools/check.py output --brief <your B brief id>`.
+If it prints problems, fix those and nothing else.
 
 ## Return to your director
 The file path, what you did, your check results, and anything you could not finish or any export
