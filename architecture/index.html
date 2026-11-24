@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
 <link rel="stylesheet" href="/assets/system.css">
 <link rel="stylesheet" href="/architecture/social-media.css">
+<link rel="stylesheet" href="/architecture/cmo.css">
 <style>
 /* Hallmark · shape: Control Room · genre: modern-minimal · theme: custom · redesign: full · job: hire · idea: "Status is light: red is stopped, blue is being built, green is live, and every page keeps score in those three." · vibe: "Flat primary colour, printed, exact"
  * paper: oklch(98.4% 0.005 255) · accent: oklch(47% 0.285 264) · display: Funnel Display · body: Funnel Sans · hero: Poster, the head set at poster scale and anchored low, over a tall three-colour bar that counts the real agents · nav: wordmark left, one link right, no rule under · footer: one line, the wordmark and the first customer · imagery: none, the org chart is the product · signature: the tall bar and the thirteen branches that share its three colours
@@ -131,7 +132,7 @@ button:disabled { cursor: not-allowed; }
       <svg width="30" height="12" viewBox="0 0 30 12" aria-hidden="true" focusable="false"><rect x="0" y="1" width="10" height="10" fill="var(--color-red)"/><polygon points="15,1 20,11 10,11" transform="translate(0 0)" fill="var(--color-blue)"/><circle cx="25" cy="6" r="5" fill="var(--color-green)"/></svg>
       <span>performance<b>reach</b></span>
     </a>
-    <nav class="nav-links" aria-label="Architecture sections"><a class="nav-link link" href="/admin/#companies">Manage companies</a><a class="nav-link link" href="#social-media">Social Media</a><a class="nav-link link" href="#status">Status</a></nav>
+    <nav class="nav-links" aria-label="Architecture sections"><a class="nav-link link" href="/admin/#companies">Manage companies</a><a class="nav-link link" href="#cmo">CMO</a><a class="nav-link link" href="#social-media">Social Media</a><a class="nav-link link" href="#status">Status</a></nav>
   </div>
 </header>
 
@@ -172,6 +173,13 @@ button:disabled { cursor: not-allowed; }
     </div>
     <div class="trunk" aria-hidden="true"></div>
     <div class="mind-rows" id="mind-rows"></div>
+  </div>
+</section>
+
+<section class="band" id="cmo" aria-labelledby="cmo-h">
+  <div class="container">
+    <h2 id="cmo-h">CMO</h2>
+    <div id="cmo-content"><p class="intro">The CMO harness puts one CMO over twelve directors and every marketing agent: the 36 agent marketing loop, the agency Minds above and the Social team.</p></div>
   </div>
 </section>
 
@@ -590,5 +598,6 @@ button:disabled { cursor: not-allowed; }
   checkHash();
 </script>
 <script type="module" src="/architecture/social-media.js"></script>
+<script type="module" src="/architecture/cmo.js"></script>
 </body>
 </html>

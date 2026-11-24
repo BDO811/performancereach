@@ -1,0 +1,783 @@
+{
+ "source_video": "https://www.tiktok.com/@hannesrkuhn/video/7709003343489682721",
+ "counts": {
+  "directors": 12,
+  "agents": 93,
+  "loop": 36,
+  "minds": 49,
+  "social": 8
+ },
+ "loop": [
+  {
+   "id": "research",
+   "name": "Research",
+   "director": "director-research",
+   "agents": [
+    "Trend Scout",
+    "Audience Listener",
+    "Comment Miner",
+    "Competitor Watch",
+    "Post Writer",
+    "Email Writer"
+   ]
+  },
+  {
+   "id": "content",
+   "name": "Content",
+   "director": "director-content",
+   "agents": [
+    "Visual Designer",
+    "Carousel Builder",
+    "Voiceover",
+    "Video Editor",
+    "Brand Check",
+    "Approval Desk"
+   ]
+  },
+  {
+   "id": "publish",
+   "name": "Publish",
+   "director": "director-publish",
+   "agents": [
+    "Scheduler",
+    "TikTok Poster",
+    "Reels Poster",
+    "Shorts Poster",
+    "X Poster",
+    "Newsletter"
+   ]
+  },
+  {
+   "id": "loop",
+   "name": "The loop",
+   "director": "director-loop",
+   "agents": [
+    "Post Analyst",
+    "Revenue Tracker",
+    "Call Tracker",
+    "Email Analyst",
+    "Weekly Report",
+    "Loop Feeder"
+   ]
+  },
+  {
+   "id": "sales",
+   "name": "Sales",
+   "director": "director-sales",
+   "agents": [
+    "Lead Scorer",
+    "Call Booker",
+    "Reminder",
+    "Follow-up",
+    "Payment Link",
+    "CRM Sync"
+   ]
+  },
+  {
+   "id": "community",
+   "name": "Community",
+   "director": "director-community",
+   "agents": [
+    "Comment Replier",
+    "DM Agent",
+    "FAQ Builder",
+    "Review Asker",
+    "Lead Catcher",
+    "Escalation"
+   ]
+  }
+ ],
+ "directors": [
+  {
+   "id": "director-research",
+   "name": "Research",
+   "job": "Finds what the market and the audience want this week, and writes the first drafts of posts and emails from it.",
+   "agents": [
+    {
+     "id": "research-trend-scout",
+     "name": "Trend Scout",
+     "source": "loop",
+     "role": "Finds what the audience is asking this week."
+    },
+    {
+     "id": "research-audience-listener",
+     "name": "Audience Listener",
+     "source": "loop",
+     "role": "Reads what real buyers say in calls, DMs, emails and forms, and keeps their words."
+    },
+    {
+     "id": "research-comment-miner",
+     "name": "Comment Miner",
+     "source": "loop",
+     "role": "Mines comments on the brand's own posts and on public competitor posts for questions and content ideas."
+    },
+    {
+     "id": "research-competitor-watch",
+     "name": "Competitor Watch",
+     "source": "loop",
+     "role": "Watches competitors' public posts, offers and ads each week."
+    },
+    {
+     "id": "research-post-writer",
+     "name": "Post Writer",
+     "source": "loop",
+     "role": "Writes the week's posts and short video scripts from the brief, in the owner's voice."
+    },
+    {
+     "id": "research-email-writer",
+     "name": "Email Writer",
+     "source": "loop",
+     "role": "Writes the newsletter and the nurture emails that go with the week's posts."
+    },
+    {
+     "id": "research-market",
+     "name": "Market",
+     "source": "mind",
+     "mind": "Research",
+     "role": "Sizes markets and maps industry landscapes: TAM/SAM/SOM, trends."
+    },
+    {
+     "id": "research-competitive",
+     "name": "Competitive",
+     "source": "mind",
+     "mind": "Research",
+     "role": "Tracks competitor positioning, pricing, and messaging."
+    },
+    {
+     "id": "research-customer",
+     "name": "Customer",
+     "source": "mind",
+     "mind": "Research",
+     "role": "Synthesizes customer/user research into real patterns."
+    },
+    {
+     "id": "research-data",
+     "name": "Data/Quant",
+     "source": "mind",
+     "mind": "Research",
+     "role": "Runs quantitative deep-dives on the client's own data."
+    }
+   ]
+  },
+  {
+   "id": "director-content",
+   "name": "Content and Creative",
+   "job": "Turns drafts into finished visuals, carousels, voiceover, video, ads, pages and long form, checks every piece against the brand and packs it for approval.",
+   "agents": [
+    {
+     "id": "content-visual-designer",
+     "name": "Visual Designer",
+     "source": "loop",
+     "role": "Designs the visuals for each post."
+    },
+    {
+     "id": "content-carousel-builder",
+     "name": "Carousel Builder",
+     "source": "loop",
+     "role": "Turns a post into a swipeable carousel."
+    },
+    {
+     "id": "content-voiceover",
+     "name": "Voiceover",
+     "source": "loop",
+     "role": "Adds the owner's voice with ElevenLabs."
+    },
+    {
+     "id": "content-video-editor",
+     "name": "Video Editor",
+     "source": "loop",
+     "role": "Plans and assembles short videos."
+    },
+    {
+     "id": "content-brand-check",
+     "name": "Brand Check",
+     "source": "loop",
+     "role": "Checks every draft and creative against the brand before it reaches the owner."
+    },
+    {
+     "id": "content-approval-desk",
+     "name": "Approval Desk",
+     "source": "loop",
+     "role": "Packs everything that passed into one place for the owner's tap to approve."
+    },
+    {
+     "id": "design-brand-identity",
+     "name": "Brand/Identity",
+     "source": "mind",
+     "mind": "Design",
+     "role": "Defines or audits a client's brand system: color, type, logo rules, voice."
+    },
+    {
+     "id": "design-ad-creative",
+     "name": "Ad Creative",
+     "source": "mind",
+     "mind": "Design",
+     "role": "Produces the actual visual ad assets from the Paid Social Mind's brief."
+    },
+    {
+     "id": "design-web-ui",
+     "name": "Web/UI",
+     "source": "mind",
+     "mind": "Design",
+     "role": "Designs landing pages, web UI, and app screens in the client's real brand."
+    },
+    {
+     "id": "design-deck",
+     "name": "Deck",
+     "source": "mind",
+     "mind": "Design",
+     "role": "Designs pitch decks, one-pagers, and investor/board updates."
+    },
+    {
+     "id": "docs-copywriting",
+     "name": "Copywriting",
+     "source": "mind",
+     "mind": "Writing/Docs",
+     "role": "Writes general marketing copy: website, email, sales one-pagers."
+    },
+    {
+     "id": "docs-content",
+     "name": "Long-form Content",
+     "source": "mind",
+     "mind": "Writing/Docs",
+     "role": "Writes blog posts, articles, and case studies from a brief."
+    },
+    {
+     "id": "docs-technical",
+     "name": "Technical Docs",
+     "source": "mind",
+     "mind": "Writing/Docs",
+     "role": "Writes READMEs, API docs, and user guides grounded in the real product."
+    },
+    {
+     "id": "docs-editing",
+     "name": "Editing",
+     "source": "mind",
+     "mind": "Writing/Docs",
+     "role": "Edits and proofreads any written deliverable before it ships."
+    }
+   ]
+  },
+  {
+   "id": "director-publish",
+   "name": "Publish",
+   "job": "Puts approved work on the calendar and prepares it for every channel.",
+   "agents": [
+    {
+     "id": "publish-scheduler",
+     "name": "Scheduler",
+     "source": "loop",
+     "role": "Builds the week's posting calendar from approved work."
+    },
+    {
+     "id": "publish-tiktok-poster",
+     "name": "TikTok Poster",
+     "source": "loop",
+     "role": "Posts approved videos to TikTok."
+    },
+    {
+     "id": "publish-reels-poster",
+     "name": "Reels Poster",
+     "source": "loop",
+     "role": "Posts approved videos to Instagram and Facebook Reels."
+    },
+    {
+     "id": "publish-shorts-poster",
+     "name": "Shorts Poster",
+     "source": "loop",
+     "role": "Posts approved videos to YouTube Shorts."
+    },
+    {
+     "id": "publish-x-poster",
+     "name": "X Poster",
+     "source": "loop",
+     "role": "Posts approved posts and threads to X."
+    },
+    {
+     "id": "publish-newsletter",
+     "name": "Newsletter",
+     "source": "loop",
+     "role": "Assembles the approved newsletter issue for sending."
+    }
+   ]
+  },
+  {
+   "id": "director-loop",
+   "name": "Loop and Analytics",
+   "job": "Measures what every post, email and dollar earned, writes the morning page and the weekly report, and feeds the results into next week.",
+   "agents": [
+    {
+     "id": "loop-post-analyst",
+     "name": "Post Analyst",
+     "source": "loop",
+     "role": "Reads how every post did and says why."
+    },
+    {
+     "id": "loop-revenue-tracker",
+     "name": "Revenue Tracker",
+     "source": "loop",
+     "role": "Checks which posts made money."
+    },
+    {
+     "id": "loop-call-tracker",
+     "name": "Call Tracker",
+     "source": "loop",
+     "role": "Tracks who booked a call and what brought them."
+    },
+    {
+     "id": "loop-email-analyst",
+     "name": "Email Analyst",
+     "source": "loop",
+     "role": "Reads how the emails did."
+    },
+    {
+     "id": "loop-weekly-report",
+     "name": "Weekly Report",
+     "source": "loop",
+     "role": "Writes the weekly results report and the one page morning brief."
+    },
+    {
+     "id": "loop-feeder",
+     "name": "Loop Feeder",
+     "source": "loop",
+     "role": "Feeds what worked into next week's plan."
+    },
+    {
+     "id": "cross-channel-aggregator",
+     "name": "Aggregator",
+     "source": "mind",
+     "mind": "Analytics",
+     "role": "Blends paid social and SEO data into one dataset."
+    },
+    {
+     "id": "weekly-report-builder",
+     "name": "Reports",
+     "source": "mind",
+     "mind": "Analytics",
+     "role": "Produces the standing performance summary."
+    },
+    {
+     "id": "anomaly-alert",
+     "name": "Alerts",
+     "source": "mind",
+     "mind": "Analytics",
+     "role": "Flags sudden metric swings between cycles."
+    }
+   ]
+  },
+  {
+   "id": "director-sales",
+   "name": "Sales and Intake",
+   "job": "Scores leads, books calls, follows up, prepares payment requests, runs outbound and takes new clients from discovery to onboarding.",
+   "agents": [
+    {
+     "id": "sales-lead-scorer",
+     "name": "Lead Scorer",
+     "source": "loop",
+     "role": "Scores every new lead."
+    },
+    {
+     "id": "sales-call-booker",
+     "name": "Call Booker",
+     "source": "loop",
+     "role": "Gets hot leads onto the owner's calendar."
+    },
+    {
+     "id": "sales-reminder",
+     "name": "Reminder",
+     "source": "loop",
+     "role": "Reminds booked leads so they show up."
+    },
+    {
+     "id": "sales-follow-up",
+     "name": "Follow-up",
+     "source": "loop",
+     "role": "Follows up after calls and no shows."
+    },
+    {
+     "id": "sales-payment-link",
+     "name": "Payment Link",
+     "source": "loop",
+     "role": "Prepares the payment link request when a deal is agreed."
+    },
+    {
+     "id": "sales-crm-sync",
+     "name": "CRM Sync",
+     "source": "loop",
+     "role": "Keeps the CRM in step with everything the team did."
+    },
+    {
+     "id": "sales-prospecting",
+     "name": "Prospecting",
+     "source": "mind",
+     "mind": "Sales",
+     "role": "Finds and qualifies leads against the client's real ideal-customer profile."
+    },
+    {
+     "id": "sales-outreach",
+     "name": "Outreach",
+     "source": "mind",
+     "mind": "Sales",
+     "role": "Drafts outbound sequences from the prospecting list, never sends them."
+    },
+    {
+     "id": "sales-meeting-prep",
+     "name": "Meeting Prep",
+     "source": "mind",
+     "mind": "Sales",
+     "role": "Preps account research and talking points before a real sales call."
+    },
+    {
+     "id": "sales-pipeline",
+     "name": "Pipeline",
+     "source": "mind",
+     "mind": "Sales",
+     "role": "Reviews pipeline health and flags stalled deals with a next action."
+    },
+    {
+     "id": "discovery-intake",
+     "name": "Discovery",
+     "source": "mind",
+     "mind": "Intake",
+     "role": "Runs new-client discovery and requirements gathering."
+    },
+    {
+     "id": "contract-pricing",
+     "name": "Pricing",
+     "source": "mind",
+     "mind": "Intake",
+     "role": "Drafts scope and pricing for a new customer."
+    },
+    {
+     "id": "onboarding-setup",
+     "name": "Onboard",
+     "source": "mind",
+     "mind": "Intake",
+     "role": "Provisions a new sealed customer workspace end-to-end."
+    }
+   ]
+  },
+  {
+   "id": "director-community",
+   "name": "Community and Customer Success",
+   "job": "Answers comments and DMs, catches leads, escalates risk, asks for reviews and keeps clients supported and renewing.",
+   "agents": [
+    {
+     "id": "community-comment-replier",
+     "name": "Comment Replier",
+     "source": "loop",
+     "role": "Answers comments on the brand's posts."
+    },
+    {
+     "id": "community-dm-agent",
+     "name": "DM Agent",
+     "source": "loop",
+     "role": "Answers direct messages."
+    },
+    {
+     "id": "community-faq-builder",
+     "name": "FAQ Builder",
+     "source": "loop",
+     "role": "Turns repeated questions into new FAQ answers."
+    },
+    {
+     "id": "community-review-asker",
+     "name": "Review Asker",
+     "source": "loop",
+     "role": "Asks happy clients for a review at the right moment."
+    },
+    {
+     "id": "community-lead-catcher",
+     "name": "Lead Catcher",
+     "source": "loop",
+     "role": "Spots buying intent in comments and DMs."
+    },
+    {
+     "id": "community-escalation",
+     "name": "Escalation",
+     "source": "loop",
+     "role": "Routes anything risky to the owner right away."
+    },
+    {
+     "id": "success-support",
+     "name": "Support",
+     "source": "mind",
+     "mind": "Customer Success",
+     "role": "Triages support tickets and drafts responses, never sends them."
+    },
+    {
+     "id": "success-retention",
+     "name": "Retention",
+     "source": "mind",
+     "mind": "Customer Success",
+     "role": "Flags churn-risk accounts from real usage signals and proposes a save play."
+    },
+    {
+     "id": "success-onboarding",
+     "name": "Onboarding",
+     "source": "mind",
+     "mind": "Customer Success",
+     "role": "Builds onboarding sequences for the client's new end customers."
+    },
+    {
+     "id": "success-feedback",
+     "name": "Feedback",
+     "source": "mind",
+     "mind": "Customer Success",
+     "role": "Mines tickets, NPS, and reviews into concrete feedback themes."
+    }
+   ]
+  },
+  {
+   "id": "director-social",
+   "name": "Social",
+   "job": "Runs the product Social team (eight departments and eight event playbooks) and the agency social agents.",
+   "agents": [
+    {
+     "id": "social-calendar",
+     "name": "Content Calendar",
+     "source": "mind",
+     "mind": "Social Media",
+     "role": "Plans the organic posting calendar/cadence across platforms."
+    },
+    {
+     "id": "social-post-writing",
+     "name": "Post Writing",
+     "source": "mind",
+     "mind": "Social Media",
+     "role": "Writes platform-native captions and posts from the calendar."
+    },
+    {
+     "id": "social-community",
+     "name": "Community",
+     "source": "mind",
+     "mind": "Social Media",
+     "role": "Drafts replies to comments/DMs and monitors brand mentions, never posts."
+    },
+    {
+     "id": "social-analytics",
+     "name": "Analytics",
+     "source": "mind",
+     "mind": "Social Media",
+     "role": "Reads organic social performance, what's actually working."
+    },
+    {
+     "id": "search-visibility",
+     "name": "Search visibility",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "market-radar",
+     "name": "Market radar",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "content-engine",
+     "name": "Content engine",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "creative-studio",
+     "name": "Creative studio",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "publishing-social",
+     "name": "Publishing & social",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "reviews-reputation",
+     "name": "Reviews & reputation",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "leads-conversations",
+     "name": "Leads & conversations",
+     "source": "social",
+     "role": "Social team department."
+    },
+    {
+     "id": "results-roi",
+     "name": "Results & ROI",
+     "source": "social",
+     "role": "Social team department."
+    }
+   ]
+  },
+  {
+   "id": "director-paid",
+   "name": "Paid Social",
+   "job": "Plans and watches paid campaigns on Meta and TikTok. Recommends every spend change, never executes one.",
+   "agents": [
+    {
+     "id": "gtm-paid-social-strategist",
+     "name": "Strategist",
+     "source": "mind",
+     "mind": "Paid Social",
+     "role": "Designs campaign structure, audience stacks, and placement tests across Meta and TikTok."
+    },
+    {
+     "id": "gtm-paid-social-creative",
+     "name": "Creative",
+     "source": "mind",
+     "mind": "Paid Social",
+     "role": "Writes ad copy variants and creative briefs per platform and format."
+    },
+    {
+     "id": "gtm-paid-social-budget-bid",
+     "name": "Budget/Bid",
+     "source": "mind",
+     "mind": "Paid Social",
+     "role": "Watches spend pacing and proposes budget or bid changes, never executes one."
+    },
+    {
+     "id": "gtm-paid-social-performance",
+     "name": "Performance",
+     "source": "mind",
+     "mind": "Paid Social",
+     "role": "Reads CPA, ROAS, CTR, and frequency, and flags winners and underperformers."
+    }
+   ]
+  },
+  {
+   "id": "director-seo",
+   "name": "SEO and GEO",
+   "job": "Owns search and AI answer visibility: keywords, briefs, technical audits and citation tests.",
+   "agents": [
+    {
+     "id": "gtm-seo-keyword-research",
+     "name": "Keywords",
+     "source": "mind",
+     "mind": "SEO / GEO",
+     "role": "Finds query and topic opportunities from Search Console data and competitive gaps."
+    },
+    {
+     "id": "gtm-seo-content-brief",
+     "name": "Content Brief",
+     "source": "mind",
+     "mind": "SEO / GEO",
+     "role": "Turns keyword research into publish-ready content briefs with schema and linking guidance."
+    },
+    {
+     "id": "gtm-seo-technical-audit",
+     "name": "Tech Audit",
+     "source": "mind",
+     "mind": "SEO / GEO",
+     "role": "Audits indexation, speed, and schema, and explains organic traffic drops."
+    },
+    {
+     "id": "gtm-seo-geo-citation",
+     "name": "GEO/Citation",
+     "source": "mind",
+     "mind": "SEO / GEO",
+     "role": "Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews."
+    }
+   ]
+  },
+  {
+   "id": "director-lifecycle",
+   "name": "Lifecycle",
+   "job": "Owns email and messaging segments, automated flows and deliverability.",
+   "agents": [
+    {
+     "id": "segmentation",
+     "name": "Segments",
+     "source": "mind",
+     "mind": "Lifecycle",
+     "role": "Defines lifecycle segments from behavior data."
+    },
+    {
+     "id": "campaign-flow-builder",
+     "name": "Flows",
+     "source": "mind",
+     "mind": "Lifecycle",
+     "role": "Builds nurture flows in Klaviyo/HubSpot."
+    },
+    {
+     "id": "deliverability-monitor",
+     "name": "Delivery",
+     "source": "mind",
+     "mind": "Lifecycle",
+     "role": "Watches sender reputation and bounce/spam rates."
+    }
+   ]
+  },
+  {
+   "id": "director-finance",
+   "name": "Finance",
+   "job": "Keeps the books, prepares invoices, reports marketing spend and return, and forecasts.",
+   "agents": [
+    {
+     "id": "finance-bookkeeping",
+     "name": "Bookkeeping",
+     "source": "mind",
+     "mind": "Finance",
+     "role": "Categorizes transactions and reconciles accounts."
+    },
+    {
+     "id": "finance-invoicing",
+     "name": "Invoicing",
+     "source": "mind",
+     "mind": "Finance",
+     "role": "Drafts invoices and tracks collections, never sends or charges anything."
+    },
+    {
+     "id": "finance-reporting",
+     "name": "Financial Reporting",
+     "source": "mind",
+     "mind": "Finance",
+     "role": "Builds P&L, cash flow, and balance-sheet reads from real bookkeeping data."
+    },
+    {
+     "id": "finance-forecasting",
+     "name": "Forecasting",
+     "source": "mind",
+     "mind": "Finance",
+     "role": "Forecasts revenue/cash and models scenarios against real historicals."
+    }
+   ]
+  },
+  {
+   "id": "director-legal",
+   "name": "Legal and Compliance",
+   "job": "Checks contracts, claims, policies and trademarks before anything is signed or goes live.",
+   "agents": [
+    {
+     "id": "legal-contract-review",
+     "name": "Contract Review",
+     "source": "mind",
+     "mind": "Legal/Compliance",
+     "role": "Flags risk clause-by-clause in contracts, NDAs, and MSAs."
+    },
+    {
+     "id": "legal-compliance-check",
+     "name": "Compliance Check",
+     "source": "mind",
+     "mind": "Legal/Compliance",
+     "role": "Checks marketing/product claims against the regulatory framework that applies."
+    },
+    {
+     "id": "legal-policy-docs",
+     "name": "Policy Docs",
+     "source": "mind",
+     "mind": "Legal/Compliance",
+     "role": "Drafts privacy policies, terms of service, and policy documents."
+    },
+    {
+     "id": "legal-ip-trademark",
+     "name": "IP/Trademark",
+     "source": "mind",
+     "mind": "Legal/Compliance",
+     "role": "Monitors trademark conflicts and drafts (never sends) related correspondence."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,584 @@
+[
+ {
+  "id": "paid-social",
+  "name": "Paid Social",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Facebook, Instagram, TikTok, Reels: campaign strategy through spend reporting.",
+  "agents": [
+   {
+    "id": "gtm-paid-social-strategist",
+    "name": "Strategist",
+    "status": "scaf",
+    "role": "Designs campaign structure, audience stacks, and placement tests across Meta and TikTok.",
+    "detail": "Given a goal and a budget range, proposes campaign objective, audience/placement mix, and a test plan with a numeric definition of what a \"win\" looks like before any spend happens.",
+    "needs": [
+     "Meta ad account ID + System User token (ads_management, ads_read)",
+     "TikTok advertiser ID + access token"
+    ]
+   },
+   {
+    "id": "gtm-paid-social-creative",
+    "name": "Creative",
+    "status": "scaf",
+    "role": "Writes ad copy variants and creative briefs per platform and format.",
+    "detail": "Produces 3 to 5 copy variants per ad set plus a shot-list-level creative brief, sized for how each platform actually reads, a TikTok native caption is not a Meta feed headline.",
+    "needs": [
+     "Canva MCP connector authorized",
+     "Client brand assets on file"
+    ]
+   },
+   {
+    "id": "gtm-paid-social-budget-bid",
+    "name": "Budget/Bid",
+    "status": "scaf",
+    "role": "Watches spend pacing and proposes budget or bid changes, never executes one.",
+    "detail": "Compares live spend and performance against the Strategist’s test-plan thresholds and recommends what to scale or pause. The recommendation always goes to a human; this agent has no execute path, by design.",
+    "needs": [
+     "Meta + TikTok API access (read minimum)",
+     "Confirmed spend-approval owner"
+    ]
+   },
+   {
+    "id": "gtm-paid-social-performance",
+    "name": "Performance",
+    "status": "scaf",
+    "role": "Reads CPA, ROAS, CTR, and frequency, and flags winners and underperformers.",
+    "detail": "A weekly (soon daily) readout across every active ad set, with a plain call on what’s clearly working, what’s clearly not, and what’s still too early to judge.",
+    "needs": [
+     "Meta + TikTok API access"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "seo-geo",
+  "name": "SEO / GEO",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Organic search plus showing up inside AI answers, not just blue links.",
+  "agents": [
+   {
+    "id": "gtm-seo-keyword-research",
+    "name": "Keywords",
+    "status": "scaf",
+    "role": "Finds query and topic opportunities from Search Console data and competitive gaps.",
+    "detail": "Clusters real Search Console query data into topic opportunities, ranked by traffic value against how hard they’d be to win, and flags where competitors cover ground the client doesn’t.",
+    "needs": [
+     "Google Search Console service account + verified property"
+    ]
+   },
+   {
+    "id": "gtm-seo-content-brief",
+    "name": "Content Brief",
+    "status": "scaf",
+    "role": "Turns keyword research into publish-ready content briefs with schema and linking guidance.",
+    "detail": "One brief per piece: target query, an outline that actually answers it, internal links from the existing site, and the schema markup that helps it get picked up correctly.",
+    "needs": [
+     "Confirmed CMS platform",
+     "Site crawl or sitemap access"
+    ]
+   },
+   {
+    "id": "gtm-seo-technical-audit",
+    "name": "Tech Audit",
+    "status": "scaf",
+    "role": "Audits indexation, speed, and schema, and explains organic traffic drops.",
+    "detail": "Pulls Coverage and Core Web Vitals data to find what’s actually blocking rankings, and ties any traffic drop to a specific technical cause rather than a shrug.",
+    "needs": [
+     "Search Console + GA4 API access"
+    ]
+   },
+   {
+    "id": "gtm-seo-geo-citation",
+    "name": "GEO/Citation",
+    "status": "scaf",
+    "role": "Tracks whether the client gets cited inside ChatGPT, Perplexity, and AI Overviews.",
+    "detail": "Runs a sample set of real queries against the major AI answer engines, records whether and how the client shows up, and recommends the structured-data and llms.txt changes that improve the odds.",
+    "needs": [
+     "Nothing blocking: running manual query tests today"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "analytics",
+  "name": "Analytics",
+  "phase": "Phase 2",
+  "future": true,
+  "note": "Cross-channel weekly rollup once Phase 1 Minds are producing real data.",
+  "agents": [
+   {
+    "id": "cross-channel-aggregator",
+    "name": "Aggregator",
+    "status": "not",
+    "role": "Blends paid social and SEO data into one dataset."
+   },
+   {
+    "id": "weekly-report-builder",
+    "name": "Reports",
+    "status": "not",
+    "role": "Produces the standing performance summary."
+   },
+   {
+    "id": "anomaly-alert",
+    "name": "Alerts",
+    "status": "not",
+    "role": "Flags sudden metric swings between cycles."
+   }
+  ]
+ },
+ {
+  "id": "design",
+  "name": "Design",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Brand system, ad creative, web/UI, and deck design, all grounded in the client's real brand, never a template.",
+  "agents": [
+   {
+    "id": "design-brand-identity",
+    "name": "Brand/Identity",
+    "status": "scaf",
+    "role": "Defines or audits a client's brand system: color, type, logo rules, voice.",
+    "detail": "Builds the brand reference file every other Design agent reads from: real hex values and typefaces pulled from the client's actual site/assets, never guessed, plus a voice/tone description with real example lines.",
+    "needs": [
+     "Read access to the client's live site or brand asset folder"
+    ]
+   },
+   {
+    "id": "design-ad-creative",
+    "name": "Ad Creative",
+    "status": "scaf",
+    "role": "Produces the actual visual ad assets from the Paid Social Mind's brief.",
+    "detail": "Builds the visual asset in every size each platform needs (feed, Stories/Reels vertical, TikTok native) from real brand colors/type/logo, never a generic stock-photo-and-gradient placeholder.",
+    "needs": [
+     "Canva MCP connector authorized",
+     "Client brand assets on file"
+    ]
+   },
+   {
+    "id": "design-web-ui",
+    "name": "Web/UI",
+    "status": "scaf",
+    "role": "Designs landing pages, web UI, and app screens in the client's real brand.",
+    "detail": "Produces a full design spec with real copy in place (never lorem ipsum) and, where useful, an actual working HTML/CSS mockup rather than just a description.",
+    "needs": [
+     "Brand file populated first",
+     "Real copy from the Writing/Docs Mind or the client"
+    ]
+   },
+   {
+    "id": "design-deck",
+    "name": "Deck",
+    "status": "scaf",
+    "role": "Designs pitch decks, one-pagers, and investor/board updates.",
+    "detail": "Gets the narrative arc right first, one slide, one idea, then applies the client's real brand. Numbers and claims come from the client or the Research Mind, never fabricated to fill a slide.",
+    "needs": [
+     "Brand file populated first",
+     "Source data/claims from the client or Research Mind"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "writing-docs",
+  "name": "Writing/Docs",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Copy, long-form content, technical docs, and editing, the words behind everything else.",
+  "agents": [
+   {
+    "id": "docs-copywriting",
+    "name": "Copywriting",
+    "status": "scaf",
+    "role": "Writes general marketing copy: website, email, sales one-pagers.",
+    "detail": "Distinct from the Paid Social Mind's ad-specific copy: website copy, email sequences, sales one-pagers, written from the reader's side in the client's real voice.",
+    "needs": [
+     "Brand file for voice/tone",
+     "Real product facts from the client"
+    ]
+   },
+   {
+    "id": "docs-content",
+    "name": "Long-form Content",
+    "status": "scaf",
+    "role": "Writes blog posts, articles, and case studies from a brief.",
+    "detail": "Takes the SEO/GEO Mind's content brief and writes the actual piece, matching the target search intent the brief was built for, not just reading well in isolation.",
+    "needs": [
+     "A content brief from the SEO/GEO Mind",
+     "Brand file for voice/tone"
+    ]
+   },
+   {
+    "id": "docs-technical",
+    "name": "Technical Docs",
+    "status": "scaf",
+    "role": "Writes READMEs, API docs, and user guides grounded in the real product.",
+    "detail": "Reads the client's actual code/API/product where accessible rather than describing a generic version of \"a product like this\", accuracy over polish.",
+    "needs": [
+     "Read access to the client's real codebase/API/product"
+    ]
+   },
+   {
+    "id": "docs-editing",
+    "name": "Editing",
+    "status": "scaf",
+    "role": "Edits and proofreads any written deliverable before it ships.",
+    "detail": "The last pass before anything written goes out: line edits for clarity and brand-voice consistency, internal-consistency checks, a clean final version, never a rewrite of the author's actual intent.",
+    "needs": [
+     "Nothing blocking: runs against any draft already on file"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "research",
+  "name": "Research",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Market, competitive, customer, and data research, the evidence behind every other Mind's work.",
+  "agents": [
+   {
+    "id": "research-market",
+    "name": "Market",
+    "status": "scaf",
+    "role": "Sizes markets and maps industry landscapes: TAM/SAM/SOM, trends.",
+    "detail": "Every figure sourced and cited; a market-size claim with no source is worse than saying no reliable public number exists and showing the best proxy instead.",
+    "needs": [
+     "Nothing blocking: runs on public research today"
+    ]
+   },
+   {
+    "id": "research-competitive",
+    "name": "Competitive",
+    "status": "scaf",
+    "role": "Tracks competitor positioning, pricing, and messaging.",
+    "detail": "Maps who the client actually competes with (not just the biggest names), pulling positioning and pricing from competitors' real public sites and ads.",
+    "needs": [
+     "Nothing blocking: runs on public research today"
+    ]
+   },
+   {
+    "id": "research-customer",
+    "name": "Customer",
+    "status": "scaf",
+    "role": "Synthesizes customer/user research into real patterns.",
+    "detail": "Turns interviews, surveys, and review mining into patterns grounded in actual quotes and counts, \"three of eight interviews mentioned X,\" not \"customers feel X.\"",
+    "needs": [
+     "Real customer data from the client for anything beyond public review mining"
+    ]
+   },
+   {
+    "id": "research-data",
+    "name": "Data/Quant",
+    "status": "scaf",
+    "role": "Runs quantitative deep-dives on the client's own data.",
+    "detail": "Cohort/funnel breakdowns and root-cause analysis on metric moves, with the actual numbers and method shown, never presents correlation as causation.",
+    "needs": [
+     "Access to the client's real underlying data"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "sales",
+  "name": "Sales",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Prospecting, outreach, meeting prep, and pipeline health for the client's own sales team.",
+  "agents": [
+   {
+    "id": "sales-prospecting",
+    "name": "Prospecting",
+    "status": "scaf",
+    "role": "Finds and qualifies leads against the client's real ideal-customer profile.",
+    "detail": "A qualified lead list where every entry has a real reason it fits and a real signal that now is a reasonable time to reach out, never a generic list.",
+    "needs": [
+     "The client's real ideal-customer profile"
+    ]
+   },
+   {
+    "id": "sales-outreach",
+    "name": "Outreach",
+    "status": "scaf",
+    "role": "Drafts outbound sequences from the prospecting list, never sends them.",
+    "detail": "Personalized sequences tied to the actual reason each lead was flagged, in the client's real voice. Every draft goes to a human before it reaches a real inbox.",
+    "needs": [
+     "A prospect list from Prospecting",
+     "Brand file for voice/tone"
+    ]
+   },
+   {
+    "id": "sales-meeting-prep",
+    "name": "Meeting Prep",
+    "status": "scaf",
+    "role": "Preps account research and talking points before a real sales call.",
+    "detail": "A one-page brief per meeting grounded in real account history and public signals, with actual objections and actual answers, not a generic pitch.",
+    "needs": [
+     "Access to prior account history/notes where they exist"
+    ]
+   },
+   {
+    "id": "sales-pipeline",
+    "name": "Pipeline",
+    "status": "scaf",
+    "role": "Reviews pipeline health and flags stalled deals with a next action.",
+    "detail": "Diagnostic only, reads the client's real CRM data, flags what's stuck and why, proposes a next step. Never talks to a prospect itself.",
+    "needs": [
+     "Read access to the client's real CRM or pipeline export"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "finance",
+  "name": "Finance",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Bookkeeping, invoicing, reporting, and forecasting from the client's own real numbers.",
+  "agents": [
+   {
+    "id": "finance-bookkeeping",
+    "name": "Bookkeeping",
+    "status": "scaf",
+    "role": "Categorizes transactions and reconciles accounts.",
+    "detail": "Never has payment or banking credentials, and never moves money, categorizes and reconciles against the client's real chart of accounts, flags anything that doesn't tie out.",
+    "needs": [
+     "Read access to the client's real transaction export and chart of accounts"
+    ]
+   },
+   {
+    "id": "finance-invoicing",
+    "name": "Invoicing",
+    "status": "scaf",
+    "role": "Drafts invoices and tracks collections, never sends or charges anything.",
+    "detail": "Draft invoices from real billing data, plus an aging report on what's overdue. Every draft goes to the client for review before it reaches a real customer.",
+    "needs": [
+     "Read access to the client's real billing/time-tracking data"
+    ]
+   },
+   {
+    "id": "finance-reporting",
+    "name": "Financial Reporting",
+    "status": "scaf",
+    "role": "Builds P&L, cash flow, and balance-sheet reads from real bookkeeping data.",
+    "detail": "A plain-language read on what moved and why, every number traced back to real transactions, flags data errors instead of quietly reporting through them.",
+    "needs": [
+     "Reconciled data from Bookkeeping, or direct access to real financial records"
+    ]
+   },
+   {
+    "id": "finance-forecasting",
+    "name": "Forecasting",
+    "status": "scaf",
+    "role": "Forecasts revenue/cash and models scenarios against real historicals.",
+    "detail": "A range with stated assumptions, never a single false-precision number, every assumption named so it can be challenged.",
+    "needs": [
+     "Historical financials from Financial Reporting"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "success",
+  "name": "Customer Success",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Support, retention, onboarding, and feedback for the client's own end customers.",
+  "agents": [
+   {
+    "id": "success-support",
+    "name": "Support",
+    "status": "scaf",
+    "role": "Triages support tickets and drafts responses, never sends them.",
+    "detail": "Grounded in the client's real product/policy docs; flags anything needing a real account lookup or a human decision instead of guessing.",
+    "needs": [
+     "Read access to the client's real product docs and support queue"
+    ]
+   },
+   {
+    "id": "success-retention",
+    "name": "Retention",
+    "status": "scaf",
+    "role": "Flags churn-risk accounts from real usage signals and proposes a save play.",
+    "detail": "Every risk flag ties to a named, real data signal. Proposes the play; any actual outreach or discount still goes through human review.",
+    "needs": [
+     "Read access to the client's real usage/engagement and account data"
+    ]
+   },
+   {
+    "id": "success-onboarding",
+    "name": "Onboarding",
+    "status": "scaf",
+    "role": "Builds onboarding sequences for the client's new end customers.",
+    "detail": "A checklist and welcome sequence tied to what actually gets a new customer to first real value with the client's product, not a generic drip.",
+    "needs": [
+     "A clear description of the client's real product setup steps"
+    ]
+   },
+   {
+    "id": "success-feedback",
+    "name": "Feedback",
+    "status": "scaf",
+    "role": "Mines tickets, NPS, and reviews into concrete feedback themes.",
+    "detail": "Themes grounded in real quotes and counts, each paired with a specific follow-up, not a vague \"customers want better X.\"",
+    "needs": [
+     "Read access to real support tickets, NPS/survey data, or reviews"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "legal",
+  "name": "Legal/Compliance",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Contract review, compliance checks, policy drafts, and IP monitoring, draft and flag only, never a substitute for a licensed attorney.",
+  "agents": [
+   {
+    "id": "legal-contract-review",
+    "name": "Contract Review",
+    "status": "scaf",
+    "role": "Flags risk clause-by-clause in contracts, NDAs, and MSAs.",
+    "detail": "Not legal advice and not a substitute for a licensed attorney, flags and explains, recommends real counsel before anything with real stakes gets signed.",
+    "needs": [
+     "Nothing blocking to review text: real counsel required for anything with real stakes"
+    ]
+   },
+   {
+    "id": "legal-compliance-check",
+    "name": "Compliance Check",
+    "status": "scaf",
+    "role": "Checks marketing/product claims against the regulatory framework that applies.",
+    "detail": "Names the actual framework being checked against rather than a vague \"looks fine.\" Never states a regulatory fact with certainty unless a current primary source was actually read.",
+    "needs": [
+     "Confirmation of which regulatory framework applies to this client's industry"
+    ]
+   },
+   {
+    "id": "legal-policy-docs",
+    "name": "Policy Docs",
+    "status": "scaf",
+    "role": "Drafts privacy policies, terms of service, and policy documents.",
+    "detail": "Reflects what the client's product actually does with data, every draft explicitly labeled as a starting point for attorney review, never a final document.",
+    "needs": [
+     "An accurate description of what the client's product actually does with user data"
+    ]
+   },
+   {
+    "id": "legal-ip-trademark",
+    "name": "IP/Trademark",
+    "status": "scaf",
+    "role": "Monitors trademark conflicts and drafts (never sends) related correspondence.",
+    "detail": "Scans for real, verifiable uses of the client's marks by others. Never sends a cease-and-desist or asserts a claim as settled, real conflicts go to a licensed attorney.",
+    "needs": [
+     "Confirmation of the client's actual registered or common-law marks"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "social",
+  "name": "Social Media",
+  "phase": "Phase 1",
+  "future": false,
+  "note": "Organic content calendar, post writing, community management, and analytics, paid social lives in its own Mind.",
+  "agents": [
+   {
+    "id": "social-calendar",
+    "name": "Content Calendar",
+    "status": "scaf",
+    "role": "Plans the organic posting calendar/cadence across platforms.",
+    "detail": "Every slot tied to a real reason, a launch, a content pillar from the brand file, matched to a cadence the client can actually sustain.",
+    "needs": [
+     "Brand file for voice/content pillars"
+    ]
+   },
+   {
+    "id": "social-post-writing",
+    "name": "Post Writing",
+    "status": "scaf",
+    "role": "Writes platform-native captions and posts from the calendar.",
+    "detail": "Written for how each platform actually reads, in the client's real voice, no emoji-bullet crutch, no engagement-bait tacked on for its own sake.",
+    "needs": [
+     "A calendar from Content Calendar",
+     "Brand file for voice/tone"
+    ]
+   },
+   {
+    "id": "social-community",
+    "name": "Community",
+    "status": "scaf",
+    "role": "Drafts replies to comments/DMs and monitors brand mentions, never posts.",
+    "detail": "Drafted replies in the client's real voice, plus a mention-monitoring summary. Escalates anything that looks like a real complaint or PR risk immediately.",
+    "needs": [
+     "Read access to the client's real social accounts/mentions"
+    ]
+   },
+   {
+    "id": "social-analytics",
+    "name": "Analytics",
+    "status": "scaf",
+    "role": "Reads organic social performance, what's actually working.",
+    "detail": "Real numbers from the platform's own analytics, feeding clear signal back to Content Calendar and Post Writing on what to do more or less of.",
+    "needs": [
+     "Read access to the client's real platform analytics"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "lifecycle",
+  "name": "Lifecycle",
+  "phase": "Phase 3",
+  "future": true,
+  "note": "Klaviyo/HubSpot-driven retention and nurture.",
+  "agents": [
+   {
+    "id": "segmentation",
+    "name": "Segments",
+    "status": "not",
+    "role": "Defines lifecycle segments from behavior data."
+   },
+   {
+    "id": "campaign-flow-builder",
+    "name": "Flows",
+    "status": "not",
+    "role": "Builds nurture flows in Klaviyo/HubSpot."
+   },
+   {
+    "id": "deliverability-monitor",
+    "name": "Delivery",
+    "status": "not",
+    "role": "Watches sender reputation and bounce/spam rates."
+   }
+  ]
+ },
+ {
+  "id": "intake",
+  "name": "Intake",
+  "phase": "Phase 4",
+  "future": true,
+  "note": "Unlocks onboarding new customers once Phases 1 to 3 are proven.",
+  "agents": [
+   {
+    "id": "discovery-intake",
+    "name": "Discovery",
+    "status": "not",
+    "role": "Runs new-client discovery and requirements gathering."
+   },
+   {
+    "id": "contract-pricing",
+    "name": "Pricing",
+    "status": "not",
+    "role": "Drafts scope and pricing for a new customer."
+   },
+   {
+    "id": "onboarding-setup",
+    "name": "Onboard",
+    "status": "not",
+    "role": "Provisions a new sealed customer workspace end-to-end."
+   }
+  ]
+ }
+]
